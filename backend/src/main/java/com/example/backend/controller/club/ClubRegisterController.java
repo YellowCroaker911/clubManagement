@@ -3,6 +3,7 @@ package com.example.backend.controller.club;
 import com.example.backend.service.club.ClubRegisterService;
 import com.example.backend.service.user.account.AdminJudgeService;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ public class ClubRegisterController {
     public ResultData register(@RequestParam Map<String, String> map) {
         System.out.println(map);
         if(!adminJudgeService.judge()){
-            return ResultData.fail(101,null);
+            return ResultData.fail(ReturnCodes.NOT_ADMIN,null);
         }
         String name = map.get("name");
         String president_id = map.get("president_id");

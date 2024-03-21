@@ -1,23 +1,35 @@
 package com.example.backend.utils.result;
 
+import lombok.Data;
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReturnCodes {
 
-    public static Map<Integer,String> returnCodes = new HashMap<>();
-    static{
-        returnCodes.put(100,"成功");
-        returnCodes.put(101,"无管理员权限");
-        returnCodes.put(201,"用户名不能为空");
-        returnCodes.put(202,"密码不能为空");
-        returnCodes.put(203,"用户名长度不能大于20");
-        returnCodes.put(204,"密码长度不能大于20");
-        returnCodes.put(205,"两次输入的密码不一致");
-        returnCodes.put(206,"用户名已存在");
-        returnCodes.put(301,"社团名不能为空");
-        returnCodes.put(302,"社团名不能大于20");
-        returnCodes.put(303,"社团名已存在");
-        returnCodes.put(304,"社长账号不存在");
+@Getter
+public enum ReturnCodes {
+
+
+//    public static Map<Integer,String> returnCodes = new HashMap<>();
+    SUCCESS(100,"成功"),
+    NOT_ADMIN(101,"无管理员权限"),
+    EMPTY_USER_NAME(201,"用户名不能为空"),
+    EMPTY_PASSWORD(202,"密码不能为空"),
+    TOO_LONG_USERNAME(203,"用户名长度不能大于20"),
+    TOO_LONG_PASSWORD(204,"密码长度不能大于20"),
+    DIFF_PASSWORD(205,"两次输入的密码不一致"),
+    EXIST_USERNAME(206,"用户名已存在"),
+    EMPTY_CLUB_NAME(301,"社团名不能为空"),
+    TOO_LONG_CLUB_NAME(302,"社团名不能大于20"),
+    EXIST_CLUB_NAME(303,"社团名已存在"),
+    NOT_EXIST_PRESIDENT(304,"社长账号不存在"),
+    SYSTEM_ERROR(9999, "系统错误");
+
+    private final int code;     // 状态码
+    private final String message;   // 状态码信息
+    ReturnCodes(int code, String message) {
+        this.code = code;
+        this.message = message;
     }
 }

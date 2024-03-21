@@ -5,6 +5,7 @@ import com.example.backend.mapper.UserMapper;
 import com.example.backend.pojo.User;
 import com.example.backend.service.user.account.RegisterService;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,37 +28,37 @@ public class RegisterServiceImpl implements RegisterService {
     public ResultData register(String username, String password, String confirmedPassword, String role) {
         Map<String, String> map = new HashMap<>();
         if (username == null) {
-            return ResultData.fail(201,null);
+            return ResultData.fail(ReturnCodes.EMPTY_USER_NAME,null);
         }
         if (password == null || confirmedPassword == null) {
-            return ResultData.fail(202,null);
+            return ResultData.fail(ReturnCodes.EMPTY_PASSWORD,null);
         }
 
         username = username.trim();
         if (username.length() == 0) {
-            return ResultData.fail(201,null);
+            return ResultData.fail(ReturnCodes.EMPTY_USER_NAME,null);
         }
 
         if (password.length() == 0 || confirmedPassword.length() == 0) {
-            return ResultData.fail(202,null);
+            return ResultData.fail(ReturnCodes.EMPTY_PASSWORD,null);
         }
 
         if (username.length() > 20) {
-            return ResultData.fail(203,null);
+            return ResultData.fail(ReturnCodes.TOO_LONG_USERNAME,null);
         }
 
         if (password.length() > 20 || confirmedPassword.length() > 20) {
-            return ResultData.fail(204,null);
+            return ResultData.fail(ReturnCodes.TOO_LONG_PASSWORD,null);
         }
 
         if (!password.equals(confirmedPassword)) {
-            return ResultData.fail(205,null);
+            return ResultData.fail(ReturnCodes.DIFF_PASSWORD,null);
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         List<User> users = userMapper.selectList(queryWrapper);
         if(!users.isEmpty()){
-            return ResultData.fail(206,null);
+            return ResultData.fail(ReturnCodes.EXIST_USERNAME,null);
         }
 
         String encodedPassword = passwordEncoder.encode(password);

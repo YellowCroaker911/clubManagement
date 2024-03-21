@@ -1,5 +1,6 @@
 package com.example.backend.utils.result;
 
+import com.sun.net.httpserver.Authenticator;
 import lombok.Data;
 
 @Data
@@ -15,20 +16,23 @@ public class ResultData<T> {
 
     public static <T> ResultData<T> success(T data) {
         ResultData<T> resultData = new ResultData<>();
-        resultData.setStatus(100);
-        resultData.setMessage(ReturnCodes.returnCodes.get(100));
+        resultData.setStatus(ReturnCodes.SUCCESS.getCode());
+        resultData.setMessage(ReturnCodes.SUCCESS.getMessage());
         resultData.setData(data);
         return resultData;
     }
 
-    public static <T> ResultData<T> fail(int code, T data) {
+    public static <T> ResultData<T> fail(ReturnCodes code, T data) {
         ResultData<T> resultData = new ResultData<>();
-        resultData.setStatus(code);
-        resultData.setMessage(ReturnCodes.returnCodes.get(code));
+        resultData.setStatus(code.getCode());
+        resultData.setMessage(code.getMessage());
         return resultData;
     }
 
-    public T getData() {
-        return data;
+    public static <T> ResultData<T> fail(int code, String message, T data) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setStatus(code);
+        resultData.setMessage(message);
+        return resultData;
     }
 }
