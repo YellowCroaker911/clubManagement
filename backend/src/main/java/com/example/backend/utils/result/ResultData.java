@@ -17,7 +17,6 @@ public class ResultData<T> {
         ResultData<T> resultData = new ResultData<>();
         resultData.setStatus(100);
         resultData.setMessage(ReturnCodes.returnCodes.get(100));
-        System.out.println(ReturnCodes.returnCodes);
         resultData.setData(data);
         return resultData;
     }
@@ -29,4 +28,7 @@ public class ResultData<T> {
         return resultData;
     }
 
+    public T getData() {
+        return data;
+    }
 }

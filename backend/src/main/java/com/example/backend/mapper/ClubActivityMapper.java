@@ -2,6 +2,7 @@ package com.example.backend.mapper;
 
 import com.example.backend.pojo.ClubActivity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author Pfeistorch
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-03-21 16:47:25
 * @Entity generator.pojo.ClubActivity
 */
+@Mapper
 public interface ClubActivityMapper extends BaseMapper<ClubActivity> {
 
 }

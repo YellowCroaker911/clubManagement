@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 社员和社团关系表
@@ -14,6 +17,8 @@ import lombok.Data;
  */
 @TableName(value ="user_club")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserClub implements Serializable {
     /**
      * 主键

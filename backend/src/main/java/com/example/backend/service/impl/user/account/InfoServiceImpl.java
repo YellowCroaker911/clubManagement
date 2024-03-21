@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class InfoServiceImpl implements InfoService {
-    @Override
-    public ResultData getinfo() {
+public class InfoServiceImpl implements InfoService{
+
+    public ResultData getInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
