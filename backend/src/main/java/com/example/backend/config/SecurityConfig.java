@@ -1,5 +1,6 @@
 package com.example.backend.config;
 
+//import com.example.backend.config.filter.JwtAuthenticationTokenFilter;
 import com.example.backend.config.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/account/token/", "/user/account/register/").permitAll()
+                .antMatchers("/user/account/token/", "/user/account/register/", "/doc.html/**", "/webjars/**", "/v3/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
