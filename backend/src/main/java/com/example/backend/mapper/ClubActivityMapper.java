@@ -1,16 +1,14 @@
 package com.example.backend.mapper;
 
-import com.example.backend.pojo.ClubActivity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import com.example.backend.model.pojo.ClubActivity;
 
 /**
-* @author Pfeistorch
+* @author oval_m
 * @description 针对表【club_activity(社团和活动关系表)】的数据库操作Mapper
-* @createDate 2024-03-21 16:47:25
-* @Entity generator.pojo.ClubActivity
+* @createDate 2024-03-22 21:30:27
+* @Entity generator.domain.ClubActivity
 */
-@Mapper
 public interface ClubActivityMapper extends BaseMapper<ClubActivity> {
 
 }

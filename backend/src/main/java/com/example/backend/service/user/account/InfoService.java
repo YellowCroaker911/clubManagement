@@ -4,5 +4,5 @@ import com.example.backend.utils.result.ResultData;
 
 
 public interface InfoService {
-    public ResultData getInfo();
+    ResultData getInfo();
 }

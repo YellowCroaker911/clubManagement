@@ -2,7 +2,7 @@ package com.example.backend.service.impl.user.account;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.backend.mapper.UserMapper;
-import com.example.backend.pojo.User;
+import com.example.backend.model.pojo.User;
 import com.example.backend.service.user.account.RegisterService;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;

@@ -1,6 +1,7 @@
 package com.example.backend.service.impl.user.account;
 
-import com.example.backend.pojo.User;
+import com.example.backend.model.pojo.User;
+import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.service.user.account.LoginService;
 import com.example.backend.utils.JwtUtil;
@@ -21,7 +22,7 @@ public class LoginServiceImpl implements LoginService {
     private AuthenticationManager authenticationManager;
 
     @Override
-    public ResultData getToken(String username, String password) {
+    public ResultData<UserLoginTokenVO> getToken(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
 
@@ -30,9 +31,10 @@ public class LoginServiceImpl implements LoginService {
         User user = loginUser.getUser();
         String jwt = JwtUtil.createJWT(user.getId().toString());
 
-        Map<String, String> map = new HashMap<>();
-        map.put("token", jwt);
-
-        return ResultData.success(map);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("token", jwt);
+        UserLoginTokenVO tokenVO = new UserLoginTokenVO();
+        tokenVO.setToken(jwt);
+        return ResultData.success(tokenVO);
     }
 }

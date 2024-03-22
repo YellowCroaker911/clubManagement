@@ -1,7 +1,8 @@
 package com.example.backend.service.user.account;
 
+import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.utils.result.ResultData;
 
 public interface LoginService {
-    public ResultData getToken(String username, String password);
+    ResultData<UserLoginTokenVO> getToken(String username, String password);
 }

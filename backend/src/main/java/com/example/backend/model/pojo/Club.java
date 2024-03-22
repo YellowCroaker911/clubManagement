@@ -1,15 +1,10 @@
-package com.example.backend.pojo;
+package com.example.backend.model.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 社团
@@ -17,8 +12,6 @@ import lombok.NoArgsConstructor;
  */
 @TableName(value ="club")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Club implements Serializable {
     /**
      * 社团id
@@ -57,6 +50,11 @@ public class Club implements Serializable {
     private Integer member;
 
     /**
+     * 公费（单位是分）
+     */
+    private Integer money;
+
+    /**
      * 社长id
      */
     private Long presidentId;
@@ -74,6 +72,7 @@ public class Club implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)

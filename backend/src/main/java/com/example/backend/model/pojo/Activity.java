@@ -1,15 +1,10 @@
-package com.example.backend.pojo;
+package com.example.backend.model.pojo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 活动
@@ -17,8 +12,6 @@ import lombok.NoArgsConstructor;
  */
 @TableName(value ="activity")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Activity implements Serializable {
     /**
      * 主键
@@ -42,9 +35,14 @@ public class Activity implements Serializable {
     private String title;
 
     /**
-     * 活动时间
+     * 活动开始时间
      */
-    private Date time;
+    private Date beginTime;
+
+    /**
+     * 活结束时间
+     */
+    private Date endTime;
 
     /**
      * 活动地点
@@ -84,6 +82,7 @@ public class Activity implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)

@@ -14,6 +14,7 @@ public enum ReturnCodes {
 //    public static Map<Integer,String> returnCodes = new HashMap<>();
     SUCCESS(100,"成功"),
     NOT_ADMIN(101,"无管理员权限"),
+    NULL_FIELD(110, "有空参数"),
     EMPTY_USER_NAME(201,"用户名不能为空"),
     EMPTY_PASSWORD(202,"密码不能为空"),
     TOO_LONG_USERNAME(203,"用户名长度不能大于20"),

@@ -1,6 +1,5 @@
 package com.example.backend.service.impl.user.account;
 
-import com.example.backend.pojo.User;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.service.user.account.AdminJudgeService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

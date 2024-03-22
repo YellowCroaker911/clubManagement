@@ -1,25 +1,17 @@
-package com.example.backend.pojo;
+package com.example.backend.model.pojo;
 
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 用户
  * @TableName user
  */
-@TableName(value ="User")
+@TableName(value ="user")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class User implements Serializable {
     /**
      * 用户id
@@ -28,7 +20,7 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     * 账号
+     * 名称
      */
     private String username;
 
@@ -41,6 +33,11 @@ public class User implements Serializable {
      * 名称
      */
     private String name;
+
+    /**
+     * 账号
+     */
+    private String account;
 
     /**
      * 头像
@@ -63,17 +60,12 @@ public class User implements Serializable {
     private String email;
 
     /**
-     * 状态 0-登录 1-离线
-     */
-    private Integer status;
-
-    /**
-     * 用户 0-社员 1-社长
+     * 用户 0-用户 1-管理员
      */
     private Integer role;
 
     /**
-     * 余额
+     * 贡献金额（单位是分）
      */
     private Integer money;
 
@@ -90,6 +82,7 @@ public class User implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)

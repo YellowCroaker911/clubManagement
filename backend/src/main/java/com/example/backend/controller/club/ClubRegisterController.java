@@ -1,15 +1,16 @@
 package com.example.backend.controller.club;
 
+import com.example.backend.exception.BusinessException;
+import com.example.backend.model.dto.club.ClubRegisterRequestDTO;
 import com.example.backend.service.club.ClubRegisterService;
 import com.example.backend.service.user.account.AdminJudgeService;
+import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 public class ClubRegisterController {
@@ -20,13 +21,17 @@ public class ClubRegisterController {
     private AdminJudgeService adminJudgeService;
 
     @PostMapping("/club/register/")
-    public ResultData register(@RequestParam Map<String, String> map) {
-        System.out.println(map);
+    public ResultData register(@RequestParam ClubRegisterRequestDTO clubRegisterRequestDTO) {
+        if(CommonUtil.checkAnyNullField(clubRegisterRequestDTO)){
+            throw new BusinessException(ReturnCodes.NULL_FIELD);
+        }
+
+        System.out.println(clubRegisterRequestDTO);
         if(!adminJudgeService.judge()){
             return ResultData.fail(ReturnCodes.NOT_ADMIN,null);
         }
-        String name = map.get("name");
-        String president_id = map.get("president_id");
-        return clubRegisterService.register(name,president_id);
+        String name = clubRegisterRequestDTO.getName();
+        String president_id = clubRegisterRequestDTO.getPresident_id();
+        return clubRegisterService.register(name, president_id);
     }
 }

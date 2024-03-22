@@ -1,16 +1,14 @@
 package com.example.backend.mapper;
 
-import com.example.backend.pojo.Activity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import com.example.backend.model.pojo.Activity;
 
 /**
-* @author Pfeistorch
+* @author oval_m
 * @description 针对表【activity(活动)】的数据库操作Mapper
-* @createDate 2024-03-21 16:47:11
-* @Entity generator.pojo.Activity
+* @createDate 2024-03-22 21:30:27
+* @Entity generator.domain.Activity
 */
-@Mapper
 public interface ActivityMapper extends BaseMapper<Activity> {
 
 }

@@ -1,7 +1,7 @@
 package com.example.backend.config.filter;
 
 import com.example.backend.mapper.UserMapper;
-import com.example.backend.pojo.User;
+import com.example.backend.model.pojo.User;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

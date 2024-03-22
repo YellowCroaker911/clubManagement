@@ -1,6 +1,6 @@
 package com.example.backend.service.impl.utils;
 
-import com.example.backend.pojo.User;
+import com.example.backend.model.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

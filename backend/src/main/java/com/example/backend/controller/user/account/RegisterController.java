@@ -1,13 +1,15 @@
 package com.example.backend.controller.user.account;
 
+import com.example.backend.exception.BusinessException;
+import com.example.backend.model.dto.user.account.UserRegisterRequestDTO;
 import com.example.backend.service.user.account.RegisterService;
+import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -17,11 +19,14 @@ public class RegisterController {
     private RegisterService registerService;
 
     @PostMapping("/user/account/register/")
-    public ResultData register(@RequestParam Map<String, String> map) {
-        String username = map.get("username");
-        String password = map.get("password");
-        String confirmedPassword = map.get("confirmedPassword");
-        String role = map.get("role");
-        return registerService.register(username, password, confirmedPassword,role);
+    public ResultData register(@RequestParam UserRegisterRequestDTO registerDTO) {
+//        if(CommonUtil.checkAnyNullField(registerDTO)){
+//            throw new BusinessException(ReturnCodes.NULL_FIELD);
+//        }
+        String username = registerDTO.getUsername();
+        String password = registerDTO.getPassword();
+        String confirmedPassword = registerDTO.getConfirmedPassword();
+        String role = registerDTO.getRole();
+        return registerService.register(username, password, confirmedPassword, role);
     }
 }
