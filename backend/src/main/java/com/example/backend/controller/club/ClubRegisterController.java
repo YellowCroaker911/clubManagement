@@ -9,6 +9,7 @@ import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ public class ClubRegisterController {
     private AdminJudgeService adminJudgeService;
 
     @PostMapping("/club/register/")
-    public ResultData register(@RequestParam ClubRegisterRequestDTO clubRegisterRequestDTO) {
+    public ResultData register(@RequestBody ClubRegisterRequestDTO clubRegisterRequestDTO) {
         if(CommonUtil.checkAnyNullField(clubRegisterRequestDTO)){
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }

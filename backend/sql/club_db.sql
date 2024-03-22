@@ -60,6 +60,7 @@ create table club
     member         int default 0 not null comment '成员数量',
     money        int     default 0 not null comment '公费（单位是分）',
     president_id   bigint not null comment '社长id',
+    is_admitted 	tinyint  default 0 not null comment '是否注册',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除'

@@ -27,7 +27,6 @@ public class ClubRegisterServiceImpl implements ClubRegisterService {
     private ClubMapper clubMapper;
 
     public ResultData register(String name, String president_id) {
-        Map<String, String> map = new HashMap<>();
         if (name == null) {
             return ResultData.fail(ReturnCodes.EMPTY_CLUB_NAME,null);
         }
@@ -50,6 +49,6 @@ public class ClubRegisterServiceImpl implements ClubRegisterService {
         club.setName(name);
         club.setPresidentId(parseLong(president_id));
         clubMapper.insert(club);
-        return ResultData.success(map);
+        return ResultData.success(null);
     }
 }

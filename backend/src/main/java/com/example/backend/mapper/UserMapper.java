@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @createDate 2024-03-22 21:30:27
 * @Entity generator.domain.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }

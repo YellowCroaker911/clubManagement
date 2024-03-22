@@ -1,14 +1,11 @@
 package com.example.backend.controller.user.account;
 
-import com.example.backend.exception.BusinessException;
 import com.example.backend.model.dto.user.account.UserRegisterRequestDTO;
 import com.example.backend.service.user.account.RegisterService;
-import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
-import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import static java.lang.Integer.parseInt;
@@ -19,7 +16,7 @@ public class RegisterController {
     private RegisterService registerService;
 
     @PostMapping("/user/account/register/")
-    public ResultData register(@RequestParam UserRegisterRequestDTO registerDTO) {
+    public ResultData register(@RequestBody UserRegisterRequestDTO registerDTO) {
 //        if(CommonUtil.checkAnyNullField(registerDTO)){
 //            throw new BusinessException(ReturnCodes.NULL_FIELD);
 //        }

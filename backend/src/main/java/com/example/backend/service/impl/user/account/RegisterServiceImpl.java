@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
@@ -26,7 +24,6 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public ResultData register(String username, String password, String confirmedPassword, String role) {
-        Map<String, String> map = new HashMap<>();
         if (username == null) {
             return ResultData.fail(ReturnCodes.EMPTY_USER_NAME,null);
         }
@@ -68,6 +65,6 @@ public class RegisterServiceImpl implements RegisterService {
         user.setRole(parseInt(role));
         userMapper.insert(user);
 
-        return ResultData.success(map);
+        return ResultData.success(null);
     }
 }

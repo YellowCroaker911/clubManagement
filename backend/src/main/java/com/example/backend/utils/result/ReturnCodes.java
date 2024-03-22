@@ -25,7 +25,8 @@ public enum ReturnCodes {
     TOO_LONG_CLUB_NAME(302,"社团名不能大于20"),
     EXIST_CLUB_NAME(303,"社团名已存在"),
     NOT_EXIST_PRESIDENT(304,"社长账号不存在"),
-    SYSTEM_ERROR(9999, "系统错误");
+    DATABASE_ERROR(901,"数据库错误"),
+    SYSTEM_ERROR(999, "系统错误");
 
     private final int code;     // 状态码
     private final String message;   // 状态码信息
