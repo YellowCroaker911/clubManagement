@@ -26,11 +26,6 @@ public class ClubRegisterController {
         if(CommonUtil.checkAnyNullField(clubRegisterRequestDTO)){
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-
-        System.out.println(clubRegisterRequestDTO);
-        if(!adminJudgeService.judge()){
-            return ResultData.fail(ReturnCodes.NOT_ADMIN,null);
-        }
         String name = clubRegisterRequestDTO.getName();
         String president_id = clubRegisterRequestDTO.getPresident_id();
         return clubRegisterService.register(name, president_id);

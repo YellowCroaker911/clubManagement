@@ -20,9 +20,7 @@ public class InfoServiceImpl implements InfoService{
 
         UserDetailsImpl loginUser = (UserDetailsImpl) authentication.getPrincipal();
         User user = loginUser.getUser();
-//        Map<String, String> map = new HashMap<>();
-//        map.put("id", user.getId().toString());
-//        map.put("username", user.getUsername());
+
         user.setPassword(null);
         return ResultData.success(user);
     }

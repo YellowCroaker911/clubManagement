@@ -1,8 +1,10 @@
 package com.example.backend.controller.club;
 
+import com.example.backend.exception.BusinessException;
 import com.example.backend.model.dto.club.ClubAdmitRequestDTO;
 import com.example.backend.service.club.ClubAdmitService;
 import com.example.backend.service.user.account.AdminJudgeService;
+import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class ClubAdmitController {
 
     @PostMapping("/club/admit/")
     public ResultData admit(@RequestBody ClubAdmitRequestDTO clubAdmitRequestDTO) {
+        if(CommonUtil.checkAnyNullField(clubAdmitRequestDTO)){
+            throw new BusinessException(ReturnCodes.NULL_FIELD);
+        }
         if(!adminJudgeService.judge()){
             return ResultData.fail(ReturnCodes.NOT_ADMIN,null);
         }
