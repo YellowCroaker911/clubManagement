@@ -20,9 +20,7 @@ public class AlterInfoController {
 
     @PostMapping("/user/account/alter/")
     public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserAlterInfoRequestDTO alterDTO) {
-        if(CommonUtil.checkAnyNullField(alterDTO)) {
-            throw new BusinessException(ReturnCodes.NULL_FIELD);
-        }
+
         return alterInfoService.alterInfo(alterDTO.getName(),alterDTO.getAvatar(),alterDTO.getGender(),alterDTO.getPhone(),alterDTO.getEmail());
     }
 }

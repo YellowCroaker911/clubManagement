@@ -31,9 +31,7 @@ custom.mysql.password=本地数据库密码
   - 传入实体使用`DTO`，放到`model.dto`下
   - 返回实体使用`VO`或已存在的`pojo`或其他可以共用的实体类，放到`model.*`下
   
-- 对于后端的接口都添加`/api`路径前缀，还没在现有的接口中做修改
-
 # 待解决
-- login失败时 `Authentication authenticate = authenticationManager.authenticate(authenticationToken);` 会自动处理，无法返回统一错误格式
+- [x] login失败时 `Authentication authenticate = authenticationManager.authenticate(authenticationToken);` 会自动处理，无法返回统一错误格式
 
-- 带token的header错误时会自动处理，无法返回统一错误格式
+- [x] 带token的header错误时会自动处理，无法返回统一错误格式，[使用这的第二个解决方法](https://blog.csdn.net/m0_37731470/article/details/116754395)

@@ -19,9 +19,7 @@ public class ClubAdmitController {
 
     @PostMapping("/club/admit/")
     public ResultData admit(@RequestBody ClubAdmitRequestDTO clubAdmitRequestDTO) {
-        if(CommonUtil.checkAnyNullField(clubAdmitRequestDTO)){
-            throw new BusinessException(ReturnCodes.NULL_FIELD);
-        }
+
         String id = clubAdmitRequestDTO.getId();
         return clubAdmitService.admit(id);
     }

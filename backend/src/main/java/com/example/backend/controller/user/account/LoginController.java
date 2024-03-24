@@ -20,9 +20,7 @@ public class LoginController {
 
     @PostMapping("/user/account/token/")
     public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO loginDTO) {
-        if(CommonUtil.checkAnyNullField(loginDTO)) {
-            throw new BusinessException(ReturnCodes.NULL_FIELD);
-        }
+
         return loginService.getToken(loginDTO.getUsername(), loginDTO.getPassword());
     }
 }

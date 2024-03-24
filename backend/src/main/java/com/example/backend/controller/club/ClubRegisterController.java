@@ -18,11 +18,9 @@ public class ClubRegisterController {
 
     @PostMapping("/club/register/")
     public ResultData register(@RequestBody ClubRegisterRequestDTO clubRegisterRequestDTO) {
-        if(CommonUtil.checkAnyNullField(clubRegisterRequestDTO)){
-            throw new BusinessException(ReturnCodes.NULL_FIELD);
-        }
+
         String name = clubRegisterRequestDTO.getName();
-        String president_id = clubRegisterRequestDTO.getPresident_id();
+        String president_id = clubRegisterRequestDTO.getPresidentId();
         return clubRegisterService.register(name, president_id);
     }
 }

@@ -1,9 +1,9 @@
-drop table if exists user;
-drop table if exists activity;
-drop table if exists club;
 drop table if exists club_activity;
 drop table if exists user_activity;
 drop table if exists user_club;
+drop table if exists user;
+drop table if exists activity;
+drop table if exists club;
 
 -- 用户信息表
 create table user
@@ -59,7 +59,7 @@ create table club
     member         int default 0 not null comment '成员数量',
     money        int     default 0 not null comment '公费（单位是分）',
     president_id   bigint not null comment '社长id',
-    is_admitted 	tinyint  default 0 not null comment '是否注册',
+    is_admitted 	tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除'
@@ -114,5 +114,5 @@ drop view if exists view_club_users;
 
 -- 查询社员、社团关系表，带上名字
 CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name as club_name
-            from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
-            where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
+                               from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
+                               where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
