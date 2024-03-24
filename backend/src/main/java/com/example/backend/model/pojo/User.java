@@ -2,7 +2,10 @@ package com.example.backend.model.pojo;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import lombok.NonNull;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -33,11 +36,6 @@ public class User implements Serializable {
      * 名称
      */
     private String name;
-
-    /**
-     * 账号
-     */
-    private String account;
 
     /**
      * 头像

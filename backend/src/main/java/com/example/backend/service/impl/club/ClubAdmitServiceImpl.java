@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.model.pojo.Club;
 import com.example.backend.service.club.ClubAdmitService;
+import com.example.backend.service.impl.method.AdminJudge;
+import com.example.backend.service.impl.method.LoginUser;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,14 @@ public class ClubAdmitServiceImpl implements ClubAdmitService {
 
     @Override
     public ResultData admit(String id) {
+        if(!AdminJudge.judge(LoginUser.getUserDetails())){
+            return ResultData.fail(ReturnCodes.NOT_ADMIN,null);
+        }
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Club club = clubMapper.selectOne(queryWrapper);
         if (club == null) {
-           return ResultData.fail(ReturnCodes.DATABASE_ERROR,"社团索引不存在");
+           return ResultData.fail(ReturnCodes.DATABASE_ERROR,"索引不存在");
         }
         UpdateWrapper<Club> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("is_admitted", 1);

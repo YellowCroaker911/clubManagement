@@ -8,6 +8,7 @@ import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +19,10 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/user/account/token/")
-    public ResultData<UserLoginTokenVO> getToken(@RequestBody UserLoginRequestDTO userLogin) {
-        if(CommonUtil.checkAnyNullField(userLogin)) {
+    public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO loginDTO) {
+        if(CommonUtil.checkAnyNullField(loginDTO)) {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-        return loginService.getToken(userLogin.getUsername(), userLogin.getPassword());
+        return loginService.getToken(loginDTO.getUsername(), loginDTO.getPassword());
     }
 }
