@@ -27,7 +27,7 @@ const router = createRouter({
       path: "/profile/:id",
       name: "profile",
       meta: { title: "个人主页", requiresAuth: true },
-      component: () => import("@/views/modules/profile.vue")
+      component: () => import("@/views/modules/profile/profile.vue")
     },
   ]
 })

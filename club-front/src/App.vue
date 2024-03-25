@@ -26,11 +26,9 @@
         <el-avatar class="title-right-image" :src="1" @click="() => avatarEvent('avatar')" />
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-            <el-dropdown-item>Action 4</el-dropdown-item>
-            <el-dropdown-item>Action 5</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('1')">个人中心</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('2')">留着</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('3')">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
