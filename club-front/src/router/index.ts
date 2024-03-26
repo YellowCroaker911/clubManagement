@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {getCurrentUser} from "@/utils";
 import {getinfo} from "@/api/backend-api/infoController";
+import component from "*.vue";
 
 
 const router = createRouter({
@@ -16,6 +17,17 @@ const router = createRouter({
       name: 'home',
       component: ()=> import("@/views/modules/home.vue"),
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/usedOrder',
+      name: 'UsedOrder',
+      component: ()=> import("@/views/modules/Club/usedOrder.vue"),
+      meta: { requiresAuth: true }
+      // children: [
+      //     path: '/usedOrder/clubInfo',
+      //     name: 'clubInfo',
+      //     component: ()=> import("@/views/modules/Club/clubInfo.vue"),
+      // ]
     },
     {
       path: '/admin/club',
