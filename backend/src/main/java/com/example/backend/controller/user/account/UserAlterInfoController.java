@@ -2,8 +2,7 @@ package com.example.backend.controller.user.account;
 
 import com.example.backend.exception.BusinessException;
 import com.example.backend.model.dto.user.account.UserAlterInfoRequestDTO;
-import com.example.backend.model.vo.UserLoginTokenVO;
-import com.example.backend.service.user.account.AlterInfoService;
+import com.example.backend.service.user.account.UserAlterInfoService;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
@@ -14,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AlterInfoController {
+public class UserAlterInfoController {
     @Autowired
-    private AlterInfoService alterInfoService;
+    private UserAlterInfoService userAlterInfoService;
 
-    @PostMapping("/user/account/alter/")
-    public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserAlterInfoRequestDTO alterDTO) {
+    @PostMapping("/user/account/alterInfo/")
+    public ResultData<Object> alterInfo(@RequestBody @Validated UserAlterInfoRequestDTO alterDTO) {
         if(CommonUtil.checkAnyNullField(alterDTO)) {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-        return alterInfoService.alterInfo(alterDTO.getName(),alterDTO.getAvatar(),alterDTO.getGender(),alterDTO.getPhone(),alterDTO.getEmail());
+        return userAlterInfoService.alterInfo(alterDTO.getName(),alterDTO.getAvatar(),alterDTO.getGender(),alterDTO.getPhone(),alterDTO.getEmail());
     }
 }

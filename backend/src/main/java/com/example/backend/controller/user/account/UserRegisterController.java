@@ -1,9 +1,8 @@
 package com.example.backend.controller.user.account;
 
 import com.example.backend.exception.BusinessException;
-import com.example.backend.model.dto.user.account.UserLoginRequestDTO;
-import com.example.backend.model.vo.UserLoginTokenVO;
-import com.example.backend.service.user.account.LoginService;
+import com.example.backend.model.dto.user.account.UserRegisterRequestDTO;
+import com.example.backend.service.user.account.UserRegisterService;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
@@ -13,16 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class LoginController {
-    @Autowired
-    private LoginService loginService;
 
-    @PostMapping("/user/account/token/")
-    public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO loginDTO) {
-        if(CommonUtil.checkAnyNullField(loginDTO)) {
+@RestController
+public class UserRegisterController {
+    @Autowired
+    private UserRegisterService userRegisterService;
+
+    @PostMapping("/user/account/register/")
+    public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO registerDTO) {
+        if(CommonUtil.checkAnyNullField(registerDTO)){
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-        return loginService.getToken(loginDTO.getUsername(), loginDTO.getPassword());
+        return userRegisterService.userRegister(registerDTO.getUsername(), registerDTO.getPassword(), registerDTO.getConfirmedPassword(), registerDTO.getRole());
     }
 }

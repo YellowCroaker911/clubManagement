@@ -1,9 +1,11 @@
 package com.example.backend.config.filter;
 
+import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.pojo.User;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.JwtUtil;
+import com.example.backend.utils.result.ReturnCodes;
 import io.jsonwebtoken.Claims;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +48,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         User user = userMapper.selectById(Integer.parseInt(userid));
 
         if (user == null) {
-            throw new RuntimeException("用户名未登录");
+            throw new BusinessException(ReturnCodes.USER_NOT_LOGIN,null);
         }
 
         UserDetailsImpl loginUser = new UserDetailsImpl(user);
