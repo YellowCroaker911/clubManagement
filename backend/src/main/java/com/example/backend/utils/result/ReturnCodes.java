@@ -18,6 +18,7 @@ public enum ReturnCodes {
     TOO_LONG_PASSWORD(204,"密码长度不能大于20"),
     DIFF_PASSWORD(205,"两次输入的密码不一致"),
     EXIST_USERNAME(206,"用户名已存在"),
+    DIFF_OlD_PASSWORD(207,"旧密码不正确"),
     EMPTY_CLUB_NAME(301,"社团名不能为空"),
     TOO_LONG_CLUB_NAME(302,"社团名不能大于20"),
     EXIST_CLUB_NAME(303,"社团名已存在"),

@@ -1,7 +1,7 @@
 package com.example.backend.controller.user.account;
 
 import com.example.backend.exception.BusinessException;
-import com.example.backend.model.dto.user.account.UserAlterPasswordDTO;
+import com.example.backend.model.dto.user.account.UserAlterPasswordRequestDTO;
 import com.example.backend.service.user.account.UserAlterPasswordService;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
@@ -19,10 +19,10 @@ public class UserAlterPasswordController {
     private UserAlterPasswordService userAlterPasswordService;
 
     @PostMapping("/user/account/alterPassword/")
-    public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordDTO alterPasswordDTO) {
+    public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordRequestDTO alterPasswordDTO) {
         if(CommonUtil.checkAnyNullField(alterPasswordDTO)) {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-        return userAlterPasswordService.alterPassword(alterPasswordDTO.getPassword(),alterPasswordDTO.getConfirmedPassword());
+        return userAlterPasswordService.alterPassword(alterPasswordDTO.getOldPassword(),alterPasswordDTO.getNewPassword(),alterPasswordDTO.getConfirmedPassword());
     }
 }

@@ -23,13 +23,20 @@ public class UserAlterPasswordServiceImpl implements UserAlterPasswordService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public ResultData<Object> alterPassword(String password, String confirmedPassword) {
-        if (!password.equals(confirmedPassword)) {
+    public ResultData<Object> alterPassword(String oldPassword,String newPassword, String confirmedPassword) {
+        UserDetailsImpl userDetails = LoginUser.getUserDetails();
+        User loginUser = userDetails.getUser();
+
+        String encodedOldPassword = passwordEncoder.encode(newPassword);
+
+        if(!loginUser.getPassword().equals(encodedOldPassword)){
+            throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
+        }
+
+        if (!newPassword.equals(confirmedPassword)) {
             throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
         }
 
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
@@ -38,8 +45,8 @@ public class UserAlterPasswordServiceImpl implements UserAlterPasswordService {
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        String encodedPassword = passwordEncoder.encode(password);
-        updateWrapper.set("password",encodedPassword);
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        updateWrapper.set("password",encodedNewPassword);
 
         userMapper.update(user, updateWrapper);
 
