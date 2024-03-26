@@ -22,7 +22,7 @@ public class ClubRegisterController {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
         String name = clubRegisterRequestDTO.getName();
-        String president_id = clubRegisterRequestDTO.getPresident_id();
-        return clubRegisterService.clubRegister(name, president_id);
+        String presidentID = clubRegisterRequestDTO.getPresidentId();
+        return clubRegisterService.clubRegister(name, presidentID);
     }
 }

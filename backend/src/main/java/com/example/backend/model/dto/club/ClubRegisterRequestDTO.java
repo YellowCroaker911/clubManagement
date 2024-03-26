@@ -13,5 +13,5 @@ public class ClubRegisterRequestDTO implements Serializable {
     private String name;
     @NotBlank(message = "社长索引不能为空")
     @Pattern(regexp = "^\\d{1,20}$",message = "索引必须是20位以内的数字")
-    private String president_id;
+    private String presidentId;
 }

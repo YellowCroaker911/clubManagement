@@ -20,7 +20,7 @@ public class UserRegisterController {
 
     @PostMapping("/user/account/register/")
     public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO registerDTO) {
-        if(CommonUtil.checkAnyNullField(registerDTO)){
+        if (CommonUtil.checkAnyNullField(registerDTO)) {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
         return userRegisterService.userRegister(registerDTO.getUsername(), registerDTO.getPassword(), registerDTO.getConfirmedPassword(), registerDTO.getRole());

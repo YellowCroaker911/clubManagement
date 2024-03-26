@@ -19,9 +19,9 @@ public class UserAlterInfoController {
 
     @PostMapping("/user/account/alterInfo/")
     public ResultData<Object> alterInfo(@RequestBody @Validated UserAlterInfoRequestDTO alterDTO) {
-        if(CommonUtil.checkAnyNullField(alterDTO)) {
+        if (CommonUtil.checkAnyNullField(alterDTO)) {
             throw new BusinessException(ReturnCodes.NULL_FIELD);
         }
-        return userAlterInfoService.alterInfo(alterDTO.getName(),alterDTO.getAvatar(),alterDTO.getGender(),alterDTO.getPhone(),alterDTO.getEmail());
+        return userAlterInfoService.alterInfo(alterDTO.getName(), alterDTO.getAvatar(), alterDTO.getGender(), alterDTO.getPhone(), alterDTO.getEmail());
     }
 }
