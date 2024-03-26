@@ -1,6 +1,7 @@
 package com.example.backend.service.impl.club;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.pojo.Club;
@@ -26,24 +27,18 @@ public class ClubRegisterServiceImpl implements ClubRegisterService {
     @Autowired
     private ClubMapper clubMapper;
 
-    public ResultData register(String name, String president_id) {
-        if (name == null) {
-            return ResultData.fail(ReturnCodes.EMPTY_CLUB_NAME,null);
-        }
-        if(name.length() > 20){
-            return ResultData.fail(ReturnCodes.TOO_LONG_CLUB_NAME,null);
-        }
+    public ResultData<Object> clubRegister(String name, String president_id) {
         QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("name", name);
         List<Club> clubs = clubMapper.selectList(queryWrapper1);
         if(!clubs.isEmpty()){
-            return ResultData.fail(ReturnCodes.EXIST_CLUB_NAME,null);
+            throw new BusinessException(ReturnCodes.EXIST_CLUB_NAME,null);
         }
         QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("id", president_id);
         List<User> users = userMapper.selectList(queryWrapper2);
         if(users.isEmpty()){
-            return ResultData.fail(ReturnCodes.NOT_EXIST_PRESIDENT,null);
+            throw new BusinessException(ReturnCodes.NOT_EXIST_PRESIDENT,null);
         }
         Club club = new Club();
         club.setName(name);

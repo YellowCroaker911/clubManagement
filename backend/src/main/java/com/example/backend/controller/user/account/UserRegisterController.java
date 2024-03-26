@@ -2,7 +2,7 @@ package com.example.backend.controller.user.account;
 
 import com.example.backend.exception.BusinessException;
 import com.example.backend.model.dto.user.account.UserRegisterRequestDTO;
-import com.example.backend.service.user.account.RegisterService;
+import com.example.backend.service.user.account.UserRegisterService;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
@@ -12,16 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static java.lang.Integer.parseInt;
 
 @RestController
-public class RegisterController {
+public class UserRegisterController {
     @Autowired
-    private RegisterService registerService;
+    private UserRegisterService userRegisterService;
 
     @PostMapping("/user/account/register/")
-    public ResultData register(@RequestBody @Validated UserRegisterRequestDTO registerDTO) {
-
-        return registerService.register(registerDTO.getUsername(), registerDTO.getPassword(), registerDTO.getConfirmedPassword(), registerDTO.getRole());
+    public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO registerDTO) {
+        if (CommonUtil.checkAnyNullField(registerDTO)) {
+            throw new BusinessException(ReturnCodes.NULL_FIELD);
+        }
+        return userRegisterService.userRegister(registerDTO.getUsername(), registerDTO.getPassword(), registerDTO.getConfirmedPassword(), registerDTO.getRole());
     }
 }

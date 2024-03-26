@@ -64,7 +64,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (user == null) {
 //            throw new RuntimeException("用户名未登录");
-            resolver.resolveException(request, response, null, new BusinessException(ReturnCodes.NOT_LOGIN));
+            resolver.resolveException(request, response, null, new BusinessException(ReturnCodes.USER_NOT_LOGIN));
             return;
         }
 
