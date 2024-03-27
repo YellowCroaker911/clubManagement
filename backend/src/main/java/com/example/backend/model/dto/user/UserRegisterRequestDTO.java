@@ -1,4 +1,4 @@
-package com.example.backend.model.dto.user.account;
+package com.example.backend.model.dto.user;
 
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class UserRegisterRequestDTO implements Serializable {
     @Pattern(regexp = "^.{6,20}$",message = "密码必须在6到20位之间")
     private String password;
     @NotBlank(message = "确认密码不能为空")
-    @Pattern(regexp = "^.{6,20}$",message = "确认密码必须在6到20位之间")
+    @Pattern(regexp = "^.{6,20}$",message = "密码必须在6到20位之间")
     private String confirmedPassword;
     @NotBlank(message = "用户权限不能为空")
     @Pattern(regexp = "^[01]$",message = "用户权限必须为0或1")
