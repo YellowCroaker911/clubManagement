@@ -1,6 +1,5 @@
 package com.example.backend.utils.result;
 
-import com.sun.net.httpserver.Authenticator;
 import lombok.Data;
 
 @Data

@@ -1,10 +1,9 @@
-package com.example.backend.service.impl;
+package com.example.backend.service.impl.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.User;
-import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;

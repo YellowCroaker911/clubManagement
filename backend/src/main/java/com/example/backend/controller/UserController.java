@@ -26,7 +26,6 @@ public class UserController {
         return userService.userRegister(userRegisterRequestDTO.getUsername(), userRegisterRequestDTO.getPassword(),
                 userRegisterRequestDTO.getConfirmedPassword(), userRegisterRequestDTO.getRole());
     }
-
     @PostMapping("/getToken")
     public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO userLoginRequestDTO) {
         return userService.userGetToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword());
@@ -36,16 +35,14 @@ public class UserController {
         return userService.userAlterInfo(userAlterInfoRequestDTO.getName(), userAlterInfoRequestDTO.getAvatar(),
                 userAlterInfoRequestDTO.getGender(), userAlterInfoRequestDTO.getPhone(), userAlterInfoRequestDTO.getEmail());
     }
-
     @PostMapping("/alterPassword")
     public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordRequestDTO userAlterPasswordRequestDTO) {
         return userService.userAlterPassword(userAlterPasswordRequestDTO.getOldPassword(),
                 userAlterPasswordRequestDTO.getNewPassword(),userAlterPasswordRequestDTO.getConfirmedPassword());
     }
-
-    @PostMapping("/getInfo")
-    public ResultData<User> getInfo() {
-        return userService.userGetInfo();
+    @PostMapping("/getSelfInfo")
+    public ResultData<User> getSelfInfo() {
+        return userService.userGetSelfInfo();
     }
     
 }

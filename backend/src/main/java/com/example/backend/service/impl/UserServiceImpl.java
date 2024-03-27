@@ -37,6 +37,42 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
+    public ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role) {
+        if (!password.equals(confirmedPassword)) {
+            throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
+        }
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        List<User> users = userMapper.selectList(queryWrapper);
+        if(!users.isEmpty()){
+            throw new BusinessException(ReturnCodes.EXIST_USERNAME,null);
+        }
+
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(encodedPassword);
+        user.setRole(parseInt(role));
+        userMapper.insert(user);
+
+        return ResultData.success(null);
+    }
+
+    @Override
+    public ResultData<UserLoginTokenVO> userGetToken(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);  // 登录失败，会自动处理
+        UserDetailsImpl loginUser = (UserDetailsImpl) authenticate.getPrincipal();
+        User user = loginUser.getUser();
+        String jwt = JwtUtil.createJWT(user.getId().toString());
+        UserLoginTokenVO tokenVO = new UserLoginTokenVO();
+        tokenVO.setToken(jwt);
+        return ResultData.success(tokenVO);
+    }
+
+    @Override
     public ResultData<Object> userAlterInfo(String name, String avatar, String gender, String phone, String email) {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
@@ -44,7 +80,7 @@ public class UserServiceImpl implements UserService {
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
         if (user == null){
-            throw new BusinessException(ReturnCodes.DATABASE_ERROR);
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -78,7 +114,7 @@ public class UserServiceImpl implements UserService {
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
         if (user == null){
-            throw new BusinessException(ReturnCodes.DATABASE_ERROR);
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -91,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<User> userGetInfo() {
+    public ResultData<User> userGetSelfInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
@@ -102,40 +138,5 @@ public class UserServiceImpl implements UserService {
         return ResultData.success(loginUser);
     }
 
-    @Override
-    public ResultData<UserLoginTokenVO> userGetToken(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);  // 登录失败，会自动处理
-        UserDetailsImpl loginUser = (UserDetailsImpl) authenticate.getPrincipal();
-        User user = loginUser.getUser();
-        String jwt = JwtUtil.createJWT(user.getId().toString());
-        UserLoginTokenVO tokenVO = new UserLoginTokenVO();
-        tokenVO.setToken(jwt);
-        return ResultData.success(tokenVO);
-    }
-
-    @Override
-    public ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role) {
-        if (!password.equals(confirmedPassword)) {
-            throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
-        }
-
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username", username);
-        List<User> users = userMapper.selectList(queryWrapper);
-        if(!users.isEmpty()){
-            throw new BusinessException(ReturnCodes.EXIST_USERNAME,null);
-        }
-
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(encodedPassword);
-        user.setRole(parseInt(role));
-        userMapper.insert(user);
-
-        return ResultData.success(null);
-    }
 
 }

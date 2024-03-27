@@ -8,7 +8,6 @@ import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.service.ClubService;
-import com.example.backend.service.impl.utils.AdminJudge;
 import com.example.backend.service.impl.utils.LoginUser;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ResultData;
@@ -29,15 +28,33 @@ public class ClubServiceImpl implements ClubService {
     private UserMapper userMapper;
 
     @Override
-    public ResultData<Object> clubAdmit(String id) {
-        if(!AdminJudge.judge(LoginUser.getUserDetails())){
-            throw new BusinessException(ReturnCodes.NOT_ADMIN,null);
+    public ResultData<Object> clubRegister(String name, String president_id) {
+        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("name", name);
+        List<Club> clubs = clubMapper.selectList(queryWrapper1);
+        if(!clubs.isEmpty()){
+            throw new BusinessException(ReturnCodes.EXIST_CLUB_NAME,null);
         }
+        QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("id", president_id);
+        List<User> users = userMapper.selectList(queryWrapper2);
+        if(users.isEmpty()){
+            throw new BusinessException(ReturnCodes.NOT_EXIST_PRESIDENT,null);
+        }
+        Club club = new Club();
+        club.setName(name);
+        club.setPresidentId(parseLong(president_id));
+        clubMapper.insert(club);
+        return ResultData.success(null);
+    }
+
+    @Override
+    public ResultData<Object> clubAdmit(String id) {
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         Club club = clubMapper.selectOne(queryWrapper);
         if (club == null) {
-            throw new BusinessException(ReturnCodes.DATABASE_ERROR,"索引不存在");
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
         UpdateWrapper<Club> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("is_admitted", 1);
@@ -57,7 +74,7 @@ public class ClubServiceImpl implements ClubService {
         queryWrapper.eq("id", id);
         Club club = clubMapper.selectOne(queryWrapper);
         if (club == null) {
-            throw new BusinessException(ReturnCodes.DATABASE_ERROR,"索引不存在");
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         UpdateWrapper<Club> updateWrapper = new UpdateWrapper<>();
@@ -76,31 +93,10 @@ public class ClubServiceImpl implements ClubService {
         queryWrapper.eq("id",id);
         Club club = clubMapper.selectOne(queryWrapper);
         if (club == null) {
-            throw new BusinessException(ReturnCodes.DATABASE_ERROR,"索引不存在");
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         return ResultData.success(club);
-    }
-
-    @Override
-    public ResultData<Object> clubRegister(String name, String president_id) {
-        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("name", name);
-        List<Club> clubs = clubMapper.selectList(queryWrapper1);
-        if(!clubs.isEmpty()){
-            throw new BusinessException(ReturnCodes.EXIST_CLUB_NAME,null);
-        }
-        QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("id", president_id);
-        List<User> users = userMapper.selectList(queryWrapper2);
-        if(users.isEmpty()){
-            throw new BusinessException(ReturnCodes.NOT_EXIST_PRESIDENT,null);
-        }
-        Club club = new Club();
-        club.setName(name);
-        club.setPresidentId(parseLong(president_id));
-        clubMapper.insert(club);
-        return ResultData.success(null);
     }
 
 }
