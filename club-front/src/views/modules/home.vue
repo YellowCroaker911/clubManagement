@@ -1,17 +1,18 @@
 <template>
+  <h1>活动列表</h1>
   <div class="activities-class">
   <template v-for="(item, index) in list" :key="index">
   <!--    <el-card v-for="item in list" :body-style="{ padding: '0px', marginBottom: '1px' }">-->
-    <el-descriptions class="activity-item-class" :title="item.name" border>
+    <el-descriptions class="activity-item-class" :title="item.name" border type="primary">
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动名称: ">{{ item.name }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主题: ">{{ item.title }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="报名方式: ">{{ item.sign }}</el-descriptions-item>
-      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>
+<!--      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>-->
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动地点: ">{{ item.address }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动时间: ">{{ item.beginTime }} 至 {{ item.endTime }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="已报名人数: ">{{ item.joinPeople }}</el-descriptions-item>
-      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="立即报名: ">
-        <el-button type="primary" @click="() => {signUp(index)}"> 点此报名 </el-button>
+      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="1" label="其他: ">
+        <el-button type="primary" @click="() => {handleDetailActivity(item.id)}"> 活动详情 </el-button>
       </el-descriptions-item>
 
     </el-descriptions>
@@ -35,8 +36,7 @@
 import { getUUID } from '@/utils'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import { ref, reactive, getCurrentInstance, } from "vue";
-import {getToken} from "@/api/backend-api/loginController";
-import {register} from "@/api/backend-api/registerController";
+import router from "@/router";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()
@@ -91,6 +91,10 @@ const list = ref([
   }
 ])
 
+const handleDetailActivity = (index: number) => {
+  router.push({path: `/activity/${index}`})
+}
+
 
 function signUp(index: number) {
   ElMessageBox.confirm(`确定要报名活动 ${list.value[index].name}`)
@@ -106,28 +110,5 @@ function signUp(index: number) {
 </script>
 
 <style>
-.label-class {
-  width: 200px;
-  color: #999;
-  font-weight: normal;
-  background: #fff;
-}
-.description-class {
-  max-width: 295px; /* 给内容增加最大宽度 */
-  word-break: break-all; /* 让内容超出列宽时自动换行显示 */
-  word-wrap: break-word;
-}
 
-.activity-item-class {
-  padding: 20px;
-  width: 80%;
-  text-align: center;
-  margin: 0 auto;
-  align-items: center;
-  justify-content: center;
-}
-
-.activities-class {
-  background: #ffffff;
-}
 </style>

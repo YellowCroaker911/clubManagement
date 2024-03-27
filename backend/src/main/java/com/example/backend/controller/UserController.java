@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @GetMapping("/getAvatar")
-    public void getAvatar(HttpServletResponse response) {
+    public ResultData<String> getAvatar(HttpServletResponse response) {
 //        String avatarFolderName = BackendApplication.class. + Constans.FILE_FOLDER_AVATAR_NAME;
 //        File folder = new File(appConfig.getProjectFolder() + avatarFolderName);
 //        if(!folder.exists()){
@@ -90,11 +90,12 @@ public class UserController {
 //        }
         String avatar = userService.userGetSelfInfo().getAvatar();
 //        String avatarPath = appConfig.getProjectFolder() + avatarFolderName + userId + Constans.AVATAR_SUFFIX;
-        File file = new File(CommonConstant.IMG_FOLDER + avatar);
-        response.setContentType("image/jpg");
-        if(!file.exists())
-            return;
-        CommonUtil.readFileToResponse(response, file);
+        return ResultData.success(CommonUtil.convertImageToBase64Str(CommonConstant.IMG_FOLDER + avatar));
+//        File file = new File(CommonConstant.IMG_FOLDER + avatar);
+//        response.setContentType("image/jpg");
+//        if(!file.exists())
+//            return;
+//        CommonUtil.readFileToResponse(response, file);
     }
 
 

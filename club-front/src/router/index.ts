@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {getCurrentUser} from "@/utils";
 import component from "*.vue";
-import {getInfo} from "@/api/backend-api/userController";
+import {getSelfInfo} from "@/api/backend-api/userController";
 
 
 const router = createRouter({
@@ -41,6 +41,12 @@ const router = createRouter({
       meta: { title: "个人主页", requiresAuth: true },
       component: () => import("@/views/modules/profile/profile.vue")
     },
+    {
+      path: "/activity/:id",
+      name: "活动详情页",
+      meta: { title: "活动详情页", requiresAuth: true },
+      component: () => import("@/views/modules/activityDetail.vue")
+    },
   ]
 })
 
@@ -51,7 +57,7 @@ router.beforeEach((to, from, next) => {
   if(to.meta.requiresAuth || to.meta.requiresAdmin) {
     if(!isAuthenticated)next({name: "login"});
     else {
-      getInfo().then(({data}) => {
+      getSelfInfo().then(({data}) => {
         sessionStorage.setItem('user', JSON.stringify(data.data));
       })
       if (to.meta.requiresAdmin) {

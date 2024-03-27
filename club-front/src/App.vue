@@ -23,7 +23,8 @@
     </div>
     <div class="title-right">
       <el-dropdown v-if="isLogin">
-        <el-avatar class="title-right-image" src="/api/user/getAvatar" @click="() => avatarEvent('profile')" />
+        <el-avatar class="title-right-image" :src="avatarData" @click="() => avatarEvent('profile')" />
+<!--        <custom-avatar class="title-right-image" src="/api/user/getAvatar" @click="() => avatarEvent('profile')" />-->
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="() => avatarEvent('profile')">个人中心</el-dropdown-item>
@@ -44,6 +45,7 @@
 <!--      </router-link>-->
     </div>
   </div>
+  <h1>{{}}</h1>
   <transition name="fade">
       <router-view></router-view>
   </transition>
@@ -55,7 +57,9 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
 import {getCurrentUser} from "@/utils";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import CustomAvatar from "@/components/CustomAvatar.vue";
+import {getAvatar} from "@/api/backend-api/userController";
 // import HelloWorld from './components/HelloWorld.vue'
 // import {Table} from 'ant-design-vue';
 // export default {
@@ -85,6 +89,14 @@ const avatarEvent = (type: string) => {
     router.push({path: '/login'}).then(()=>window.location.reload());
   }
 }
+
+const avatarData = ref<string>();
+onMounted(() => {
+  getAvatar().then(({data})=> {
+    avatarData.value = 'data:image/png;base64,' + data.data;
+  })
+})
+
 // 解决ERROR ResizeObserver loop completed with undelivered notifications.
 //问题的
 const debounce = (fn, delay) => {

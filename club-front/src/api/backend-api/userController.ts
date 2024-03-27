@@ -32,9 +32,17 @@ export async function alterPassword(
   });
 }
 
-/** 此处后端没有提供注释 POST /user/getInfo */
-export async function getInfo(options?: { [key: string]: any }) {
-  return request<API.ResultDataUser>(`/api/user/getInfo`, {
+/** 此处后端没有提供注释 GET /user/getAvatar */
+export async function getAvatar(options?: { [key: string]: any }) {
+  return request<API.ResultDataString>(`/api/user/getAvatar`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /user/getSelfInfo */
+export async function getSelfInfo(options?: { [key: string]: any }) {
+  return request<API.ResultDataUser>(`/api/user/getSelfInfo`, {
     method: 'POST',
     ...(options || {}),
   });
@@ -58,6 +66,18 @@ export async function userRegister(
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/user/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /user/upload */
+export async function singleFileUpload(body: {}, options?: { [key: string]: any }) {
+  return request<API.ResultDataObject>(`/api/user/upload`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
