@@ -34,7 +34,7 @@ export async function alterPassword(
 
 /** 此处后端没有提供注释 POST /user/getInfo */
 export async function getInfo(options?: { [key: string]: any }) {
-  return request<API.ResultDataUser>(`/api/user/getInfo`, {
+  return request<API.ResultDataUser>(`/api/user/getSelfInfo`, {
     method: 'POST',
     ...(options || {}),
   });
