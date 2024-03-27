@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
+import com.example.backend.mapper.UserClubMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
+import com.example.backend.model.entity.UserClub;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.impl.utils.LoginUser;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
@@ -21,11 +23,15 @@ import static java.lang.Long.parseLong;
 
 @Service
 public class ClubServiceImpl implements ClubService {
+
+    @Autowired
+    private UserMapper userMapper;
+
     @Autowired
     ClubMapper clubMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    UserClubMapper userClubMapper;
 
     @Override
     public ResultData<Object> clubRegister(String name, String president_id) {
@@ -98,5 +104,6 @@ public class ClubServiceImpl implements ClubService {
 
         return ResultData.success(club);
     }
+
 
 }

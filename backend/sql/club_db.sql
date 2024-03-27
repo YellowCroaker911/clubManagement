@@ -101,6 +101,7 @@ create table user_club
     user_club_id   bigint auto_increment comment '主键' primary key,
     user_id     bigint not null comment '用户id',
     club_id     bigint not null comment '社团id',
+    is_passed   tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
