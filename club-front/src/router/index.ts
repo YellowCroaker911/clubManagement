@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {getCurrentUser} from "@/utils";
-import {getinfo} from "@/api/backend-api/infoController";
 import component from "*.vue";
+import {getInfo} from "@/api/backend-api/userController";
 
 
 const router = createRouter({
@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
   if(to.meta.requiresAuth || to.meta.requiresAdmin) {
     if(!isAuthenticated)next({name: "login"});
     else {
-      getinfo().then(({data}) => {
+      getInfo().then(({data}) => {
         sessionStorage.setItem('user', JSON.stringify(data.data));
       })
       if (to.meta.requiresAdmin) {

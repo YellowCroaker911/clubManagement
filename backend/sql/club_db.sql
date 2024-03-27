@@ -105,7 +105,7 @@ create table user_club
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
     FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (club_id) REFERENCES user(id),
+    FOREIGN KEY (club_id) REFERENCES club(id),
     index user_index (user_id),
     index club_index (club_id)
 )comment '社员和社团关系表';
@@ -116,3 +116,12 @@ drop view if exists view_club_users;
 CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name as club_name
                                from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
                                where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
+
+
+drop view if exists on_join_club;
+delimiter //
+create trigger on_join_club after insert on user_club
+for each row begin
+update club set member = member + 1 where id = new.club_id;
+end //
+delimiter ;

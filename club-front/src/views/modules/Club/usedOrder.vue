@@ -43,7 +43,7 @@
             <el-input v-model.trim="clubInfo.info" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="社长" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.president_id" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.presidentId" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="活动地址" style="margin-left: 10px; margin-top: 10px;">
             <el-input v-model.trim="clubInfo.address" autocomplete="off" style="width: 400px;"></el-input>
@@ -158,7 +158,7 @@ const clubs = ref([
     name: "fex",
     avatar: null,
     info: null,
-    president_id: null,
+    presidentId: null,
     address: null,
     contact: null,
     member: null,
@@ -169,7 +169,7 @@ const clubs = ref([
     name: "maple",
     avatar: null,
     info: null,
-    president_id: null,
+    presidentId: null,
     address: null,
     contact: null,
     member: null,

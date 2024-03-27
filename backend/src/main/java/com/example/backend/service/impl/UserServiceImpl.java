@@ -2,6 +2,7 @@ package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.pojo.User;
@@ -19,13 +20,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public ResultData<Object> userAlterInfo(String name, String avatar, String gender, String phone, String email) {
+    public ResultData<Object> userAlterInfo(String name, String gender, String phone, String email) {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -49,7 +51,6 @@ public class UserServiceImpl implements UserService {
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("name", name);
-        updateWrapper.set("avatar", avatar);
         updateWrapper.set("gender", parseInt(gender));
         updateWrapper.set("phone", phone);
         updateWrapper.set("email", email);
@@ -64,11 +65,16 @@ public class UserServiceImpl implements UserService {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
 
-        String encodedOldPassword = passwordEncoder.encode(newPassword);
-
-        if(!loginUser.getPassword().equals(encodedOldPassword)){
+//        String encodedOldPassword = passwordEncoder.matches( oldPassword);
+//
+//        System.out.println(encodedOldPassword);
+        System.out.println(loginUser.getPassword());
+        if(!passwordEncoder.matches(oldPassword, loginUser.getPassword())){
             throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
         }
+//        if(!loginUser.getPassword().equals(encodedOldPassword)){
+//            throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
+//        }
 
         if (!newPassword.equals(confirmedPassword)) {
             throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
@@ -91,15 +97,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<User> userGetInfo() {
+    public User userGetInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
 
-        loginUser.setPassword(null);
-        return ResultData.success(loginUser);
+//        loginUser.setPassword(null);
+        return loginUser;
     }
 
     @Override
@@ -138,4 +144,11 @@ public class UserServiceImpl implements UserService {
         return ResultData.success(null);
     }
 
+    @Override
+    public void updateAvatar(String avatarUrl) {
+        User user = new User();
+        user.setAvatar(avatarUrl);
+        user.setId(userGetInfo().getId());
+        userMapper.updateById(user);
+    }
 }
