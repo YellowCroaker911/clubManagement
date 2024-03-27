@@ -60,6 +60,11 @@ public class UserAccountController {
 
 
     /*************用户头像***************/
+    /**
+     * 上传修改用户头像
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     public ResultData<Object> singleFileUpload(@RequestParam("file") MultipartFile file) {
         //@RequestParam("file") MultipartFile file为接收图片参数
@@ -82,16 +87,16 @@ public class UserAccountController {
         }
     }
 
+    /**
+     * 获取登录用户头像返回base64
+     * @return
+     */
     @GetMapping("/getAvatar")
-    public void getAvatar(HttpServletResponse response) {
-        // 获取图片名
+    public ResultData<String> getAvatar() {
+        // 获取图片名称
         String avatar = userService.userGetSelfInfo().getAvatar();
-        // 图片文件
-        File file = new File(CommonConstant.IMG_FOLDER + avatar);
-        response.setContentType("image/jpg");
-        if(!file.exists())
-            return;
-        CommonUtil.readFileToResponse(response, file);
+        // 获取图片并转成Base64
+        return ResultData.success(CommonUtil.convertImageToBase64Str(CommonConstant.IMG_FOLDER + avatar));
     }
 
 
