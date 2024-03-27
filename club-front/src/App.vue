@@ -22,15 +22,13 @@
       </router-link>
     </div>
     <div class="title-right">
-      <el-dropdown v-if="isLogin()">
-        <el-avatar class="title-right-image" :src="1" @click="() => avatarEvent('avatar')" />
+      <el-dropdown v-if="isLogin">
+        <el-avatar class="title-right-image" src="/api/user/getAvatar" @click="() => avatarEvent('profile')" />
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-            <el-dropdown-item>Action 4</el-dropdown-item>
-            <el-dropdown-item>Action 5</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('profile')">个人中心</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('2')">留着</el-dropdown-item>
+            <el-dropdown-item @click="() => avatarEvent('logout')">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -68,6 +66,8 @@ import {ref} from "vue";
   // }
 // }
 const router = useRouter();
+// export const isLogin = ref(false);
+
 const isLogin = () =>{
   return sessionStorage.getItem('jwt');
 }
@@ -77,8 +77,12 @@ const isLogin = () =>{
 
 
 const avatarEvent = (type: string) => {
-  if(type === 'avatar'){
+  if(type === 'profile'){
     router.push({path: `/profile/${getCurrentUser().id}`})
+  }
+  else if(type === 'logout'){
+    sessionStorage.clear();
+    router.push({path: '/login'}).then(()=>window.location.reload());
   }
 }
 // 解决ERROR ResizeObserver loop completed with undelivered notifications.

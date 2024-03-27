@@ -11,7 +11,7 @@
         <el-input v-model="formData.name"></el-input>
       </el-form-item>
       <el-form-item label="社长id：" prop="president_id">
-        <el-input v-model="formData.president_id"></el-input>
+        <el-input v-model="formData.presidentId"></el-input>
       </el-form-item>
 <!--      <el-form-item label="年龄：" prop="age">-->
 <!--        <el-input v-model="formData.age"></el-input>-->
@@ -39,14 +39,14 @@ const formRef = {};
 const dialogFlag = ref();
 const formData = reactive<API.ClubRegisterRequestDTO>({
   name: '',
-  president_id: ''
+  presidentId: ''
 });
 
 const rules = reactive<FormRules<API.ClubRegisterRequestDTO>>({
   name:[
     {required:true, message: '输入社团名称', trigger: 'blur'}
   ],
-  president_id:[
+  presidentId:[
     {required:true, message: '输入社长id', trigger: 'blur'}
   ]
 })
@@ -84,7 +84,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 onMounted(() => {
   const tmp = Object.assign({}, props.rowInfo);
   formData.name = tmp.name;
-  formData.president_id = tmp.president_id;
+  formData.presidentId = tmp.presidentId;
   dialogFlag.value = props.rowInfo;
 });
 </script>

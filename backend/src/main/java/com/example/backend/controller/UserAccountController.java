@@ -7,13 +7,21 @@ import com.example.backend.model.dto.user.UserRegisterRequestDTO;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.UserService;
+import com.example.backend.utils.CommonConstant;
+import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/account")
@@ -32,8 +40,10 @@ public class UserAccountController {
     }
     @PostMapping("/alterInfo")
     public ResultData<Object> alterInfo(@RequestBody @Validated UserAlterInfoRequestDTO userAlterInfoRequestDTO) {
-        return userService.userAlterInfo(userAlterInfoRequestDTO.getName(), userAlterInfoRequestDTO.getAvatar(),
-                userAlterInfoRequestDTO.getGender(), userAlterInfoRequestDTO.getPhone(), userAlterInfoRequestDTO.getEmail());
+        return userService.userAlterInfo(userAlterInfoRequestDTO.getName(),
+                userAlterInfoRequestDTO.getGender(),
+                userAlterInfoRequestDTO.getPhone(),
+                userAlterInfoRequestDTO.getEmail());
     }
     @PostMapping("/alterPassword")
     public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordRequestDTO userAlterPasswordRequestDTO) {
@@ -42,7 +52,51 @@ public class UserAccountController {
     }
     @PostMapping("/getSelfInfo")
     public ResultData<User> getSelfInfo() {
-        return userService.userGetSelfInfo();
+        User user = userService.userGetSelfInfo();
+        user.setPassword(null);
+        return ResultData.success(user);
     }
-    
+
+
+    /*************用户头像***************/
+    @PostMapping("/upload")
+    public ResultData<Object> singleFileUpload(@RequestParam("file") MultipartFile file) {
+        //@RequestParam("file") MultipartFile file为接收图片参数
+        //Long userId,String status 用户Id和状态
+        try {
+            byte[] bytes = file.getBytes();
+            String imageFileName = file.getOriginalFilename();
+            String fileName = CommonUtil.getPhotoName("img",imageFileName);
+            Path path = Paths.get(CommonConstant.IMG_FOLDER + fileName);
+            //“C:\\框架\\D4\\d4_pc_ui\\src\\assets\\images\\img\\”为本地目录
+            Files.write(path, bytes);//写入文件
+            String avatar_url=fileName;
+            userService.updateAvatar(avatar_url);//dao层方法
+
+//            System.out.println(fileName);
+            return ResultData.success(fileName);//返回文件名字
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResultData.fail(ReturnCodes.SYSTEM_ERROR.getCode(), "存图片错误", null);
+        }
+    }
+
+    @GetMapping("/getAvatar")
+    public void getAvatar(HttpServletResponse response) {
+//        String avatarFolderName = BackendApplication.class. + Constans.FILE_FOLDER_AVATAR_NAME;
+//        File folder = new File(appConfig.getProjectFolder() + avatarFolderName);
+//        if(!folder.exists()){
+//            folder.mkdirs();
+//        }
+        String avatar = userService.userGetSelfInfo().getAvatar();
+//        String avatarPath = appConfig.getProjectFolder() + avatarFolderName + userId + Constans.AVATAR_SUFFIX;
+        File file = new File(CommonConstant.IMG_FOLDER + avatar);
+        response.setContentType("image/jpg");
+        if(!file.exists())
+            return;
+        CommonUtil.readFileToResponse(response, file);
+    }
+
+
+
 }

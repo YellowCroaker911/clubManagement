@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {getCurrentUser} from "@/utils";
-import {getinfo} from "@/api/backend-api/infoController";
+import component from "*.vue";
+import {getInfo} from "@/api/backend-api/userController";
 
 
 const router = createRouter({
@@ -18,6 +19,17 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
+      path: '/usedOrder',
+      name: 'UsedOrder',
+      component: ()=> import("@/views/modules/Club/usedOrder.vue"),
+      meta: { requiresAuth: true }
+      // children: [
+      //     path: '/usedOrder/clubInfo',
+      //     name: 'clubInfo',
+      //     component: ()=> import("@/views/modules/Club/clubInfo.vue"),
+      // ]
+    },
+    {
       path: '/admin/club',
       name: 'AdminClub',
       component: ()=> import("@/views/modules/AdminClub/AdminClub.vue"),
@@ -27,7 +39,7 @@ const router = createRouter({
       path: "/profile/:id",
       name: "profile",
       meta: { title: "个人主页", requiresAuth: true },
-      component: () => import("@/views/modules/profile.vue")
+      component: () => import("@/views/modules/profile/profile.vue")
     },
   ]
 })
@@ -39,7 +51,7 @@ router.beforeEach((to, from, next) => {
   if(to.meta.requiresAuth || to.meta.requiresAdmin) {
     if(!isAuthenticated)next({name: "login"});
     else {
-      getinfo().then(({data}) => {
+      getInfo().then(({data}) => {
         sessionStorage.setItem('user', JSON.stringify(data.data));
       })
       if (to.meta.requiresAdmin) {

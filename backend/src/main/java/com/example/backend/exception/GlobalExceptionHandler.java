@@ -5,6 +5,7 @@ import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,17 +54,28 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResultData jwtSignatureExceptionHandler(AuthenticationException e){
+        log.info("用户不存在 " + e);
+        return ResultData.fail(ReturnCodes.USER_NOT_EXIST, null);
+    }
+
+
 
     /******通用异常捕获*******/
     @ExceptionHandler(RuntimeException.class)
     public ResultData RuntimeExceptionHandler(RuntimeException e){
         log.error("runtimeException: " + e);
+        log.error(e.getMessage());
+        e.printStackTrace();
         return ResultData.fail(ReturnCodes.SYSTEM_ERROR, null);
     }
 
     @ExceptionHandler(Throwable.class)
     public ResultData RestExceptionHandler(Throwable e){
         log.error("other exception: ", e);
+        log.error(e.getMessage());
+        e.printStackTrace();
         return ResultData.fail(ReturnCodes.SYSTEM_ERROR, null);
     }
 }

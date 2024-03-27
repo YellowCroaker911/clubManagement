@@ -7,10 +7,12 @@ import com.example.backend.utils.result.ResultData;
 import java.util.List;
 
 public interface UserService {
-    ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role);
-    ResultData<UserLoginTokenVO> userGetToken(String username, String password);
-    ResultData<Object> userAlterInfo(String name, String avatar, String gender, String phone, String email);
-    ResultData<Object> userAlterPassword(String oldPassword,String newPassword,String confirmedPassword);
-    ResultData<User> userGetSelfInfo();
+
+    public ResultData<Object> userRegister(Sgittring username, String password, String confirmedPassword, String role);
+    public ResultData<UserLoginTokenVO> userGetToken(String username, String password);
+    public ResultData<Object> userAlterInfo(String name, String gender, String phone, String email);
+    public ResultData<Object> userAlterPassword(String oldPassword,String newPassword,String confirmedPassword);
+    public User userGetSelfInfo();
     ResultData<List<User>> userCheckMember(String id);
+    void updateAvatar(String avatarUrl);
 }

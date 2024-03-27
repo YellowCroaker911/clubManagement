@@ -89,7 +89,7 @@ create table user_club
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
     FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (club_id) REFERENCES user(id),
+    FOREIGN KEY (club_id) REFERENCES club(id),
     index user_index (user_id),
     index club_index (club_id)
 )comment '社员和社团关系表';
