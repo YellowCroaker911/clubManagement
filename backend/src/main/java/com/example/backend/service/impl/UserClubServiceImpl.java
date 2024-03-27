@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserClubMapper;
+import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserClub;
@@ -16,11 +17,12 @@ import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static java.lang.Long.parseLong;
 
 @Service
 public class UserClubServiceImpl implements UserClubService {
-
     @Autowired
     ClubMapper clubMapper;
 
@@ -42,7 +44,6 @@ public class UserClubServiceImpl implements UserClubService {
         UserClub userClub = new UserClub();
         userClub.setUserId(loginUser.getId());
         userClub.setClubId(parseLong(id));
-        userClub.setIsPassed(0);
 
         userClubMapper.insert(userClub);
 
@@ -69,4 +70,5 @@ public class UserClubServiceImpl implements UserClubService {
 
         return ResultData.success(null);
     }
+
 }

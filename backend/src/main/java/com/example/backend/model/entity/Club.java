@@ -50,6 +50,11 @@ public class Club implements Serializable {
     private Integer member;
 
     /**
+     * 活动数量
+     */
+    private Integer activity_number;
+
+    /**
      * 公费（单位是分）
      */
     private Integer money;

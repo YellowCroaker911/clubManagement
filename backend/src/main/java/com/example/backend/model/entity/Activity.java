@@ -18,6 +18,10 @@ public class Activity implements Serializable {
      */
     @TableId(type = IdType.AUTO)
     private Long id;
+    /**
+     * 所属社团id
+     */
+    private Long clubId;
 
     /**
      * 活动名称
@@ -53,6 +57,12 @@ public class Activity implements Serializable {
      * 报名方式
      */
     private String sign;
+
+    /**
+     * 活动缴费
+     */
+
+    private Long money;
 
     /**
      * 参加人数

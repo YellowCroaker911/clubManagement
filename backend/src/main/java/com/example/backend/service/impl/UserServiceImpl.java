@@ -3,7 +3,9 @@ package com.example.backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
+import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
+import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.UserService;
@@ -32,6 +34,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    ClubMapper clubMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,14 +43,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role) {
         if (!password.equals(confirmedPassword)) {
-            throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
+            throw new BusinessException(ReturnCodes.DIFF_PASSWORD, null);
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         List<User> users = userMapper.selectList(queryWrapper);
-        if(!users.isEmpty()){
-            throw new BusinessException(ReturnCodes.EXIST_USERNAME,null);
+        if (!users.isEmpty()) {
+            throw new BusinessException(ReturnCodes.EXIST_USERNAME, null);
         }
 
         String encodedPassword = passwordEncoder.encode(password);
@@ -79,8 +83,8 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
-        if (user == null){
-            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        if (user == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -96,30 +100,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<Object> userAlterPassword(String oldPassword,String newPassword, String confirmedPassword) {
+    public ResultData<Object> userAlterPassword(String oldPassword, String newPassword, String confirmedPassword) {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
 
-        String encodedOldPassword = passwordEncoder.encode(newPassword);
+        String encodedOldPassword = passwordEncoder.encode(oldPassword);
 
-        if(!loginUser.getPassword().equals(encodedOldPassword)){
-            throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
+        if (!loginUser.getPassword().equals(encodedOldPassword)) {
+            throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD, null);
         }
 
         if (!newPassword.equals(confirmedPassword)) {
-            throw new BusinessException(ReturnCodes.DIFF_PASSWORD,null);
+            throw new BusinessException(ReturnCodes.DIFF_PASSWORD, null);
         }
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
-        if (user == null){
-            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        if (user == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         String encodedNewPassword = passwordEncoder.encode(newPassword);
-        updateWrapper.set("password",encodedNewPassword);
+        updateWrapper.set("password", encodedNewPassword);
 
         userMapper.update(user, updateWrapper);
 
@@ -138,5 +142,18 @@ public class UserServiceImpl implements UserService {
         return ResultData.success(loginUser);
     }
 
+    @Override
+    public ResultData<List<User>> userCheckMember(String id) {
+        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", id);
+        Club club = clubMapper.selectOne(queryWrapper1);
+        if (club == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+
+        List<User> users = userMapper.getUserByClubId(id);
+
+        return ResultData.success(users);
+    }
 
 }

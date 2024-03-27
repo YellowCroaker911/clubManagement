@@ -8,7 +8,6 @@ import com.example.backend.mapper.UserClubMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
-import com.example.backend.model.entity.UserClub;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.impl.utils.LoginUser;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.lang.Long.parseLong;
 
 @Service
 public class ClubServiceImpl implements ClubService {
@@ -34,7 +31,10 @@ public class ClubServiceImpl implements ClubService {
     UserClubMapper userClubMapper;
 
     @Override
-    public ResultData<Object> clubRegister(String name, String president_id) {
+    public ResultData<Object> clubRegister(String name) {
+        UserDetailsImpl userDetails = LoginUser.getUserDetails();
+        User loginUser = userDetails.getUser();
+
         QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("name", name);
         List<Club> clubs = clubMapper.selectList(queryWrapper1);
@@ -42,14 +42,14 @@ public class ClubServiceImpl implements ClubService {
             throw new BusinessException(ReturnCodes.EXIST_CLUB_NAME,null);
         }
         QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("id", president_id);
+        queryWrapper2.eq("id", loginUser.getId());
         List<User> users = userMapper.selectList(queryWrapper2);
         if(users.isEmpty()){
             throw new BusinessException(ReturnCodes.NOT_EXIST_PRESIDENT,null);
         }
         Club club = new Club();
         club.setName(name);
-        club.setPresidentId(parseLong(president_id));
+        club.setPresidentId(loginUser.getId());
         clubMapper.insert(club);
         return ResultData.success(null);
     }
@@ -104,6 +104,5 @@ public class ClubServiceImpl implements ClubService {
 
         return ResultData.success(club);
     }
-
 
 }

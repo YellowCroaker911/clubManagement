@@ -12,6 +12,7 @@
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="contact" column="contact" jdbcType="VARCHAR"/>
             <result property="member" column="member" jdbcType="INTEGER"/>
+            <result property="activity_number" column="activity_number" jdbcType="INTEGER"/>
             <result property="money" column="money" jdbcType="INTEGER"/>
             <result property="presidentId" column="president_id" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>

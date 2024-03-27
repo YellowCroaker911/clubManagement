@@ -9,7 +9,6 @@
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="account" column="account" jdbcType="VARCHAR"/>
             <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
             <result property="gender" column="gender" jdbcType="TINYINT"/>
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
@@ -28,4 +27,10 @@
         role,money,create_time,
         update_time,is_delete
     </sql>
+
+    <select id="getUserByClubId" resultType="com.example.backend.model.entity.User">
+        select * from user
+        where user.id in (select user_id from user_club where club_id = #{id});
+    </select>
+
 </mapper>
