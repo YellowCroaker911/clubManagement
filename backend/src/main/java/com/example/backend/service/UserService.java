@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    public ResultData<Object> userRegister(Sgittring username, String password, String confirmedPassword, String role);
+    public ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role);
     public ResultData<UserLoginTokenVO> userGetToken(String username, String password);
     public ResultData<Object> userAlterInfo(String name, String gender, String phone, String email);
     public ResultData<Object> userAlterPassword(String oldPassword,String newPassword,String confirmedPassword);

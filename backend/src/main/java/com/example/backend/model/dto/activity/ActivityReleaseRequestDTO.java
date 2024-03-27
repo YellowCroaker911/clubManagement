@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 public class ActivityReleaseRequestDTO {
     @NotBlank(message = "索引不能为空")
-    @Pattern(regexp = "^\\d{1,20}$",message = "索引必须是20位以内的数字")
+    @Pattern(regexp = "^\\d{1,17}$",message = "索引必须是17位以内的数字")
     private String clubId;
     private String id;
     @NotBlank(message = "活动名不能为空")
@@ -20,7 +20,7 @@ public class ActivityReleaseRequestDTO {
     @Pattern(regexp = "^.{0,500}$",message = "活动信息不能超过500个字符")
     private String info;
     @NotBlank(message = "活动主题不能为空")
-    @Pattern(regexp = "^.{0,50}$",message = "活动主题不能超过100个字符")
+    @Pattern(regexp = "^.{0,50}$",message = "活动主题不能超过50个字符")
     private String title;
     //todo:时间数据校验
     @NotBlank(message = "活动开始时间不能为空")
@@ -34,6 +34,6 @@ public class ActivityReleaseRequestDTO {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "联系邮箱号码不符规范")
     private String sign;
     @NotBlank(message = "索引不能为空")
-    @Pattern(regexp = "^\\d{1,2}$",message = "缴费为整数单位，不得超过99元")
+    @Pattern(regexp = "^\\d{1,10}$",message = "缴费为整数单位，不得超过1亿元")
     private String money;
 }

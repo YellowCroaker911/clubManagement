@@ -13,9 +13,9 @@ create table user
     password     varchar(255) not null comment '密码',
     name         varchar(255) default '' not null comment '昵称',
     avatar       varchar(1023) null comment '头像',
-    gender       tinyint null comment '性别',
+    gender       tinyint null comment '性别（0-男，1-女）',
     phone        varchar(255) null comment '电话',
-    email        varchar(255)  comment '邮箱',
+    email        varchar(255) null comment '邮箱',
     role         int     default 0 not null comment '用户 0-用户 1-管理员',
     money        int     default 0 not null comment '贡献金额（单位是分）',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
@@ -35,7 +35,7 @@ create table activity
     end_time       datetime not null comment '活结束时间',
     address        varchar(255) not null comment '活动地点',
     sign           varchar(255) not null comment '报名方式',
-    money          bigint comment '活动缴费',
+    money          bigint comment '活动缴费（单位是分）',
     join_people          int default 0 not null comment '参加人数',
     attendance_people      int default 0 not null comment '签到人数',
     summary        varchar(1023) null comment '活动总结',
@@ -100,8 +100,14 @@ drop view if exists view_club_users;
 CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name as club_name
                                from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
                                where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
+
+drop trigger if exists on_join_club;
+drop trigger if exists on_release_activity;
+drop trigger if exists on_sign_up_activity;
+drop trigger if exists after_user_activity_pay_status_update;
+drop trigger if exists after_user_activity_join_status_update;
+
 -- 用户报名社团
-drop view if exists on_join_club;
 delimiter //
 create trigger on_join_club after insert on user_club
     for each row begin
@@ -110,36 +116,33 @@ end //
 delimiter ;
 
 -- 社长发布活动
-drop view if exists on_release_activity;
 delimiter //
 create trigger on_release_activity after insert on activity
     for each row begin
-    update club set activity_number = club.activity_number + 1 where club_id = new.club_id;
+    update club set activity_number = club.activity_number + 1 where club.id = new.club_id;
 end //
 delimiter ;
 
 -- 用户报名活动
-drop view if exists on_sign_up_activity;
 delimiter //
 create trigger on_sign_up_activity after insert on user_activity
     for each row begin
-    update activity set join_people = activity.join_people + 1 where activity_id = new.activity_id;
+    update activity set join_people = activity.join_people + 1 where activity.id = new.activity_id;
 end //
 delimiter ;
 
 -- 用户活动缴费
-drop view if exists after_user_activity_pay_status_update;
 DELIMITER //
 CREATE TRIGGER after_user_activity_pay_status_update
     AFTER UPDATE ON user_activity
     FOR EACH ROW
 BEGIN
-    DECLARE activity_money DECIMAL(10, 2);
+    DECLARE activity_money bigint;
     DECLARE club_id INT;
 
-    update activity
-    SET join_people = join_people + 1
-    where activity_id = NEW.activity_id;
+--     update activity
+--     SET join_people = join_people + 1
+--     where activity_id = NEW.activity_id;
 
     -- 检查pay_status是否从非1更新为1
     IF NEW.pay_status = 1 AND OLD.pay_status != 1 THEN
@@ -161,16 +164,16 @@ BEGIN
             WHERE id = NEW.user_id;
         END IF;
     END IF;
-END;
-//
+END //
 DELIMITER ;
 
 -- 用户活动签到
-drop view if exists after_user_activity_join_status_update;
 delimiter //
 create trigger after_user_activity_join_status_update
     AFTER UPDATE ON user_activity
     for each row begin
-    update activity set attendance_people = activity.attendance_people  + 1 where activity_id = new.activity_id;
+    IF NEW.join_status = 1 AND OLD.join_status != 1 THEN
+        update activity set attendance_people = activity.attendance_people + 1 where activity.id = new.activity_id;
+    END IF;
 end //
 delimiter ;

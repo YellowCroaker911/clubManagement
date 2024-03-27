@@ -52,7 +52,7 @@ public class Club implements Serializable {
     /**
      * 活动数量
      */
-    private Integer activity_number;
+    private Integer activityNumber;
 
     /**
      * 公费（单位是分）

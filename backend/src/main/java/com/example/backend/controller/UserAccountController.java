@@ -50,7 +50,8 @@ public class UserAccountController {
         return userService.userAlterPassword(userAlterPasswordRequestDTO.getOldPassword(),
                 userAlterPasswordRequestDTO.getNewPassword(),userAlterPasswordRequestDTO.getConfirmedPassword());
     }
-    @PostMapping("/getSelfInfo")
+
+    @GetMapping("/getSelfInfo")
     public ResultData<User> getSelfInfo() {
         User user = userService.userGetSelfInfo();
         user.setPassword(null);
@@ -83,13 +84,9 @@ public class UserAccountController {
 
     @GetMapping("/getAvatar")
     public void getAvatar(HttpServletResponse response) {
-//        String avatarFolderName = BackendApplication.class. + Constans.FILE_FOLDER_AVATAR_NAME;
-//        File folder = new File(appConfig.getProjectFolder() + avatarFolderName);
-//        if(!folder.exists()){
-//            folder.mkdirs();
-//        }
+        // 获取图片名
         String avatar = userService.userGetSelfInfo().getAvatar();
-//        String avatarPath = appConfig.getProjectFolder() + avatarFolderName + userId + Constans.AVATAR_SUFFIX;
+        // 图片文件
         File file = new File(CommonConstant.IMG_FOLDER + avatar);
         response.setContentType("image/jpg");
         if(!file.exists())

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminUserController {
     @Autowired
     ClubService clubService;
-    @PostMapping("/admit")
 
+    @PostMapping("/admit")
     public ResultData<Object> clubAdmit(@RequestBody @Validated Id1DTO id1DTO) {
         return clubService.clubAdmit(id1DTO.getId());
     }

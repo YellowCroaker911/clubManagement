@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.model.dto.activity.ActivityReleaseRequestDTO;
 import com.example.backend.model.dto.club.ClubAlterInfoRequestDTO;
-import com.example.backend.model.dto.id.Id2DTO;
 import com.example.backend.model.dto.id.Id1DTO;
 import com.example.backend.model.entity.User;
 import com.example.backend.service.ActivityService;
@@ -43,8 +42,13 @@ public class PresidentUserController {
         return userClubService.userClubJoin(id1DTO.getId());
     }
 
+    /**
+     * 返回社团下的所有成员
+     * @param id1DTO 社团id
+     * @return
+     */
     @PostMapping("/checkMember")
-    public ResultData<List<User>> checkMember(Id1DTO id1DTO){
+    public ResultData<List<User>> checkMember(@RequestBody @Validated Id1DTO id1DTO){
         return userService.userCheckMember(id1DTO.getId());
     }
 

@@ -43,7 +43,7 @@ public class commonUserController {
     }
 
     @PostMapping("/signIn")
-    public ResultData<Object> activiySignIn(@RequestBody @Validated Id1DTO id1DTO) {
+    public ResultData<Object> activitySignIn(@RequestBody @Validated Id1DTO id1DTO) {
         return userActivityService.userActivitySignIn(id1DTO.getId());
     }
 
