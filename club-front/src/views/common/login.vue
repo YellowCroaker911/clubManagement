@@ -24,7 +24,7 @@
           </el-input>
         </el-form-item>
         <el-form-item v-if="tabName === 'register'" prop="confirmedPassword">
-          <el-input type="confirmedPassword" size="large" placeholder="确认密码" v-model="formData.confirmedPassword"
+          <el-input type="password" size="large" placeholder="确认密码" v-model="formData.confirmedPassword"
             show-password>
             <template #prefix>
             <span class="iconfont icon-password"></span>
@@ -72,10 +72,8 @@ import { useRouter } from 'vue-router'
 import { getUUID } from '@/utils'
 import {ElMessage, FormInstance, FormRules} from 'element-plus'
 import { ref, reactive, getCurrentInstance, } from "vue";
-import {getToken} from "@/api/backend-api/loginController";
-import {register} from "@/api/backend-api/registerController";
-import {getinfo} from "@/api/backend-api/infoController";
 import httpRequest from "@/api/httpRequest";
+import {getInfo, getToken, userRegister} from "@/api/backend-api/userController";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()
@@ -148,10 +146,10 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
           // proxy.$http.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
           ElMessage.success('登录成功');
           sessionStorage.setItem('jwt', `Bearer ${data.data.token}`);
-          getinfo().then((res:any) => {
+          getInfo().then((res:any) => {
             sessionStorage.setItem('user', JSON.stringify(res.data.data));
             console.log("123");
-            router.push({path: '/'});
+            router.push({path: '/'}).then(()=>window.location.reload());
           })
         }).catch(e => {
           ElMessage.error(`登陆失败, ${e.message}`)
@@ -173,7 +171,7 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         // });
       }
       else{
-        register({
+        userRegister({
           ...formData,
           role: '0'
         }).then(({data}) => {

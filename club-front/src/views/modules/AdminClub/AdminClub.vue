@@ -47,7 +47,7 @@
 import { reactive, ref, toRefs } from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Dialog from "./dialog.vue";
-import {register1} from "@/api/backend-api/clubRegisterController";
+import { clubRegister } from "@/api/backend-api/clubController";
 
 
 
@@ -122,7 +122,7 @@ export default {
       addRow(val: any) {
         console.log("val", val);
         // ElMessage.error("此页面不支持添加");
-        register1({
+        clubRegister({
           ...val
         }).then((res) => {
           ElMessage.success('提交成功');

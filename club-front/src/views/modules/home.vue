@@ -7,6 +7,7 @@
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主题: ">{{ item.title }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="报名方式: ">{{ item.sign }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>
+      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动地点: ">{{ item.address }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动时间: ">{{ item.beginTime }} 至 {{ item.endTime }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="已报名人数: ">{{ item.joinPeople }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="立即报名: ">
