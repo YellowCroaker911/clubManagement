@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<Object> userAlterInfo(String name, String avatar, String gender, String phone, String email) {
+    public ResultData<Object> userAlterInfo(String name, String gender, String phone, String email) {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("name", name);
-        updateWrapper.set("avatar", avatar);
         updateWrapper.set("gender", parseInt(gender));
         updateWrapper.set("phone", phone);
         updateWrapper.set("email", email);
@@ -100,9 +99,9 @@ public class UserServiceImpl implements UserService {
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
 
-        String encodedOldPassword = passwordEncoder.encode(newPassword);
+//        String encodedOldPassword = passwordEncoder.encode(newPassword);
 
-        if(!loginUser.getPassword().equals(encodedOldPassword)){
+        if(!passwordEncoder.matches(oldPassword, loginUser.getPassword())){
             throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
         }
 
@@ -127,16 +126,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<User> userGetSelfInfo() {
+    public User userGetSelfInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         UserDetailsImpl userDetails = LoginUser.getUserDetails();
         User loginUser = userDetails.getUser();
 
-        loginUser.setPassword(null);
-        return ResultData.success(loginUser);
+        return loginUser;
     }
 
+    @Override
+    public void updateAvatar(String avatarUrl) {
+        User user = new User();
+        user.setAvatar(avatarUrl);
+        user.setId(userGetSelfInfo().getId());
+        userMapper.updateById(user);
+    }
 
 }
