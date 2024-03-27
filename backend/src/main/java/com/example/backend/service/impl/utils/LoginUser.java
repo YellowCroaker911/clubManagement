@@ -1,4 +1,4 @@
-package com.example.backend.service.impl.method;
+package com.example.backend.service.impl.utils;
 
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

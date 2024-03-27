@@ -4,7 +4,7 @@ import com.example.backend.model.dto.user.UserAlterInfoRequestDTO;
 import com.example.backend.model.dto.user.UserAlterPasswordRequestDTO;
 import com.example.backend.model.dto.user.UserLoginRequestDTO;
 import com.example.backend.model.dto.user.UserRegisterRequestDTO;
-import com.example.backend.model.pojo.User;
+import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
@@ -20,6 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @PostMapping("/register")
+    public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO userRegisterRequestDTO) {
+        return userService.userRegister(userRegisterRequestDTO.getUsername(), userRegisterRequestDTO.getPassword(),
+                userRegisterRequestDTO.getConfirmedPassword(), userRegisterRequestDTO.getRole());
+    }
+
+    @PostMapping("/getToken")
+    public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO userLoginRequestDTO) {
+        return userService.userGetToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword());
+    }
     @PostMapping("/alterInfo")
     public ResultData<Object> alterInfo(@RequestBody @Validated UserAlterInfoRequestDTO userAlterInfoRequestDTO) {
         return userService.userAlterInfo(userAlterInfoRequestDTO.getName(), userAlterInfoRequestDTO.getAvatar(),
@@ -36,15 +47,5 @@ public class UserController {
     public ResultData<User> getInfo() {
         return userService.userGetInfo();
     }
-
-    @PostMapping("/getToken")
-    public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO userLoginRequestDTO) {
-        return userService.userGetToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword());
-    }
-
-    @PostMapping("/register")
-    public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO userRegisterRequestDTO) {
-        return userService.userRegister(userRegisterRequestDTO.getUsername(), userRegisterRequestDTO.getPassword(),
-                userRegisterRequestDTO.getConfirmedPassword(), userRegisterRequestDTO.getRole());
-    }
+    
 }

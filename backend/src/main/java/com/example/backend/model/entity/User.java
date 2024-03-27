@@ -1,11 +1,8 @@
-package com.example.backend.model.pojo;
+package com.example.backend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
-import lombok.NonNull;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 

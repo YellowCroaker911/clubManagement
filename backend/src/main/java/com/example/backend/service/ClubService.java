@@ -1,6 +1,6 @@
 package com.example.backend.service;
 
-import com.example.backend.model.pojo.Club;
+import com.example.backend.model.entity.Club;
 import com.example.backend.utils.result.ResultData;
 
 public interface ClubService {

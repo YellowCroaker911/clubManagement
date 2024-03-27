@@ -2,7 +2,7 @@ package com.example.backend.config.filter;
 
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.UserMapper;
-import com.example.backend.model.pojo.User;
+import com.example.backend.model.entity.User;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.JwtUtil;
 import com.example.backend.utils.result.ReturnCodes;
@@ -10,7 +10,6 @@ import io.jsonwebtoken.Claims;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -50,11 +49,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         try {
             claims = JwtUtil.parseJWT(token);
         } catch (Exception e) {
-//            response.sendError(HttpStatus.UNAUTHORIZED.value(), "JWT校验错误");
-//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//            filterChain.doFilter(request, response);
-//            return;
-//             throw new BusinessException(ReturnCodes.BAD_JWT, e.getMessage());
             resolver.resolveException(request, response, null, new BusinessException(ReturnCodes.BAD_JWT));
             return;
         }
@@ -63,7 +57,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         User user = userMapper.selectById(Integer.parseInt(userid));
 
         if (user == null) {
-//            throw new RuntimeException("用户名未登录");
             resolver.resolveException(request, response, null, new BusinessException(ReturnCodes.USER_NOT_LOGIN));
             return;
         }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.backend.mapper.ClubActivityMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.backend.model.pojo.ClubActivity">
+    <resultMap id="BaseResultMap" type="com.example.backend.model.entity.ClubActivity">
             <id property="clubActivityId" column="club_activity_id" jdbcType="BIGINT"/>
             <result property="clubId" column="club_id" jdbcType="BIGINT"/>
             <result property="activityId" column="activity_id" jdbcType="BIGINT"/>

@@ -1,6 +1,6 @@
 package com.example.backend.service;
 
-import com.example.backend.model.pojo.User;
+import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.utils.result.ResultData;
 

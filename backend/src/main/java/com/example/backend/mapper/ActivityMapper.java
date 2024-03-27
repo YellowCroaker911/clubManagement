@@ -1,7 +1,7 @@
 package com.example.backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.backend.model.pojo.Activity;
+import com.example.backend.model.entity.Activity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

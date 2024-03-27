@@ -1,4 +1,4 @@
-package com.example.backend.model.pojo;
+package com.example.backend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
@@ -7,22 +7,22 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 社员和活动关系表
- * @TableName user_activity
+ * 社团和活动关系表
+ * @TableName club_activity
  */
-@TableName(value ="user_activity")
+@TableName(value ="club_activity")
 @Data
-public class UserActivity implements Serializable {
+public class ClubActivity implements Serializable {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
-    private Long userActivityId;
+    private Long clubActivityId;
 
     /**
-     * 用户id
+     * 社团id
      */
-    private Long userId;
+    private Long clubId;
 
     /**
      * 活动id
@@ -30,9 +30,9 @@ public class UserActivity implements Serializable {
     private Long activityId;
 
     /**
-     * 0-没签到 1-签到
+     * 社团对该活动的花费（单位是分）
      */
-    private Integer joinStatus;
+    private Integer expense;
 
     /**
      * 创建时间
