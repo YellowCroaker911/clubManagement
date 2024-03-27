@@ -63,3 +63,28 @@ body {
         margin-right: 5px;
     }
 }
+
+.label-class {
+  width: 200px;
+  color: #999;
+  font-weight: normal;
+  background: #fff;
+}
+.description-class {
+  max-width: 295px; /* 给内容增加最大宽度 */
+  word-break: break-all; /* 让内容超出列宽时自动换行显示 */
+  word-wrap: break-word;
+}
+
+.activity-item-class {
+  padding: 20px;
+  width: 80%;
+  text-align: center;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.activities-class {
+  background: #ffffff;
+}

@@ -53,6 +53,13 @@ declare namespace API {
     timestamp?: number;
   };
 
+  type ResultDataString = {
+    status?: number;
+    message?: string;
+    data?: string;
+    timestamp?: number;
+  };
+
   type ResultDataUser = {
     status?: number;
     message?: string;
@@ -85,7 +92,6 @@ declare namespace API {
 
   type UserAlterInfoRequestDTO = {
     name?: string;
-    avatar?: string;
     gender?: string;
     phone?: string;
     email?: string;

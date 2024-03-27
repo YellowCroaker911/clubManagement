@@ -73,7 +73,7 @@ import { getUUID } from '@/utils'
 import {ElMessage, FormInstance, FormRules} from 'element-plus'
 import { ref, reactive, getCurrentInstance, } from "vue";
 import httpRequest from "@/api/httpRequest";
-import {getInfo, getToken, userRegister} from "@/api/backend-api/userController";
+import {getSelfInfo, getToken, userRegister} from "@/api/backend-api/userController";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()
@@ -146,7 +146,7 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
           // proxy.$http.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
           ElMessage.success('登录成功');
           sessionStorage.setItem('jwt', `Bearer ${data.data.token}`);
-          getInfo().then((res:any) => {
+          getSelfInfo().then((res:any) => {
             sessionStorage.setItem('user', JSON.stringify(res.data.data));
             console.log("123");
             router.push({path: '/'}).then(()=>window.location.reload());
