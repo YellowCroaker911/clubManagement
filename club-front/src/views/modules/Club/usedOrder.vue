@@ -97,6 +97,7 @@ const clubInfo = ref();
 const showPanel = (type, data) =>{
   opType.value = type;
   if(type == 1){
+
     clubInfo.value = data;
   }
 }
