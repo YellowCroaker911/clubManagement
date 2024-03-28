@@ -8,6 +8,7 @@
             <id property="userActivityId" column="user_activity_id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="activityId" column="activity_id" jdbcType="BIGINT"/>
+            <result property="payStatus" column="pay_status" jdbcType="INTEGER"/>
             <result property="joinStatus" column="join_status" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>

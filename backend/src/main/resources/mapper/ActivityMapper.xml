@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.example.backend.model.entity.Activity">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="clubId" column="clubId" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="info" column="info" jdbcType="VARCHAR"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
@@ -13,6 +14,7 @@
             <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="sign" column="sign" jdbcType="VARCHAR"/>
+            <result property="money" column="money" jdbcType="BIGINT"/>
             <result property="joinPeople" column="join_people" jdbcType="INTEGER"/>
             <result property="attendancePeople" column="attendance_people" jdbcType="INTEGER"/>
             <result property="summary" column="summary" jdbcType="VARCHAR"/>

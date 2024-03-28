@@ -24,8 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/account")
+public class UserAccountController {
     @Autowired
     UserService userService;
 
@@ -50,7 +50,8 @@ public class UserController {
         return userService.userAlterPassword(userAlterPasswordRequestDTO.getOldPassword(),
                 userAlterPasswordRequestDTO.getNewPassword(),userAlterPasswordRequestDTO.getConfirmedPassword());
     }
-    @PostMapping("/getSelfInfo")
+
+    @GetMapping("/getSelfInfo")
     public ResultData<User> getSelfInfo() {
         User user = userService.userGetSelfInfo();
         user.setPassword(null);
@@ -59,6 +60,11 @@ public class UserController {
 
 
     /*************用户头像***************/
+    /**
+     * 上传修改用户头像
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     public ResultData<Object> singleFileUpload(@RequestParam("file") MultipartFile file) {
         //@RequestParam("file") MultipartFile file为接收图片参数
@@ -81,21 +87,16 @@ public class UserController {
         }
     }
 
+    /**
+     * 获取登录用户头像返回base64
+     * @return
+     */
     @GetMapping("/getAvatar")
-    public ResultData<String> getAvatar(HttpServletResponse response) {
-//        String avatarFolderName = BackendApplication.class. + Constans.FILE_FOLDER_AVATAR_NAME;
-//        File folder = new File(appConfig.getProjectFolder() + avatarFolderName);
-//        if(!folder.exists()){
-//            folder.mkdirs();
-//        }
+    public ResultData<String> getAvatar() {
+        // 获取图片名称
         String avatar = userService.userGetSelfInfo().getAvatar();
-//        String avatarPath = appConfig.getProjectFolder() + avatarFolderName + userId + Constans.AVATAR_SUFFIX;
+        // 获取图片并转成Base64
         return ResultData.success(CommonUtil.convertImageToBase64Str(CommonConstant.IMG_FOLDER + avatar));
-//        File file = new File(CommonConstant.IMG_FOLDER + avatar);
-//        response.setContentType("image/jpg");
-//        if(!file.exists())
-//            return;
-//        CommonUtil.readFileToResponse(response, file);
     }
 
 

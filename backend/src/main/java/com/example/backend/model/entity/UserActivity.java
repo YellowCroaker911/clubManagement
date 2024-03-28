@@ -29,6 +29,12 @@ public class UserActivity implements Serializable {
      */
     private Long activityId;
 
+
+    /**
+     * 0-没缴费 1-缴费
+     */
+    private Integer payStatus;
+
     /**
      * 0-没签到 1-签到
      */

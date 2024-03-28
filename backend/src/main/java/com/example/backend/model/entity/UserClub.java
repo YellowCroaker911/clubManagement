@@ -1,10 +1,12 @@
 package com.example.backend.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 社员和社团关系表
@@ -42,8 +44,12 @@ public class UserClub implements Serializable {
     /**
      * 是否删除
      */
-    @TableLogic
     private Integer isDelete;
+
+    /**
+     * 是否审核通过(0-审核中, 1-通过)
+     */
+    private Integer isPassed;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
