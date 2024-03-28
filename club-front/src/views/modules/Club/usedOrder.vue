@@ -28,7 +28,7 @@
       </el-menu>
     </el-col>
     <div class="person_body_right" v-if="opType == 1">
-      <el-card style="width: 800px; margin-top: 20px; margin-left: 200px;" shadow="hover">
+      <el-card style="width: 600px; margin-top: 20px; margin-left: 200px;" shadow="hover">
         <el-descriptions title="社团信息" style="margin-left: 250px">
         </el-descriptions>
         <el-form label-width="80px" size="large">
@@ -37,19 +37,19 @@
           </el-form-item>
 
           <el-form-item label="社团名称" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.name" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.name" :disabled="editAble" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="社团简介" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.info" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.info" :disabled="editAble" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="社长" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.presidentId" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.presidentId" disabled autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="活动地址" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.address" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.address" :disabled="editAble" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="联系方式" style="margin-left: 10px; margin-top: 10px;">
-            <el-input v-model.trim="clubInfo.contact" autocomplete="off" style="width: 400px;"></el-input>
+            <el-input v-model.trim="clubInfo.contact" :disabled="editAble" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item label="成员数量" style="margin-left: 10px; margin-top: 10px;">
             <el-input v-model.trim="clubInfo.member" disabled autocomplete="off" style="width: 400px;"></el-input>
@@ -58,38 +58,148 @@
             <el-input v-model.trim="clubInfo.money" disabled autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button style="margin-left: 40px" type="primary" :icon="Edit"/>
-            <el-button style="margin-left: 180px" type="primary" :icon="Upload"/>
+            <el-button style="margin-left: 40px" type="primary" :icon="Edit" @click="showAble(!editAble)">{{editAble?'修改':'暂存'}}</el-button>
+            <el-button style="margin-left: 180px" type="primary" :icon="Upload" @click="handleUpdateInfo">保存</el-button>
           </el-form-item>
         </el-form>
       </el-card>
     </div>
-    <div class="activities-class" v-if="opType == 2">
-      <template v-for="(item, index) in activitys" :key="index">
-        <!--    <el-card v-for="item in list" :body-style="{ padding: '0px', marginBottom: '1px' }">-->
-        <el-descriptions class="activity-item-class" :title="item.name" border>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动名称: ">{{ item.name }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主题: ">{{ item.title }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="报名方式: ">{{ item.sign }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动地点: ">{{ item.address }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动时间: ">{{ item.beginTime }} 至 {{ item.endTime }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="已报名人数: ">{{ item.joinPeople }}</el-descriptions-item>
-          <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="立即报名: ">
-            <el-button type="primary" @click="() => {signUp(index)}"> 点此报名 </el-button>
-          </el-descriptions-item>
-        </el-descriptions>
-      </template>
+    <div class="box" v-if="opType == 2">
+      <h1>活动管理</h1>
+      <el-button class="new_btn" type="primary" @click="handleNew">新增</el-button>
+      <el-table :data="activityInfo" border style="width: 1100px">
+        <el-table-column prop="name" label="活动名称" />
+        <el-table-column prop="title" label="活动主题" />
+        <el-table-column prop="address" label="活动地址" />
+        <el-table-column prop="beginTime" label="开始时间" />
+        <el-table-column prop="endTime" label="结束时间" />
+        <el-table-column prop="money" label="报名费用" />
+        <el-table-column fixed="right" label="操作" width="220">
+          <template #default="scope">
+            <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+<!--            <el-button type="text" size="small" v-if="scope.row.is_admitted === 0" @click="handleDetail(scope.row)">通过</el-button>-->
+            <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 新建/编辑弹框 -->
+      <dialog-activity
+          v-if="dialogShow"
+          v-model:dialogShow="dialogShow"
+          :rowInfo="rowInfo"
+          :title="title"
+          :arrayNum="clubInfo.length"
+          @add="addRow"
+          @update="editRow"
+      />
     </div>
   </el-row>
 
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
+import {reactive, ref, toRefs} from "vue";
 import {  Edit, Upload } from '@element-plus/icons-vue'
-import {ElMessageBox} from "element-plus";
-// import {clubInfo} from "@/api/backend-api/ClubInfoController"
+import {ElMessage, ElMessageBox} from "element-plus";
+import Dialog from "@/views/modules/AdminClub/dialog.vue";
+import {clubAlterInfo, clubRegister} from "@/api/backend-api/clubController";
+import {alterInfo} from "@/api/backend-api/userController";
+import DialogActivity from "@/views/modules/Club/dialogActivity.vue";
+
+
+const editAble = ref(1)
+const showAble = (type) =>{
+  editAble.value = type;
+}
+
+const handleUpdateInfo = () => {
+  clubAlterInfo({
+    // name: clubInfo.value.name,
+    // info: clubInfo.value.info,
+    // address: clubInfo.value.address,
+    ...clubInfo.value
+  })
+}
+
+const dialogShow = ref(false) // 新增/编辑弹框
+const detailShow = ref(false)// 详情弹窗
+const rowInfo = ref({}) // 新增/编辑的数据
+const title = ref("") // 是新建还是修改
+const activityInfo = ref([
+  {
+    name: "111",
+    title: "1233",
+    address: "432",
+    beginTime: "4433",
+    endTime: "jidowq",
+    money: "12"
+  },
+  {
+    name: "131231",
+    title: "123dqds3",
+    address: "43qsd2",
+    beginTime: "4433",
+    endTime: "jidoeqwewq",
+    money: "11"
+  }
+])
+const handleNew = () => {
+  title.value = "新增";
+  rowInfo.value = {};
+  dialogShow.value = true;
+}
+const handleDetail = (val: any) => {
+  console.log(val);
+  // data.detailShow = true;
+  // data.rowInfo = val;
+  // todo 发送审核通过请求
+}
+const handleEdit = (val: any) => {
+  console.log(val);
+  title.value = "修改";
+  dialogShow.value = true;
+  rowInfo.value = val;
+}
+const handleDel = (val: any) => {
+  console.log(val);
+  ElMessageBox.confirm("你确定删除这个社团吗?", "提示", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+  .then(() => {
+    // todo 发送请求删除社团
+  })
+  .catch(() => {
+    // catch error
+  });
+}
+// 添加行
+const addRow = (val: any) => {
+  console.log("val", val);
+  // ElMessage.error("此页面不支持添加");
+  clubRegister({
+    ...val
+  }).then((res) => {
+    ElMessage.success('提交成功');
+  }).catch(e => {
+    ElMessage.error(`提交失败, ${e.message}`)
+  })
+  // data.studentInfo.push(val);
+}
+// 编辑行
+const editRow = (val: any) => {
+  // todo 发送更新请求
+
+  // let index = data.studentInfo.findIndex(
+  //     (item, index) => item.id === val.id
+  // );
+  // data.studentInfo.splice(index, 1, val);
+}
+// 关闭详情弹窗
+const closeDetail = () => {
+  detailShow.value = false;
+}
 
 // 0 disable 1 clubInfo  2 activityInfo
 const opType = ref(0);
@@ -101,6 +211,8 @@ const showPanel = (type, data) =>{
     clubInfo.value = data;
   }
 }
+
+
 
 //todo 获取所有活动信息
 const activitys = ref([
@@ -215,6 +327,18 @@ function signUp(index: number) {
   margin: 0 auto;
   align-items: center;
   justify-content: center;
+}
+
+
+.box {
+  padding: 20px;
+  margin: 50px;
+  .new_btn {
+    margin-bottom: 10px;
+  }
+  ::v-deep .el-table__cell {
+    text-align: center;
+  }
 }
 
 </style>
