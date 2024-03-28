@@ -93,6 +93,9 @@
           @update="editRow"
       />
     </div>
+    <div class="person_body_right">
+
+    </div>
   </el-row>
 
 </template>
