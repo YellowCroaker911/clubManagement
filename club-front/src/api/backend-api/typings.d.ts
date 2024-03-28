@@ -116,8 +116,19 @@ declare namespace API {
     id: string;
   };
 
+  type getActivityByIdParams = {
+    id: number;
+  };
+
   type getUsersParams = {
     id: string;
+  };
+
+  type ResultDataActivity = {
+    status?: number;
+    message?: string;
+    data?: Activity;
+    timestamp?: number;
   };
 
   type ResultDataListActivity = {

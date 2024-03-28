@@ -10,6 +10,8 @@ npm版本为`v10.1.0`
 
 由于生成函数的umijs/openapi只能生成ts，使用vue3+ts，js语法在ts都可使用，但ts语法检查更严格，能跑的报错都不是报错
 
+如果在代码中发现`''+id`就是number转字符串
+
 ### 依赖安装
 ```
 npm install

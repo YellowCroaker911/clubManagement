@@ -10,7 +10,7 @@
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动时间: ">{{ activityInfo.beginTime }} 至 {{ activityInfo.endTime }}</el-descriptions-item>
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="已报名人数: ">{{ activityInfo.joinPeople }}</el-descriptions-item>
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="1" label="其他: ">
-          <el-button type="primary" :disabled="activityInfo.isJoin" @click="handleSignUp()"> {{ activityInfo.isJoin?'已报名':'立即报名' }}</el-button>
+          <el-button type="primary" :disabled="activityInfo.isJoin" @click="handleSignUpOrOut()"> {{ activityInfo.isJoin?'取消报名':'立即报名' }}</el-button>
           <el-button v-if="activityInfo.isJoin" type="primary" :disabled="activityInfo.isSign" @click="handleSignIn()"> {{ activityInfo.isSign?'已签到':'未签到' }}</el-button>
         </el-descriptions-item>
       </el-descriptions>
@@ -20,7 +20,10 @@
 import Vue, {onMounted, ref} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 import Options from 'vue-class-component';
-const activityInfo = ref({
+import {getActivityById} from "@/api/backend-api/globalQueryController";
+import {ElMain, ElMessage} from "element-plus";
+import {activityCancel, activitySignUp} from "@/api/backend-api/commonUserController";
+const activityInfo = ref<API.Activity>({
   id: 1,
   name: "卖书",
   info: "这是一个卖书活动的信息",
@@ -29,23 +32,48 @@ const activityInfo = ref({
   endTime: "2024-01-07 00:00",
   address: "操场",
   sign: "网站报名",
-  joinPeople: "100",
-  isJoin: false,
-  isSign: false,
+  joinPeople: 100,
+  // isJoin: false,
+  // isSign: false,
 });
 const route = useRoute();
-const activityId = route.params.id;
+const activityId = parseInt(route.params.id);
 
-const handleSignUp = () => {
-  //todo handleSignUp
+const handleSignUpOrOut = () => {
+  if(!activityInfo.isJoin) {
+    activitySignUp({id: '' + activityId}).then(({data}) => {
+      ElMessage.success("报名成功");
+    }).catch(e => {
+      console.log(e);
+      ElMessage.error("报名失败");
+    })
+  }
+  else{
+    activityCancel({id: ''+activityId}).then(({data}) => {
+      ElMessage.success("取消成功");
+    }).catch(e => {
+      console.log(e);
+      ElMessage.error("取消失败");
+    })
+  }
 }
 
 const handleSignIn = () => {
-  // todo handleSignIn
+  activitySignUp({id:''+activityId}).then(({data}) => {
+    ElMessage.success("签到成功");
+  }).catch(e => {
+    console.log(e);
+    ElMessage.error("签到失败");
+  })
 }
 
 onMounted(() => {
-  //todo 获取活动信息
+  getActivityById({id: activityId}).then(({data}) => {
+    activityInfo.value = data.data;
+  }).catch(e => {
+    console.log(e);
+    ElMessage.error("获取信息失败");
+  })
 })
 </script>
 
