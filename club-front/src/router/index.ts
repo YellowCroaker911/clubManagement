@@ -20,7 +20,7 @@ const router = createRouter({
     {
       path: '/usedOrder',
       name: 'UsedOrder',
-      component: ()=> import("@/views/modules/Club/usedOrder.vue"),
+      component: ()=> import("@/views/modules/Club/presidentClub.vue"),
       meta: { requiresAuth: true }
     },
     {

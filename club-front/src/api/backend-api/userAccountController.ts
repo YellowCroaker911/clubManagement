@@ -2,12 +2,12 @@
 /* eslint-disable */
 import request from '@/api/httpRequest';
 
-/** 此处后端没有提供注释 POST /account/alterInfo */
-export async function alterInfo(
-  body: API.UserAlterInfoRequestDTO,
+/** 此处后端没有提供注释 POST /account/alterPassword */
+export async function alterPassword(
+  body: API.UserAlterPasswordRequestDTO,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultDataObject>(`/api/account/alterInfo`, {
+  return request<API.ResultDataObject>(`/api/account/alterPassword`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,12 +17,12 @@ export async function alterInfo(
   });
 }
 
-/** 此处后端没有提供注释 POST /account/alterPassword */
-export async function alterPassword(
-  body: API.UserAlterPasswordRequestDTO,
+/** 此处后端没有提供注释 POST /account/alterSelfInfo */
+export async function alterSelfInfo(
+  body: API.UserAlterInfoRequestDTO,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultDataObject>(`/api/account/alterPassword`, {
+  return request<API.ResultDataObject>(`/api/account/alterSelfInfo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

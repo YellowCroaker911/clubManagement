@@ -36,7 +36,7 @@
           <el-form-item label="头像" style="margin-left: 10px; margin-top: 10px;">
             <el-upload
               class="avatar-uploader"
-              action="/api/user/upload"
+              action="/api/account/upload"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
@@ -145,7 +145,7 @@ import {onMounted, reactive, ref} from "vue";
 import {  Edit, Upload } from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox, FormInstance, FormRules} from "element-plus";
 import {useRouter} from "vue-router";
-import {alterInfo, alterPassword, getAvatar, getSelfInfo} from "@/api/backend-api/userAccountController";
+import {alterPassword, alterSelfInfo, getAvatar, getSelfInfo} from "@/api/backend-api/userAccountController";
 import {getUUID} from "@/utils";
 import CustomImg from "@/App.vue";
 
@@ -262,7 +262,7 @@ const onAlterPsw = async (formEl: FormInstance | undefined) => {
 }
 
 const handleUpdateInfo = () => {
-  alterInfo({
+  alterSelfInfo({
     name: userInfo.value.name,
     gender: `${userInfo.value.gender}`,
     phone: userInfo.value.phone,

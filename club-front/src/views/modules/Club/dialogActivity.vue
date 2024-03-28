@@ -23,13 +23,28 @@
         <el-input v-model="formData.sign"></el-input>
       </el-form-item>
       <el-form-item label="开始时间：" prop="beginTime">
-        <el-input v-model="formData.beginTime"></el-input>
+        <el-date-picker
+            v-model="formData.beginTime"
+            type="datetime"
+            placeholder="选择开始时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+        />
       </el-form-item>
       <el-form-item label="结束时间：" prop="endTime">
-        <el-input v-model="formData.endTime"></el-input>
+        <el-date-picker
+            v-model="formData.endTime"
+            type="datetime"
+            placeholder="选择开始结束"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+        />
       </el-form-item>
       <el-form-item label="报名费用：" prop="money">
         <el-input v-model="formData.money"></el-input>
+      </el-form-item>
+      <el-form-item v-if="title === '修改'" label="总结：" prop="summary">
+        <el-input v-model="formData.summary"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(formRef)">确定</el-button>
@@ -45,7 +60,7 @@ import {FormInstance, FormRules} from "element-plus";
 const emit = defineEmits(["update:dialogShow", "update", "add"])
 
 
-const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInfo: API.ActivityReleaseRequestDTO | undefined}>(),{
+const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInfo: API.Activity | undefined}>(),{
   title: "",
   dialogShow: false,
   rowInfo: undefined,
@@ -53,33 +68,28 @@ const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInf
 const formRef = {};
 const dialogFlag = ref();
 
-const formData = reactive<API.ActivityReleaseRequestDTO>({
-  clubId: '',
-  name: '',
-  info: '',
-  title: '',
-  beginTime: '',
-  endTime: '',
-  address: '',
-  sign: '',
-  money: '',
-});
+const formData = ref<API.ActivityAlterInfoRequestDTO>({});
 
-const rules = reactive<FormRules<API.ActivityReleaseRequestDTO>>({
+const rules = reactive<FormRules<API.ActivityAlterInfoRequestDTO>>({
   name:[
-    {required:true, message: '输入活动名称', trigger: 'blur'}
+    {required:true, message: '输入活动名称', trigger: 'blur'},
+    {pattern: /^[a-zA-Z0-9\u4e00-\u9fff]{1,20}$/, message: '活动名只能包含中英文字符和数字，不能超过20位', trigger: 'blur'}
   ],
   info:[
-    {required:true, message: '输入活动信息', trigger: 'blur'}
+    {required:true, message: '输入活动信息', trigger: 'blur'},
+    {pattern: /^.{0,500}$/, message: '活动信息不能超过500个字符', trigger: 'blur'}
   ],
   title:[
-    {required:true, message: '输入活动主题', trigger: 'blur'}
+    {required:true, message: '输入活动主题', trigger: 'blur'},
+    {pattern: /^.{0,50}$/, message: '活动主题不能超过50个字符', trigger: 'blur'}
   ],
   address:[
-    {required:true, message: '输入活动地址', trigger: 'blur'}
+    {required:true, message: '输入活动地址', trigger: 'blur'},
+    {pattern: /^.{0,10}$/, message: '活动地点不能超过100个字符', trigger: 'blur'}
   ],
   sign:[
-    {required:true, message: '输入联系方式', trigger: 'blur'}
+    {required:true, message: '输入邮箱联系方式', trigger: 'blur'},
+    {pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: '联系邮箱号码不符规范', trigger: 'blur'}
   ],
   beginTime:[
     {required:true, message: '输入开始时间', trigger: 'blur'}
@@ -88,7 +98,11 @@ const rules = reactive<FormRules<API.ActivityReleaseRequestDTO>>({
     {required:true, message: '输入结束时间', trigger: 'blur'}
   ],
   money:[
-    {required:true, message: '输入报名费用', trigger: 'blur'}
+    {required:true, message: '输入报名费用', trigger: 'blur'},
+    {pattern: /^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/, message: '两位小数，不得超过1亿元', trigger: 'blur'}
+  ],
+  summary:[
+    {pattern: /^.{0,500}$/, message: '活动总结不能超过500个字符', trigger: 'blur'}
   ]
 })
 // 关闭弹窗
@@ -110,11 +124,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       if(props.rowInfo?.name) {
         console.log("upd");
-        emit("update", formData);
+        emit("update", formData.value);
       }
       else {
-        console.log("add");
-        emit("add", formData);
+        console.log("add", props.rowInfo);
+        emit("add", formData.value);
       }
       console.log('submit!')
     } else {
@@ -124,15 +138,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 onMounted(() => {
   const tmp = Object.assign({}, props.rowInfo);
-  formData.clubId = tmp.clubId;
-  formData.name = tmp.name;
-  formData.title = tmp.title;
-  formData.info = tmp.info;
-  formData.address = tmp.address;
-  formData.sign = tmp.sign;
-  formData.beginTime = tmp.beginTime;
-  formData.endTime = tmp.endTime;
-  formData.money = tmp.money;
+  formData.value = {...tmp};
   dialogFlag.value = props.rowInfo;
 });
 </script>

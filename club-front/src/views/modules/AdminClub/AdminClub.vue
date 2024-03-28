@@ -49,10 +49,6 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import Dialog from "./dialog.vue";
 import {clubRegister} from "@/api/backend-api/commonUserController";
 
-
-
-
-
 export default {
   components: { Dialog },
   setup() {

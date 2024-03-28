@@ -23,7 +23,7 @@
       </router-link>
     </div>
     <div class="title-right">
-      <el-dropdown v-if="isLogin">
+      <el-dropdown v-if="isLogin()">
         <el-avatar class="title-right-image" :src="avatarData" @click="() => avatarEvent('profile')" />
 <!--        <custom-avatar class="title-right-image" src="/api/user/getAvatar" @click="() => avatarEvent('profile')" />-->
         <template #dropdown>

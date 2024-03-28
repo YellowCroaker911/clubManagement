@@ -2,14 +2,32 @@
 /* eslint-disable */
 import request from '@/api/httpRequest';
 
-/** 此处后端没有提供注释 POST /admin/admit */
-export async function clubAdmit(body: API.Id1DTO, options?: { [key: string]: any }) {
+/** 此处后端没有提供注释 GET /admin/admit */
+export async function clubAdmit(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.clubAdmitParams,
+  options?: { [key: string]: any },
+) {
   return request<API.ResultDataObject>(`/api/admin/admit`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+    method: 'GET',
+    params: {
+      ...params,
     },
-    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 GET /admin/delete */
+export async function clubDelete(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.clubDeleteParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultDataObject>(`/api/admin/delete`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }
