@@ -32,31 +32,57 @@ public class commonUserController {
     ClubMapper clubMapper;
     @Autowired
     ActivityMapper activityMapper;
+
     // 社团注册
     @PostMapping("/register")
     public ResultData<Object> clubRegister(@RequestBody @Validated ClubRegisterRequestDTO clubRegisterRequestDTO) {
-        return clubService.clubRegister(clubRegisterRequestDTO.getName());
+        User loginUser = userService.userGetSelfInfo();
+        return clubService.clubRegister(loginUser.getId().toString(),clubRegisterRequestDTO.getName());
     }
+
     // 社团加入
     @GetMapping("/join")
     public ResultData<Object> clubJoin(@RequestParam String id){
-        return userClubService.userClubJoin(id);
+        User loginUser = userService.userGetSelfInfo();
+        return userClubService.userClubJoin(loginUser.getId().toString(),id);
     }
+
+    // 社团退出
+    @GetMapping("/exit")
+    public ResultData<Object> clubExit(@RequestParam String id){
+        User loginUser = userService.userGetSelfInfo();
+        return userClubService.userClubDelete(loginUser.getId().toString(),id);
+    }
+
     // 活动报名
     @GetMapping("/signUp")
     public ResultData<Object> activitySignUp(@RequestParam String id) {
-        return userActivityService.userActivitySignUp(id);
+        User loginUser = userService.userGetSelfInfo();
+        return userActivityService.userActivitySignUp(loginUser.getId().toString(),id);
     }
+
+    // 活动取消报名
+    @GetMapping("/cancel")
+    public ResultData<Object> activityCancel(@RequestParam String id) {
+        User loginUser = userService.userGetSelfInfo();
+        return userActivityService.userActivityDelete(loginUser.getId().toString(),id);
+    }
+
     // 活动缴费
     @GetMapping("/pay")
     public ResultData<Object> activityPay(@RequestParam String id) {
-        return userActivityService.userActivityPay(id);
+        User loginUser = userService.userGetSelfInfo();
+        return userActivityService.userActivityPay(loginUser.getId().toString(),id);
     }
+
     // 活动签到
     @GetMapping("/signIn")
     public ResultData<Object> activitySignIn(@RequestParam String id) {
-        return userActivityService.userActivitySignIn(id);
+        User loginUser = userService.userGetSelfInfo();
+        return userActivityService.userActivitySignIn(loginUser.getId().toString(),id);
     }
+
+
     // 获取用户已加入社团
     @GetMapping("/getSelfClubs")
     public ResultData<List<Club>> getSelfClubs(){
@@ -64,6 +90,7 @@ public class commonUserController {
         List<Club> clubs = clubMapper.getClubsByUserId(loginUser.getId());
         return ResultData.success(clubs);
     }
+
     // 获取用户作为社长的社团
     @GetMapping("/getSelfClubsAsPresident")
     public ResultData<List<Club>> getSelfClubsAsPresident(){
@@ -71,6 +98,7 @@ public class commonUserController {
         List<Club> clubs = clubMapper.getClubsByPresidentId(loginUser.getId());
         return ResultData.success(clubs);
     }
+
     // 查询用户所在社团活动
     @GetMapping("/getSelfClubActivities")
     public ResultData<List<Activity>> getSelfClubActivities(){

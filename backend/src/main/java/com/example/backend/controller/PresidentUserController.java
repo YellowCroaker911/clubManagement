@@ -48,10 +48,17 @@ public class PresidentUserController {
         return clubService.clubAlterInfo(clubAlterInfoRequestDTO.getId(),clubAlterInfoRequestDTO.getAvatar(),
                 clubAlterInfoRequestDTO.getInfo(),clubAlterInfoRequestDTO.getAddress(),clubAlterInfoRequestDTO.getContact());
     }
+
     // 社员加入通过
     @GetMapping("/pass")
     public ResultData<Object> clubPass(@RequestParam String userId,String clubId){
         return userClubService.userClubPass(userId,clubId);
+    }
+
+    // 社长踢人
+    @GetMapping("kick")
+    public ResultData<Object> userKick(String userId,String clubId){
+        return userClubService.userClubDelete(userId,clubId);
     }
 
     // 活动发布
@@ -71,6 +78,12 @@ public class PresidentUserController {
                 activityAlterInfoRequestDTO.getBeginTime(),activityAlterInfoRequestDTO.getEndTime(),
                 activityAlterInfoRequestDTO.getAddress(),activityAlterInfoRequestDTO.getSign(),activityAlterInfoRequestDTO.getMoney(),
                 activityAlterInfoRequestDTO.getSummary());
+    }
+
+    // 活动删除
+    @GetMapping("/activityDelete")
+    public ResultData<Object> activityDelete(String id){
+        return activityService.activityDelete(id);
     }
 
     // 获取社团管理的社员

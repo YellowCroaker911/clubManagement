@@ -1,11 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.mapper.ClubMapper;
 import com.example.backend.model.dto.user.UserAlterInfoRequestDTO;
 import com.example.backend.model.dto.user.UserAlterPasswordRequestDTO;
 import com.example.backend.model.dto.user.UserLoginRequestDTO;
 import com.example.backend.model.dto.user.UserRegisterRequestDTO;
-import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.ClubService;
@@ -40,25 +38,31 @@ public class UserAccountController {
         return userService.userRegister(userRegisterRequestDTO.getUsername(), userRegisterRequestDTO.getPassword(),
                 userRegisterRequestDTO.getConfirmedPassword(), userRegisterRequestDTO.getRole());
     }
+
     // 用户登录，返回jwt-token
     @PostMapping("/getToken")
     public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO userLoginRequestDTO) {
         return userService.userGetToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword());
     }
+
     // 用户修改自身信息
     @PostMapping("/alterSelfInfo")
     public ResultData<Object> alterSelfInfo(@RequestBody @Validated UserAlterInfoRequestDTO userAlterInfoRequestDTO) {
-        return userService.userAlterSelfInfo(userAlterInfoRequestDTO.getName(),
+        User loginUser = userService.userGetSelfInfo();
+        return userService.userAlterSelfInfo(loginUser.getId().toString(),userAlterInfoRequestDTO.getName(),
                 userAlterInfoRequestDTO.getGender(),
                 userAlterInfoRequestDTO.getPhone(),
                 userAlterInfoRequestDTO.getEmail());
     }
+
     // 用户修改自身密码
     @PostMapping("/alterPassword")
     public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordRequestDTO userAlterPasswordRequestDTO) {
-        return userService.userAlterPassword(userAlterPasswordRequestDTO.getOldPassword(),
+        User loginUser = userService.userGetSelfInfo();
+        return userService.userAlterPassword(loginUser.getId().toString(),userAlterPasswordRequestDTO.getOldPassword(),
                 userAlterPasswordRequestDTO.getNewPassword(),userAlterPasswordRequestDTO.getConfirmedPassword());
     }
+
     // 用户获取自身信息
     @GetMapping("/getSelfInfo")
     public ResultData<User> getSelfInfo() {
@@ -77,6 +81,8 @@ public class UserAccountController {
     public ResultData<Object> singleFileUpload(@RequestParam("file") MultipartFile file) {
         //@RequestParam("file") MultipartFile file为接收图片参数
         //Long userId,String status 用户Id和状态
+        User loginUser = userService.userGetSelfInfo();
+
         try {
             byte[] bytes = file.getBytes();
             String imageFileName = file.getOriginalFilename();
@@ -85,7 +91,7 @@ public class UserAccountController {
             //“C:\\框架\\D4\\d4_pc_ui\\src\\assets\\images\\img\\”为本地目录
             Files.write(path, bytes);//写入文件
             String avatar_url =fileName;
-            userService.userUpdateAvatar(avatar_url);//dao层方法
+            userService.userUpdateAvatar(loginUser.getId().toString(),avatar_url);//dao层方法
             return ResultData.success(fileName);//返回文件名
         } catch (IOException e) {
             e.printStackTrace();

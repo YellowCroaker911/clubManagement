@@ -16,4 +16,10 @@ public class AdminUserController {
         return clubService.clubAdmit(id);
     }
 
+    // 注销社团
+    @GetMapping("delete")
+    public ResultData<Object> clubDelete(String id){
+        return clubService.clubDelete(id);
+    }
+
 }

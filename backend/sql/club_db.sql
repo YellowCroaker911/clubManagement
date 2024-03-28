@@ -41,7 +41,8 @@ create table activity
     summary        varchar(1023) null comment '活动总结',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    is_delete     tinyint  default 0 not null comment '是否删除'
+    is_delete     tinyint  default 0 not null comment '是否删除',
+    FOREIGN KEY (club_id) REFERENCES club(id) on delete cascade
 )comment '活动';
 
 
@@ -74,8 +75,8 @@ create table user_activity
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
-    FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (activity_id) REFERENCES activity(id)
+    FOREIGN KEY (user_id) REFERENCES user(id) on delete cascade,
+    FOREIGN KEY (activity_id) REFERENCES activity(id) on delete cascade
 )comment '社员和活动关系表';
 
 
@@ -88,8 +89,8 @@ create table user_club
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
-    FOREIGN KEY (user_id) REFERENCES user(id),
-    FOREIGN KEY (club_id) REFERENCES club(id),
+    FOREIGN KEY (user_id) REFERENCES user(id) on delete cascade ,
+    FOREIGN KEY (club_id) REFERENCES club(id) on delete cascade,
     index user_index (user_id),
     index club_index (club_id)
 )comment '社员和社团关系表';
@@ -101,11 +102,28 @@ CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name a
                                from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
                                where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
 
+drop trigger if exists on_club_status_update;
 drop trigger if exists on_join_club;
 drop trigger if exists on_release_activity;
 drop trigger if exists on_sign_up_activity;
-drop trigger if exists after_user_activity_pay_status_update;
-drop trigger if exists after_user_activity_join_status_update;
+drop trigger if exists on_user_activity_status_update;
+
+-- 管理员通过社团
+DELIMITER //
+CREATE TRIGGER on_club_status_update
+    AFTER UPDATE ON club
+    FOR EACH ROW
+BEGIN
+    IF NEW.is_admitted = 1 AND OLD.is_admitted != 1 THEN
+        -- 插入社长到user_club表中，作为第一名成员
+        INSERT INTO user_club (user_id, club_id)
+        VALUES (NEW.president_id, NEW.id);
+        UPDATE club SET member = member + 1 WHERE id = NEW.id;
+    END IF;
+END;
+//
+DELIMITER ;
+
 
 -- 用户报名社团
 delimiter //
@@ -131,19 +149,14 @@ create trigger on_sign_up_activity after insert on user_activity
 end //
 delimiter ;
 
--- 用户活动缴费
+-- 用户活动缴费和用户活动签到
 DELIMITER //
-CREATE TRIGGER after_user_activity_pay_status_update
+CREATE TRIGGER on_user_activity_status_update
     AFTER UPDATE ON user_activity
     FOR EACH ROW
 BEGIN
     DECLARE activity_money bigint;
     DECLARE club_id INT;
-
---     update activity
---     SET join_people = join_people + 1
---     where activity_id = NEW.activity_id;
-
     -- 检查pay_status是否从非1更新为1
     IF NEW.pay_status = 1 AND OLD.pay_status != 1 THEN
         -- 获取activity的money字段值
@@ -164,32 +177,8 @@ BEGIN
             WHERE id = NEW.user_id;
         END IF;
     END IF;
-END //
-DELIMITER ;
-
--- 用户活动签到
-delimiter //
-create trigger after_user_activity_join_status_update
-    AFTER UPDATE ON user_activity
-    for each row begin
     IF NEW.join_status = 1 AND OLD.join_status != 1 THEN
         update activity set attendance_people = activity.attendance_people + 1 where activity.id = new.activity_id;
     END IF;
-end //
-delimiter ;
-
--- 管理员通过社长注册的社团后，自动把社长加为第一名社团成员
-DELIMITER //
-CREATE TRIGGER after_club_insert
-    AFTER INSERT ON club
-    FOR EACH ROW
-BEGIN
-    -- 插入社长到user_club表中，作为第一名成员
-    INSERT INTO user_club (user_id, club_id)
-    VALUES (NEW.president_id, NEW.id);
-
-    -- 如果需要更新社团的成员数量，可以在这里执行，但根据您提供的表结构，成员数量是通过其他逻辑维护的
-    -- UPDATE club SET member = member + 1 WHERE id = NEW.id;
-END;
-//
+END //
 DELIMITER ;

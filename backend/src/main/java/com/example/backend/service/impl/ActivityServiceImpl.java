@@ -22,7 +22,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ResultData<Object> activityRelease(String clubId,String name, String info, String title, Date beginTime, Date endTime, String address, String sign,String money) {
-
         //todo:beginTime和endTime的检查
         Activity activity = new Activity();
         activity.setClubId(parseLong(clubId));
@@ -61,6 +60,19 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setSummary(summary);
 
         activityMapper.insert(activity);
+        return ResultData.success(null);
+    }
+
+    @Override
+    public ResultData<Object> activityDelete(String id){
+        QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+        Activity activity = activityMapper.selectOne(queryWrapper);
+        if (activity == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+        activityMapper.delete(queryWrapper);
+
         return ResultData.success(null);
     }
 }

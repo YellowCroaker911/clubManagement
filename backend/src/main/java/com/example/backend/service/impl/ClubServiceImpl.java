@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.lang.Long.parseLong;
+
 @Service
 public class ClubServiceImpl implements ClubService {
 
@@ -33,8 +35,7 @@ public class ClubServiceImpl implements ClubService {
     UserService userService;
 
     @Override
-    public ResultData<Object> clubRegister(String name) {
-        User loginUser = userService.userGetSelfInfo();
+    public ResultData<Object> clubRegister(String userId, String name) {
 
         QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("name", name);
@@ -43,14 +44,14 @@ public class ClubServiceImpl implements ClubService {
             throw new BusinessException(ReturnCodes.EXIST_CLUB_NAME,null);
         }
         QueryWrapper<User> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("id", loginUser.getId());
+        queryWrapper2.eq("id", userId);
         List<User> users = userMapper.selectList(queryWrapper2);
         if(users.isEmpty()){
             throw new BusinessException(ReturnCodes.NOT_EXIST_PRESIDENT,null);
         }
         Club club = new Club();
         club.setName(name);
-        club.setPresidentId(loginUser.getId());
+        club.setPresidentId(parseLong(userId));
         clubMapper.insert(club);
         return ResultData.success(null);
     }
@@ -70,11 +71,6 @@ public class ClubServiceImpl implements ClubService {
     }
     @Override
     public ResultData<Object> clubAlterInfo(String id,String avatar, String info, String address, String contact) {
-        User loginUser = userService.userGetSelfInfo();
-
-        if(!loginUser.getId().toString().equals(id)){
-            throw new BusinessException(ReturnCodes.NOT_PRESIDENT,null);
-        }
 
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -91,6 +87,18 @@ public class ClubServiceImpl implements ClubService {
         clubMapper.update(club, updateWrapper);
         return ResultData.success(null);
 
+    }
+
+    @Override
+    public ResultData<Object> clubDelete(String id) {
+        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Club club = clubMapper.selectOne(queryWrapper);
+        if (club == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        }
+        clubMapper.delete(queryWrapper);
+        return ResultData.success(queryWrapper);
     }
 
 }

@@ -32,19 +32,18 @@ public class UserClubServiceImpl implements UserClubService {
     UserService userService;
 
     @Override
-    public ResultData<Object> userClubJoin(String id) {
-        User loginUser = userService.userGetSelfInfo();
+    public ResultData<Object> userClubJoin(String userId,String clubId) {
 
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",id);
+        queryWrapper.eq("id",clubId);
         Club club = clubMapper.selectOne(queryWrapper);
         if (club == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         UserClub userClub = new UserClub();
-        userClub.setUserId(loginUser.getId());
-        userClub.setClubId(parseLong(id));
+        userClub.setUserId(parseLong(userId));
+        userClub.setClubId(parseLong(clubId));
 
         userClubMapper.insert(userClub);
 
@@ -65,9 +64,19 @@ public class UserClubServiceImpl implements UserClubService {
         updateWrapper1.set("is_passed", 1);
         userClubMapper.update(userClub,updateWrapper1);
 
-        QueryWrapper<Club> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("id",clubId);
-        Club club = clubMapper.selectOne(queryWrapper2);
+        return ResultData.success(null);
+    }
+
+    @Override
+    public ResultData<Object> userClubDelete(String userId, String clubId) {
+        QueryWrapper<UserClub> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId).eq("club_id",clubId);
+        UserClub userClub = userClubMapper.selectOne(queryWrapper);
+        if (userClub == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        }
+
+        userClubMapper.delete(queryWrapper);
 
         return ResultData.success(null);
     }

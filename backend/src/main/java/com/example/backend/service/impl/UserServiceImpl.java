@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
-import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.UserService;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
-import static javax.xml.bind.DatatypeConverter.parseLong;
+import static java.lang.Long.parseLong;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -77,11 +76,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<Object> userAlterSelfInfo(String name, String gender, String phone, String email) {
-        User loginUser = userGetSelfInfo();
+    public ResultData<Object> userAlterSelfInfo(String id,String name, String gender, String phone, String email) {
 
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", loginUser.getId());
+        queryWrapper.eq("id", id);
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
@@ -99,22 +97,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<Object> userAlterPassword(String oldPassword, String newPassword, String confirmedPassword) {
-        User loginUser = userGetSelfInfo();
+    public ResultData<Object> userAlterPassword(String id,String oldPassword, String newPassword, String confirmedPassword) {
 
-        if(!passwordEncoder.matches(oldPassword, loginUser.getPassword())){
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
             throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
         }
 
         if (!newPassword.equals(confirmedPassword)) {
             throw new BusinessException(ReturnCodes.DIFF_PASSWORD, null);
-        }
-
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", loginUser.getId());
-        User user = userMapper.selectOne(queryWrapper);
-        if (user == null) {
-            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
@@ -127,6 +124,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResultData<Object> userDelete(String id) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+        userMapper.delete(queryWrapper);
+        return ResultData.success(null);
+    }
+
+    @Override
     public User userGetSelfInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
@@ -134,13 +143,19 @@ public class UserServiceImpl implements UserService {
         return userDetails.getUser();
     }
 
-    public void userUpdateAvatar(String avatarUrl) {
-        User loginUser = userGetSelfInfo();
+    public ResultData<Object> userUpdateAvatar(String id,String avatarUrl) {
 
-        User user = new User();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+
         user.setAvatar(avatarUrl);
-        user.setId(loginUser.getId());
         userMapper.updateById(user);
+
+        return ResultData.success(null);
     }
 
 }

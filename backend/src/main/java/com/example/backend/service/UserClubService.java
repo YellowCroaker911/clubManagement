@@ -7,6 +7,8 @@ import com.example.backend.utils.result.ResultData;
 import java.util.List;
 
 public interface UserClubService {
-    ResultData<Object> userClubJoin(String id);
+    ResultData<Object> userClubJoin(String userId,String clubId);
     ResultData<Object> userClubPass(String userId,String clubId);
+
+    ResultData<Object> userClubDelete(String userId,String clubId);
 }

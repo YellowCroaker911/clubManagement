@@ -9,9 +9,10 @@ import java.util.List;
 public interface UserService {
 
     ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role);
+    ResultData<Object> userAlterSelfInfo(String id,String name, String gender, String phone, String email);
+    ResultData<Object> userAlterPassword(String id,String oldPassword,String newPassword,String confirmedPassword);
+    ResultData<Object> userDelete(String id);
     ResultData<UserLoginTokenVO> userGetToken(String username, String password);
-    ResultData<Object> userAlterSelfInfo(String name, String gender, String phone, String email);
-    ResultData<Object> userAlterPassword(String oldPassword,String newPassword,String confirmedPassword);
     User userGetSelfInfo();
-    void userUpdateAvatar(String avatarUrl);
+    ResultData<Object> userUpdateAvatar(String id,String avatarUrl);
 }

@@ -10,7 +10,6 @@ import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserActivity;
 import com.example.backend.service.UserActivityService;
 import com.example.backend.service.UserService;
-import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +26,18 @@ public class UserActivityServiceImpl implements UserActivityService {
     @Autowired
     UserService userService;
     @Override
-    public ResultData<Object> userActivitySignUp(String id) {
-        User loginUser = userService.userGetSelfInfo();
+    public ResultData<Object> userActivitySignUp(String userId, String activityId) {
 
         QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
+        queryWrapper.eq("id", userId);
         Activity activity = activityMapper.selectOne(queryWrapper);
         if (activity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
         UserActivity userActivity = new UserActivity();
-        userActivity.setUserId(loginUser.getId());
-        userActivity.setActivityId(parseLong(id));
+        userActivity.setUserId(parseLong(userId));
+        userActivity.setActivityId(parseLong(activityId));
 
         userActivityMapper.insert(userActivity);
 
@@ -47,11 +45,10 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public ResultData<Object> userActivityPay(String id) {
-        User loginUser = userService.userGetSelfInfo();
+    public ResultData<Object> userActivityPay(String userId,String activityId) {
 
         QueryWrapper<UserActivity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",loginUser.getId()).eq("activity_id", id);
+        queryWrapper.eq("user_id",userId).eq("activity_id", activityId);
         UserActivity userActivity = userActivityMapper.selectOne(queryWrapper);
         if (userActivity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
@@ -65,13 +62,11 @@ public class UserActivityServiceImpl implements UserActivityService {
     }
 
     @Override
-    public ResultData<Object> userActivitySignIn(String id) {
+    public ResultData<Object> userActivitySignIn(String userId,String activityId) {
         //todo:规定时间内签到
 
-        User loginUser = userService.userGetSelfInfo();
-
         QueryWrapper<UserActivity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",loginUser.getId()).eq("activity_id", id);
+        queryWrapper.eq("user_id",userId).eq("activity_id", activityId);
         UserActivity userActivity = userActivityMapper.selectOne(queryWrapper);
         if (userActivity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
@@ -80,6 +75,20 @@ public class UserActivityServiceImpl implements UserActivityService {
         UpdateWrapper<UserActivity> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("join_status",1);
         userActivityMapper.update(userActivity,updateWrapper);
+
+        return ResultData.success(null);
+    }
+
+    @Override
+    public ResultData<Object> userActivityDelete(String userId, String activityId) {
+        QueryWrapper<UserActivity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",userId).eq("activity_id", activityId);
+        UserActivity userActivity = userActivityMapper.selectOne(queryWrapper);
+        if (userActivity == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        }
+
+        userActivityMapper.delete(queryWrapper);
 
         return ResultData.success(null);
     }
