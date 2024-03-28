@@ -10,20 +10,20 @@
           @open="handleOpen"
           @close="handleClose"
       >
-        <el-menu-item @click="showPanel(1)">
+        <el-menu-item @click="showPanel(1, null)">
           <!--          <el-icon><document /></el-icon>-->
           <span>个人信息</span>
         </el-menu-item>
-        <el-menu-item @click="showPanel(2)">
+        <el-menu-item @click="showPanel(2, null)">
           <!--          <el-icon><document /></el-icon>-->
           <span>修改密码</span>
         </el-menu-item>
         <el-sub-menu index="1">
           <template #title>
-            <span>社团信息</span>
+            <span>社团</span>
           </template>
           <el-menu-item-group v-for="item in clubs">
-            <el-menu-item @click="showPanel(item)">{{item.name}}</el-menu-item>
+            <el-menu-item @click="showPanel(3, item)">{{item.name}}</el-menu-item>
           </el-menu-item-group>
         </el-sub-menu>
       </el-menu>
@@ -103,6 +103,39 @@
         </el-form>
       </el-card>
     </div>
+    <div class="person_body_right" v-if="opType == 3">
+      <el-card style="width: 600px; margin-top: 20px; margin-left: 200px;" shadow="hover">
+        <el-descriptions title="社团信息" style="margin-left: 250px">
+        </el-descriptions>
+        <el-form label-width="80px" size="large">
+          <el-form-item label="社团头像" style="margin-left: 10px; margin-top: 10px;">
+            <img :src="clubInfo.avatar">
+          </el-form-item>
+
+          <el-form-item label="社团名称" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.name" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="社团简介" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.info" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="社长" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.presidentId" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="活动地址" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.address" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="联系方式" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.contact" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="成员数量" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.member" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+          <el-form-item label="公费" style="margin-left: 10px; margin-top: 10px;">
+            <el-input v-model.trim="clubInfo.money" disabled autocomplete="off" style="width: 400px;"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
   </el-row>
 
 </template>
@@ -112,7 +145,7 @@ import {onMounted, reactive, ref} from "vue";
 import {  Edit, Upload } from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox, FormInstance, FormRules} from "element-plus";
 import {useRouter} from "vue-router";
-import {alterInfo, alterPassword, getAvatar, getSelfInfo} from "@/api/backend-api/userController";
+import {alterInfo, alterPassword, getAvatar, getSelfInfo} from "@/api/backend-api/userAccountController";
 import {getUUID} from "@/utils";
 import CustomImg from "@/App.vue";
 
@@ -122,11 +155,15 @@ const showAble = (type) =>{
   editAble.value = type;
 }
 
-// 0 disable 1 userInfo  2 resetPassword
+// 0 disable 1 userInfo  2 resetPassword  3 clubInfo
 const opType = ref(1);
+const clubInfo = ref();
 
-const showPanel = (type) =>{
+const showPanel = (type, data) =>{
   opType.value = type;
+  if(type == 3){
+    clubInfo.value = data;
+  }
 }
 
 const userInfo = ref<API.User>({});

@@ -1,21 +1,15 @@
 declare namespace API {
-  type Club = {
-    id?: number;
-    name?: string;
-    avatar?: string;
-    info?: string;
-    address?: string;
-    contact?: string;
-    member?: number;
-    money?: number;
-    presidentId?: number;
-    createTime?: string;
-    updateTime?: string;
-    isDelete?: number;
-  };
-
-  type ClubAdmitRequestDTO = {
-    id: string;
+  type ActivityReleaseRequestDTO = {
+    clubId: string;
+    id?: string;
+    name: string;
+    info: string;
+    title: string;
+    beginTime: string;
+    endTime: string;
+    address: string;
+    sign: string;
+    money: string;
   };
 
   type ClubAlterInfoRequestDTO = {
@@ -26,23 +20,18 @@ declare namespace API {
     contact?: string;
   };
 
-  type clubGetInfoParams = {
-    clubGetInfoRequestDTO: ClubGetInfoRequestDTO;
+  type ClubRegisterRequestDTO = {
+    name: string;
   };
 
-  type ClubGetInfoRequestDTO = {
+  type Id1DTO = {
     id: string;
   };
 
-  type ClubRegisterRequestDTO = {
-    name: string;
-    presidentId: string;
-  };
-
-  type ResultDataClub = {
+  type ResultDataListUser = {
     status?: number;
     message?: string;
-    data?: Club;
+    data?: User[];
     timestamp?: number;
   };
 

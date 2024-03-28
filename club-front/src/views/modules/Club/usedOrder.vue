@@ -88,7 +88,7 @@
           v-model:dialogShow="dialogShow"
           :rowInfo="rowInfo"
           :title="title"
-          :arrayNum="clubInfo.length"
+          :arrayNum="activityInfo.length"
           @add="addRow"
           @update="editRow"
       />
@@ -102,9 +102,9 @@ import {reactive, ref, toRefs} from "vue";
 import {  Edit, Upload } from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from "element-plus";
 import Dialog from "@/views/modules/AdminClub/dialog.vue";
-import {clubAlterInfo, clubRegister} from "@/api/backend-api/clubController";
-import {alterInfo} from "@/api/backend-api/userController";
 import DialogActivity from "@/views/modules/Club/dialogActivity.vue";
+import {clubRegister} from "@/api/backend-api/commonUserController";
+import {clubAlterInfo} from "@/api/backend-api/presidentUserController";
 
 
 const editAble = ref(1)
@@ -297,16 +297,6 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 
 
-function signUp(index: number) {
-  ElMessageBox.confirm(`确定要报名活动 ${activitys.value[index].name}`)
-      .then(() => {
-        // todo 提交活动报名
-        console.log("报名成功")
-      })
-      .catch(() => {
-        console.log("报名取消")
-      })
-}
 
 
 </script>

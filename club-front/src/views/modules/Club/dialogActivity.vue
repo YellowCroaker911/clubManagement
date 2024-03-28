@@ -13,8 +13,14 @@
       <el-form-item label="活动主题：" prop="title">
         <el-input v-model="formData.title"></el-input>
       </el-form-item>
+      <el-form-item label="活动信息：" prop="info">
+        <el-input v-model="formData.info"></el-input>
+      </el-form-item>
       <el-form-item label="活动地址：" prop="address">
         <el-input v-model="formData.address"></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式：" prop="sign">
+        <el-input v-model="formData.sign"></el-input>
       </el-form-item>
       <el-form-item label="开始时间：" prop="beginTime">
         <el-input v-model="formData.beginTime"></el-input>
@@ -39,7 +45,7 @@ import {FormInstance, FormRules} from "element-plus";
 const emit = defineEmits(["update:dialogShow", "update", "add"])
 
 
-const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInfo: API.ClubRegisterRequestDTO | undefined}>(),{
+const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInfo: API.ActivityReleaseRequestDTO | undefined}>(),{
   title: "",
   dialogShow: false,
   rowInfo: undefined,
@@ -47,22 +53,33 @@ const props = withDefaults(defineProps<{title:string, dialogShow:boolean, rowInf
 const formRef = {};
 const dialogFlag = ref();
 
-// todo 活动创建API
-const formData = reactive<API.>({
+const formData = reactive<API.ActivityReleaseRequestDTO>({
+  clubId: '',
   name: '',
-  presidentId: ''
+  info: '',
+  title: '',
+  beginTime: '',
+  endTime: '',
+  address: '',
+  sign: '',
+  money: '',
 });
 
-// todo 活动创建API
-const rules = reactive<FormRules<API.>>({
+const rules = reactive<FormRules<API.ActivityReleaseRequestDTO>>({
   name:[
     {required:true, message: '输入活动名称', trigger: 'blur'}
+  ],
+  info:[
+    {required:true, message: '输入活动信息', trigger: 'blur'}
   ],
   title:[
     {required:true, message: '输入活动主题', trigger: 'blur'}
   ],
   address:[
     {required:true, message: '输入活动地址', trigger: 'blur'}
+  ],
+  sign:[
+    {required:true, message: '输入联系方式', trigger: 'blur'}
   ],
   beginTime:[
     {required:true, message: '输入开始时间', trigger: 'blur'}
@@ -107,8 +124,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 onMounted(() => {
   const tmp = Object.assign({}, props.rowInfo);
+  formData.clubId = tmp.clubId;
   formData.name = tmp.name;
-  formData.presidentId = tmp.presidentId;
+  formData.title = tmp.title;
+  formData.info = tmp.info;
+  formData.address = tmp.address;
+  formData.sign = tmp.sign;
+  formData.beginTime = tmp.beginTime;
+  formData.endTime = tmp.endTime;
+  formData.money = tmp.money;
   dialogFlag.value = props.rowInfo;
 });
 </script>

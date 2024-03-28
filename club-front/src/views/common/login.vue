@@ -73,7 +73,7 @@ import { getUUID } from '@/utils'
 import {ElMessage, FormInstance, FormRules} from 'element-plus'
 import { ref, reactive, getCurrentInstance, } from "vue";
 import httpRequest from "@/api/httpRequest";
-import {getSelfInfo, getToken, userRegister} from "@/api/backend-api/userController";
+import {getSelfInfo, getToken, userRegister} from "@/api/backend-api/userAccountController";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()

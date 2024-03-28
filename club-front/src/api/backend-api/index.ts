@@ -2,9 +2,13 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
-import * as userController from './userController';
-import * as clubController from './clubController';
+import * as presidentUserController from './presidentUserController';
+import * as commonUserController from './commonUserController';
+import * as adminUserController from './adminUserController';
+import * as userAccountController from './userAccountController';
 export default {
-  userController,
-  clubController,
+  presidentUserController,
+  commonUserController,
+  adminUserController,
+  userAccountController,
 };

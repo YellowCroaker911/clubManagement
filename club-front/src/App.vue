@@ -59,7 +59,7 @@ import {useRouter} from "vue-router";
 import {getCurrentUser} from "@/utils";
 import {onMounted, ref} from "vue";
 import CustomAvatar from "@/components/CustomAvatar.vue";
-import {getAvatar} from "@/api/backend-api/userController";
+import {getAvatar} from "@/api/backend-api/userAccountController";
 // import HelloWorld from './components/HelloWorld.vue'
 // import {Table} from 'ant-design-vue';
 // export default {

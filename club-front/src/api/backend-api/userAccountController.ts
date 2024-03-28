@@ -2,12 +2,12 @@
 /* eslint-disable */
 import request from '@/api/httpRequest';
 
-/** 此处后端没有提供注释 POST /user/alterInfo */
+/** 此处后端没有提供注释 POST /account/alterInfo */
 export async function alterInfo(
   body: API.UserAlterInfoRequestDTO,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultDataObject>(`/api/user/alterInfo`, {
+  return request<API.ResultDataObject>(`/api/account/alterInfo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,12 +17,12 @@ export async function alterInfo(
   });
 }
 
-/** 此处后端没有提供注释 POST /user/alterPassword */
+/** 此处后端没有提供注释 POST /account/alterPassword */
 export async function alterPassword(
   body: API.UserAlterPasswordRequestDTO,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultDataObject>(`/api/user/alterPassword`, {
+  return request<API.ResultDataObject>(`/api/account/alterPassword`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -32,25 +32,25 @@ export async function alterPassword(
   });
 }
 
-/** 此处后端没有提供注释 GET /user/getAvatar */
+/** 此处后端没有提供注释 GET /account/getAvatar */
 export async function getAvatar(options?: { [key: string]: any }) {
-  return request<API.ResultDataString>(`/api/user/getAvatar`, {
+  return request<API.ResultDataString>(`/api/account/getAvatar`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-/** 此处后端没有提供注释 POST /user/getSelfInfo */
+/** 此处后端没有提供注释 GET /account/getSelfInfo */
 export async function getSelfInfo(options?: { [key: string]: any }) {
-  return request<API.ResultDataUser>(`/api/user/getSelfInfo`, {
-    method: 'POST',
+  return request<API.ResultDataUser>(`/api/account/getSelfInfo`, {
+    method: 'GET',
     ...(options || {}),
   });
 }
 
-/** 此处后端没有提供注释 POST /user/getToken */
+/** 此处后端没有提供注释 POST /account/getToken */
 export async function getToken(body: API.UserLoginRequestDTO, options?: { [key: string]: any }) {
-  return request<API.ResultDataUserLoginTokenVO>(`/api/user/getToken`, {
+  return request<API.ResultDataUserLoginTokenVO>(`/api/account/getToken`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -60,12 +60,12 @@ export async function getToken(body: API.UserLoginRequestDTO, options?: { [key: 
   });
 }
 
-/** 此处后端没有提供注释 POST /user/register */
+/** 此处后端没有提供注释 POST /account/register */
 export async function userRegister(
   body: API.UserRegisterRequestDTO,
   options?: { [key: string]: any },
 ) {
-  return request<API.ResultDataObject>(`/api/user/register`, {
+  return request<API.ResultDataObject>(`/api/account/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -75,9 +75,9 @@ export async function userRegister(
   });
 }
 
-/** 此处后端没有提供注释 POST /user/upload */
+/** 此处后端没有提供注释 POST /account/upload */
 export async function singleFileUpload(body: {}, options?: { [key: string]: any }) {
-  return request<API.ResultDataObject>(`/api/user/upload`, {
+  return request<API.ResultDataObject>(`/api/account/upload`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

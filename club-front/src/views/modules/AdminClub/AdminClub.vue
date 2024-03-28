@@ -47,7 +47,9 @@
 import { reactive, ref, toRefs } from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Dialog from "./dialog.vue";
-import { clubRegister } from "@/api/backend-api/clubController";
+import {clubRegister} from "@/api/backend-api/commonUserController";
+
+
 
 
 
