@@ -8,6 +8,7 @@ import com.example.backend.model.entity.User;
 import com.example.backend.service.ActivityService;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class ActivityServiceImpl implements ActivityService {
         if (activity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
-
+//        BeanUtils.copyProperties(外面的DTO, activity);
         activity.setName(name);
         activity.setInfo(info);
         activity.setTitle(title);
@@ -59,7 +60,7 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setMoney(parseLong(money));
         activity.setSummary(summary);
 
-        activityMapper.insert(activity);
+        activityMapper.updateById(activity);
         return ResultData.success(null);
     }
 

@@ -8,12 +8,14 @@ import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Activity;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
+import com.example.backend.service.ActivityService;
 import com.example.backend.utils.result.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -25,6 +27,7 @@ public class GlobalQueryController {
     ClubMapper clubMapper;
     @Autowired
     ActivityMapper activityMapper;
+
     @GetMapping("/getAllUser")
     public ResultData<List<User>> getAllUser(){
         return ResultData.success(userMapper.selectList(null));
@@ -37,5 +40,10 @@ public class GlobalQueryController {
     @GetMapping("/getAllActivity")
     public ResultData<List<Activity>> getAllActivity(){
         return ResultData.success(activityMapper.selectList(null));
+    }
+
+    @GetMapping("/getActivityById")
+    public ResultData<Activity> getActivityById(@NotNull Long id) {
+        return ResultData.success(activityMapper.selectById(id));
     }
 }
