@@ -1,5 +1,6 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+  <el-affix >
   <div class="title">
     <div class="title-left">
       <div class="title-left-image"></div>
@@ -45,7 +46,8 @@
 <!--      </router-link>-->
     </div>
   </div>
-  <h1>{{}}</h1>
+  </el-affix>
+<!--  <h1>{{}}</h1>-->
   <transition name="fade">
       <router-view></router-view>
   </transition>

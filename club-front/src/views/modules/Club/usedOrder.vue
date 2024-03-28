@@ -31,7 +31,7 @@
       <el-card style="width: 600px; margin-top: 20px; margin-left: 200px;" shadow="hover">
         <el-descriptions title="社团信息" style="margin-left: 250px">
         </el-descriptions>
-        <el-form label-width="80px" size="large">
+        <el-form label-width="80px" size="large" >
           <el-form-item label="社团头像" style="margin-left: 10px; margin-top: 10px;">
             <img :src="clubInfo.avatar">
           </el-form-item>
@@ -63,6 +63,21 @@
           </el-form-item>
         </el-form>
       </el-card>
+      <el-card>
+        <el-table :data="clubMemberInfo" border style="width: 100%">
+          <el-table-column prop="id" label="社员id" />
+          <el-table-column prop="name" label="名字" />
+          <el-table-column prop="gender" label="性别" />
+          <el-table-column prop="money" label="贡献金额" />
+          <el-table-column prop="phone" label="电话" />
+          <el-table-column prop="email" label="邮箱" />
+          <el-table-column fixed="right" label="操作" width="220">
+            <template #default="scope">
+              <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
     </div>
     <div class="box" v-if="opType == 2">
       <h1>活动管理</h1>
@@ -93,9 +108,9 @@
           @update="editRow"
       />
     </div>
-    <div class="person_body_right">
+<!--    <div class="person_body_right">-->
 
-    </div>
+<!--    </div>-->
   </el-row>
 
 </template>
@@ -214,6 +229,13 @@ const showPanel = (type, data) =>{
     clubInfo.value = data;
   }
 }
+
+
+const clubMemberInfo = ref([
+  {
+
+  }
+]);
 
 
 
