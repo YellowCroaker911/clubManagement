@@ -1,23 +1,28 @@
 package com.example.backend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
+import com.example.backend.mapper.ClubMapper;
+import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.dto.activity.ActivityReleaseRequestDTO;
 import com.example.backend.model.dto.club.ClubAlterInfoRequestDTO;
-import com.example.backend.model.dto.id.Id1DTO;
+import com.example.backend.model.entity.Activity;
+import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.service.ActivityService;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.UserClubService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static javax.xml.bind.DatatypeConverter.parseLong;
 
 @RestController
 @RequestMapping("/president")
@@ -30,33 +35,56 @@ public class PresidentUserController {
     UserClubService userClubService;
     @Autowired
     ActivityService activityService;
-
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    ClubMapper clubMapper;
+    @Autowired
+    ActivityMapper activityMapper;
+    // 修改社团信息
     @PostMapping("/alterInfo")
     public ResultData<Object> clubAlterInfo(@RequestBody @Validated ClubAlterInfoRequestDTO clubAlterInfoRequestDTO){
         return clubService.clubAlterInfo(clubAlterInfoRequestDTO.getId(),clubAlterInfoRequestDTO.getAvatar(),
                 clubAlterInfoRequestDTO.getInfo(),clubAlterInfoRequestDTO.getAddress(),clubAlterInfoRequestDTO.getContact());
     }
-
-    @PostMapping("/pass")
-    public ResultData<Object> clubJoin(@RequestBody @Validated Id1DTO id1DTO){
-        return userClubService.userClubJoin(id1DTO.getId());
+    // 社员加入通过
+    @GetMapping("/pass")
+    public ResultData<Object> clubPass(@RequestParam String userId,String clubId){
+        return userClubService.userClubPass(userId,clubId);
     }
 
-    /**
-     * 返回社团下的所有成员
-     * @param id1DTO 社团id
-     * @return
-     */
-    @PostMapping("/checkMember")
-    public ResultData<List<User>> checkMember(@RequestBody @Validated Id1DTO id1DTO){
-        return userService.userCheckMember(id1DTO.getId());
-    }
-
+    // 发布活动
     @PostMapping("/activityRelease")
     public ResultData<Object> activityRelease(@RequestBody @Validated ActivityReleaseRequestDTO activityReleaseRequestDTO){
         return activityService.activityRelease(activityReleaseRequestDTO.getClubId(),activityReleaseRequestDTO.getName(),
                 activityReleaseRequestDTO.getInfo(), activityReleaseRequestDTO.getTitle(),
                 activityReleaseRequestDTO.getBeginTime(),activityReleaseRequestDTO.getEndTime(),
                 activityReleaseRequestDTO.getAddress(),activityReleaseRequestDTO.getSign(),activityReleaseRequestDTO.getMoney());
+    }
+
+    // 获取社团管理的社员
+    @GetMapping ("/getUsersByClubId")
+    public ResultData<List<User>> getUsers(@RequestParam String id){
+        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Club club = clubMapper.selectOne(queryWrapper);
+        if (club == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+        List<User> users = userMapper.getUserByClubId(parseLong(id));
+        return ResultData.success(users);
+    }
+
+    // 获取社团管理的活动
+    @GetMapping("getActivitiesByClubId")
+    public ResultData<List<Activity>> getActivities(@RequestParam String id){
+        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        Club club = clubMapper.selectOne(queryWrapper);
+        if (club == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+        List<Activity> activities = activityMapper.getActivitiesByClubId(parseLong(id));
+        return ResultData.success(activities);
     }
 }

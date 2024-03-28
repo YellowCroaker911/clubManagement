@@ -9,8 +9,7 @@ import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.service.ClubService;
-import com.example.backend.service.impl.utils.LoginUser;
-import com.example.backend.service.impl.utils.UserDetailsImpl;
+import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,12 @@ public class ClubServiceImpl implements ClubService {
     @Autowired
     UserClubMapper userClubMapper;
 
+    @Autowired
+    UserService userService;
+
     @Override
     public ResultData<Object> clubRegister(String name) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("name", name);
@@ -69,8 +70,7 @@ public class ClubServiceImpl implements ClubService {
     }
     @Override
     public ResultData<Object> clubAlterInfo(String id,String avatar, String info, String address, String contact) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         if(!loginUser.getId().toString().equals(id)){
             throw new BusinessException(ReturnCodes.NOT_PRESIDENT,null);
@@ -91,18 +91,6 @@ public class ClubServiceImpl implements ClubService {
         clubMapper.update(club, updateWrapper);
         return ResultData.success(null);
 
-    }
-
-    @Override
-    public ResultData<Club> clubGetInfo(String id) {
-        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",id);
-        Club club = clubMapper.selectOne(queryWrapper);
-        if (club == null) {
-            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
-        }
-
-        return ResultData.success(club);
     }
 
 }

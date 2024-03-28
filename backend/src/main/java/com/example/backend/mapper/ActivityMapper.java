@@ -2,7 +2,11 @@ package com.example.backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.backend.model.entity.Activity;
+import com.example.backend.model.entity.Club;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author oval_m
@@ -12,7 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ActivityMapper extends BaseMapper<Activity> {
-
+    List<Activity> getActivitiesByClubId(@Param("id") Long id);
 }
 
 

@@ -12,7 +12,6 @@ public class ActivityReleaseRequestDTO {
     @NotBlank(message = "索引不能为空")
     @Pattern(regexp = "^\\d{1,17}$",message = "索引必须是17位以内的数字")
     private String clubId;
-    private String id;
     @NotBlank(message = "活动名不能为空")
     @Pattern(regexp = "^[a-zA-Z0-9\\u4e00-\\u9fff]{1,20}$",message = "活动名只能包含中英文字符和数字，不能超过20位")
     private String name;

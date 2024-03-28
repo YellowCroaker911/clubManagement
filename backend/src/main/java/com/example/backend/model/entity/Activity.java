@@ -18,6 +18,7 @@ public class Activity implements Serializable {
      */
     @TableId(type = IdType.AUTO)
     private Long id;
+
     /**
      * 所属社团id
      */

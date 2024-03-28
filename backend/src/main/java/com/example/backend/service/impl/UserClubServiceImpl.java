@@ -5,12 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserClubMapper;
-import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserClub;
 import com.example.backend.service.UserClubService;
-import com.example.backend.service.impl.utils.LoginUser;
+import com.example.backend.service.UserService;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
@@ -29,10 +28,12 @@ public class UserClubServiceImpl implements UserClubService {
     @Autowired
     UserClubMapper userClubMapper;
 
+    @Autowired
+    UserService userService;
+
     @Override
     public ResultData<Object> userClubJoin(String id) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",id);

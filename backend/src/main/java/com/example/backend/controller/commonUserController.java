@@ -1,50 +1,70 @@
 package com.example.backend.controller;
 
+import com.example.backend.mapper.ClubMapper;
 import com.example.backend.model.dto.club.ClubRegisterRequestDTO;
-import com.example.backend.model.dto.id.Id1DTO;
+import com.example.backend.model.entity.Club;
+import com.example.backend.model.entity.User;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.UserActivityService;
 import com.example.backend.service.UserClubService;
+import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/common")
 public class commonUserController {
+    @Autowired
+    UserService userService;
     @Autowired
     ClubService clubService;
     @Autowired
     UserClubService userClubService;
     @Autowired
     UserActivityService userActivityService;
+    @Autowired
+    ClubMapper clubMapper;
+    // 社团注册
     @PostMapping("/register")
     public ResultData<Object> clubRegister(@RequestBody @Validated ClubRegisterRequestDTO clubRegisterRequestDTO) {
         return clubService.clubRegister(clubRegisterRequestDTO.getName());
     }
-
-    @PostMapping("/join")
-    public ResultData<Object> clubJoin(@RequestBody @Validated Id1DTO id1DTO){
-        return userClubService.userClubJoin(id1DTO.getId());
+    // 社团加入
+    @GetMapping("/join")
+    public ResultData<Object> clubJoin(@RequestParam String id){
+        return userClubService.userClubJoin(id);
     }
-
-    @PostMapping("/signUp")
-    public ResultData<Object> activitySignUp(@RequestBody @Validated Id1DTO id1DTO) {
-        return userActivityService.userActivitySignUp(id1DTO.getId());
+    // 活动报名
+    @GetMapping("/signUp")
+    public ResultData<Object> activitySignUp(@RequestParam String id) {
+        return userActivityService.userActivitySignUp(id);
     }
-
-    @PostMapping("/pay")
-    public ResultData<Object> activityPay(@RequestBody @Validated Id1DTO id1DTO) {
-        return userActivityService.userActivityPay(id1DTO.getId());
+    // 活动缴费
+    @GetMapping("/pay")
+    public ResultData<Object> activityPay(@RequestParam String id) {
+        return userActivityService.userActivityPay(id);
     }
-
-    @PostMapping("/signIn")
-    public ResultData<Object> activitySignIn(@RequestBody @Validated Id1DTO id1DTO) {
-        return userActivityService.userActivitySignIn(id1DTO.getId());
+    // 活动签到
+    @GetMapping("/signIn")
+    public ResultData<Object> activitySignIn(@RequestParam String id) {
+        return userActivityService.userActivitySignIn(id);
     }
-
+    // 获取用户已加入社团
+    @GetMapping("/getSelfClub")
+    public ResultData<List<Club>> getSelfClub(){
+        User loginUser = userService.userGetSelfInfo();
+        List<Club> clubs = clubMapper.getClubByUserId(loginUser.getId());
+        return ResultData.success(clubs);
+    }
+    // 获取用户作为社长的社团
+    @GetMapping("/getSelfClubAsPresident")
+    public ResultData<List<Club>> getSelfClubAsPresident(){
+        User loginUser = userService.userGetSelfInfo();
+        List<Club> clubs = clubMapper.getClubByPresidentId(loginUser.getId());
+        return ResultData.success(clubs);
+    }
 }

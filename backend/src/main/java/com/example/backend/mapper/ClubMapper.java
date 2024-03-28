@@ -3,6 +3,9 @@ package com.example.backend.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.backend.model.entity.Club;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author oval_m
@@ -12,6 +15,9 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface ClubMapper extends BaseMapper<Club> {
+    List<Club> getClubByUserId(@Param("id") Long id);
+
+    List<Club> getClubByPresidentId(@Param("id") Long id);
 
 }
 

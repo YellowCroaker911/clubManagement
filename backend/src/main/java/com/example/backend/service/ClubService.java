@@ -10,6 +10,4 @@ public interface ClubService {
     ResultData<Object> clubRegister(String name);
     ResultData<Object> clubAdmit(String id);
     ResultData<Object> clubAlterInfo(String id,String avatar,String info,String address,String contact);
-    ResultData<Club> clubGetInfo(String id);
-
 }

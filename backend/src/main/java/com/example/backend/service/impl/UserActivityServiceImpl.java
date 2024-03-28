@@ -6,11 +6,10 @@ import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.UserActivityMapper;
 import com.example.backend.model.entity.Activity;
-import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserActivity;
 import com.example.backend.service.UserActivityService;
-import com.example.backend.service.impl.utils.LoginUser;
+import com.example.backend.service.UserService;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
@@ -25,10 +24,11 @@ public class UserActivityServiceImpl implements UserActivityService {
     ActivityMapper activityMapper;
     @Autowired
     UserActivityMapper userActivityMapper;
+    @Autowired
+    UserService userService;
     @Override
     public ResultData<Object> userActivitySignUp(String id) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -48,9 +48,7 @@ public class UserActivityServiceImpl implements UserActivityService {
 
     @Override
     public ResultData<Object> userActivityPay(String id) {
-
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         QueryWrapper<UserActivity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",loginUser.getId()).eq("activity_id", id);
@@ -70,8 +68,7 @@ public class UserActivityServiceImpl implements UserActivityService {
     public ResultData<Object> userActivitySignIn(String id) {
         //todo:规定时间内签到
 
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+        User loginUser = userService.userGetSelfInfo();
 
         QueryWrapper<UserActivity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",loginUser.getId()).eq("activity_id", id);

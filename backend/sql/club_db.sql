@@ -177,3 +177,4 @@ create trigger after_user_activity_join_status_update
     END IF;
 end //
 delimiter ;
+-- todo:管理员通过社长注册的社团后，自动把社长加为第一名社团成员

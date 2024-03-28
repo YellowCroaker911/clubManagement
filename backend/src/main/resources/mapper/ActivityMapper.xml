@@ -30,4 +30,8 @@
         attendance_people,summary,create_time,
         update_time,is_delete
     </sql>
+    <select id="getActivitiesByClubId" resultType="com.example.backend.model.entity.Activity">
+        select * from activity
+        where club_id = #{id} ;
+    </select>
 </mapper>

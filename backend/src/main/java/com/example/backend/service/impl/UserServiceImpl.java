@@ -9,7 +9,6 @@ import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
 import com.example.backend.service.UserService;
-import com.example.backend.service.impl.utils.LoginUser;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.JwtUtil;
 import com.example.backend.utils.result.ResultData;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static javax.xml.bind.DatatypeConverter.parseLong;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -77,9 +77,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultData<Object> userAlterInfo(String name, String gender, String phone, String email) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
+    public ResultData<Object> userAlterSelfInfo(String name, String gender, String phone, String email) {
+        User loginUser = userGetSelfInfo();
+
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", loginUser.getId());
         User user = userMapper.selectOne(queryWrapper);
@@ -100,9 +100,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultData<Object> userAlterPassword(String oldPassword, String newPassword, String confirmedPassword) {
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
-
+        User loginUser = userGetSelfInfo();
 
         if(!passwordEncoder.matches(oldPassword, loginUser.getPassword())){
             throw new BusinessException(ReturnCodes.DIFF_OlD_PASSWORD,null);
@@ -132,30 +130,16 @@ public class UserServiceImpl implements UserService {
     public User userGetSelfInfo() {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-
-        UserDetailsImpl userDetails = LoginUser.getUserDetails();
-        User loginUser = userDetails.getUser();
-
-        return loginUser;
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return userDetails.getUser();
     }
 
-    @Override
-    public ResultData<List<User>> userCheckMember(String id) {
-        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("id", id);
-        Club club = clubMapper.selectOne(queryWrapper1);
-        if (club == null) {
-            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
-        }
+    public void userUpdateAvatar(String avatarUrl) {
+        User loginUser = userGetSelfInfo();
 
-        List<User> users = userMapper.getUserByClubId(id);
-
-        return ResultData.success(users);
-    }
-    public void updateAvatar(String avatarUrl) {
         User user = new User();
         user.setAvatar(avatarUrl);
-        user.setId(userGetSelfInfo().getId());
+        user.setId(loginUser.getId());
         userMapper.updateById(user);
     }
 

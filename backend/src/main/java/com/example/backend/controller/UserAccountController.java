@@ -1,11 +1,14 @@
 package com.example.backend.controller;
 
+import com.example.backend.mapper.ClubMapper;
 import com.example.backend.model.dto.user.UserAlterInfoRequestDTO;
 import com.example.backend.model.dto.user.UserAlterPasswordRequestDTO;
 import com.example.backend.model.dto.user.UserLoginRequestDTO;
 import com.example.backend.model.dto.user.UserRegisterRequestDTO;
+import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.user.UserLoginTokenVO;
+import com.example.backend.service.ClubService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.CommonConstant;
 import com.example.backend.utils.CommonUtil;
@@ -16,12 +19,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -29,35 +31,41 @@ public class UserAccountController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ClubService clubService;
+
+    //用户注册
     @PostMapping("/register")
     public ResultData<Object> userRegister(@RequestBody @Validated UserRegisterRequestDTO userRegisterRequestDTO) {
         return userService.userRegister(userRegisterRequestDTO.getUsername(), userRegisterRequestDTO.getPassword(),
                 userRegisterRequestDTO.getConfirmedPassword(), userRegisterRequestDTO.getRole());
     }
+    // 用户登录，返回jwt-token
     @PostMapping("/getToken")
     public ResultData<UserLoginTokenVO> getToken(@RequestBody @Validated UserLoginRequestDTO userLoginRequestDTO) {
         return userService.userGetToken(userLoginRequestDTO.getUsername(), userLoginRequestDTO.getPassword());
     }
-    @PostMapping("/alterInfo")
-    public ResultData<Object> alterInfo(@RequestBody @Validated UserAlterInfoRequestDTO userAlterInfoRequestDTO) {
-        return userService.userAlterInfo(userAlterInfoRequestDTO.getName(),
+    // 用户修改自身信息
+    @PostMapping("/alterSelfInfo")
+    public ResultData<Object> alterSelfInfo(@RequestBody @Validated UserAlterInfoRequestDTO userAlterInfoRequestDTO) {
+        return userService.userAlterSelfInfo(userAlterInfoRequestDTO.getName(),
                 userAlterInfoRequestDTO.getGender(),
                 userAlterInfoRequestDTO.getPhone(),
                 userAlterInfoRequestDTO.getEmail());
     }
+    // 用户修改自身密码
     @PostMapping("/alterPassword")
     public ResultData<Object> alterPassword(@RequestBody @Validated UserAlterPasswordRequestDTO userAlterPasswordRequestDTO) {
         return userService.userAlterPassword(userAlterPasswordRequestDTO.getOldPassword(),
                 userAlterPasswordRequestDTO.getNewPassword(),userAlterPasswordRequestDTO.getConfirmedPassword());
     }
-
+    // 用户获取自身信息
     @GetMapping("/getSelfInfo")
     public ResultData<User> getSelfInfo() {
         User user = userService.userGetSelfInfo();
         user.setPassword(null);
         return ResultData.success(user);
     }
-
 
     /*************用户头像***************/
     /**
@@ -76,29 +84,26 @@ public class UserAccountController {
             Path path = Paths.get(CommonConstant.IMG_FOLDER + fileName);
             //“C:\\框架\\D4\\d4_pc_ui\\src\\assets\\images\\img\\”为本地目录
             Files.write(path, bytes);//写入文件
-            String avatar_url=fileName;
-            userService.updateAvatar(avatar_url);//dao层方法
-
-//            System.out.println(fileName);
-            return ResultData.success(fileName);//返回文件名字
+            String avatar_url =fileName;
+            userService.userUpdateAvatar(avatar_url);//dao层方法
+            return ResultData.success(fileName);//返回文件名
         } catch (IOException e) {
             e.printStackTrace();
-            return ResultData.fail(ReturnCodes.SYSTEM_ERROR.getCode(), "存图片错误", null);
+            return ResultData.fail(ReturnCodes.SYSTEM_ERROR.getCode(), "上传图片错误", null);
         }
     }
 
     /**
-     * 获取登录用户头像返回base64
+     * 获取登录用户头像，返回base64
      * @return
      */
     @GetMapping("/getAvatar")
     public ResultData<String> getAvatar() {
+        User loginUser = userService.userGetSelfInfo();
         // 获取图片名称
-        String avatar = userService.userGetSelfInfo().getAvatar();
+        String avatar = loginUser.getAvatar();
         // 获取图片并转成Base64
         return ResultData.success(CommonUtil.convertImageToBase64Str(CommonConstant.IMG_FOLDER + avatar));
     }
-
-
 
 }
