@@ -5,6 +5,7 @@ import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
+import com.example.backend.model.dto.activity.ActivityAlterInfoRequestDTO;
 import com.example.backend.model.dto.activity.ActivityReleaseRequestDTO;
 import com.example.backend.model.dto.club.ClubAlterInfoRequestDTO;
 import com.example.backend.model.entity.Activity;
@@ -53,13 +54,23 @@ public class PresidentUserController {
         return userClubService.userClubPass(userId,clubId);
     }
 
-    // 发布活动
+    // 活动发布
     @PostMapping("/activityRelease")
     public ResultData<Object> activityRelease(@RequestBody @Validated ActivityReleaseRequestDTO activityReleaseRequestDTO){
         return activityService.activityRelease(activityReleaseRequestDTO.getClubId(),activityReleaseRequestDTO.getName(),
                 activityReleaseRequestDTO.getInfo(), activityReleaseRequestDTO.getTitle(),
                 activityReleaseRequestDTO.getBeginTime(),activityReleaseRequestDTO.getEndTime(),
                 activityReleaseRequestDTO.getAddress(),activityReleaseRequestDTO.getSign(),activityReleaseRequestDTO.getMoney());
+    }
+
+    // 活动修改和活动总结发布
+    @PostMapping("/activityAlterInfo")
+    public ResultData<Object> activityAlterInfo(@RequestBody @Validated ActivityAlterInfoRequestDTO activityAlterInfoRequestDTO) {
+        return activityService.activityAlterInfo(activityAlterInfoRequestDTO.getId(),activityAlterInfoRequestDTO.getName(),
+                activityAlterInfoRequestDTO.getInfo(), activityAlterInfoRequestDTO.getTitle(),
+                activityAlterInfoRequestDTO.getBeginTime(),activityAlterInfoRequestDTO.getEndTime(),
+                activityAlterInfoRequestDTO.getAddress(),activityAlterInfoRequestDTO.getSign(),activityAlterInfoRequestDTO.getMoney(),
+                activityAlterInfoRequestDTO.getSummary());
     }
 
     // 获取社团管理的社员

@@ -34,4 +34,9 @@
         select * from activity
         where club_id = #{id} ;
     </select>
+
+    <select id="getActivitiesByUserId" resultType="com.example.backend.model.entity.Activity">
+        select * from activity
+        where club_id in (select club_id from user_club where user_id = #{id});
+    </select>
 </mapper>

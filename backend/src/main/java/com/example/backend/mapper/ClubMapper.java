@@ -15,9 +15,9 @@ import java.util.List;
 */
 @Mapper
 public interface ClubMapper extends BaseMapper<Club> {
-    List<Club> getClubByUserId(@Param("id") Long id);
+    List<Club> getClubsByUserId(@Param("id") Long id);
 
-    List<Club> getClubByPresidentId(@Param("id") Long id);
+    List<Club> getClubsByPresidentId(@Param("id") Long id);
 
 }
 

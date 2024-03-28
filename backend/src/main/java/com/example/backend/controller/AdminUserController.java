@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import com.example.backend.service.ClubService;
 import com.example.backend.utils.result.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

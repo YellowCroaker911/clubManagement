@@ -1,7 +1,9 @@
 package com.example.backend.controller;
 
+import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.model.dto.club.ClubRegisterRequestDTO;
+import com.example.backend.model.entity.Activity;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
 import com.example.backend.service.ClubService;
@@ -28,6 +30,8 @@ public class commonUserController {
     UserActivityService userActivityService;
     @Autowired
     ClubMapper clubMapper;
+    @Autowired
+    ActivityMapper activityMapper;
     // 社团注册
     @PostMapping("/register")
     public ResultData<Object> clubRegister(@RequestBody @Validated ClubRegisterRequestDTO clubRegisterRequestDTO) {
@@ -54,17 +58,24 @@ public class commonUserController {
         return userActivityService.userActivitySignIn(id);
     }
     // 获取用户已加入社团
-    @GetMapping("/getSelfClub")
-    public ResultData<List<Club>> getSelfClub(){
+    @GetMapping("/getSelfClubs")
+    public ResultData<List<Club>> getSelfClubs(){
         User loginUser = userService.userGetSelfInfo();
-        List<Club> clubs = clubMapper.getClubByUserId(loginUser.getId());
+        List<Club> clubs = clubMapper.getClubsByUserId(loginUser.getId());
         return ResultData.success(clubs);
     }
     // 获取用户作为社长的社团
-    @GetMapping("/getSelfClubAsPresident")
-    public ResultData<List<Club>> getSelfClubAsPresident(){
+    @GetMapping("/getSelfClubsAsPresident")
+    public ResultData<List<Club>> getSelfClubsAsPresident(){
         User loginUser = userService.userGetSelfInfo();
-        List<Club> clubs = clubMapper.getClubByPresidentId(loginUser.getId());
+        List<Club> clubs = clubMapper.getClubsByPresidentId(loginUser.getId());
         return ResultData.success(clubs);
+    }
+    // 查询用户所在社团活动
+    @GetMapping("/getSelfClubActivities")
+    public ResultData<List<Activity>> getSelfClubActivities(){
+        User loginUser = userService.userGetSelfInfo();
+        List<Activity> activities = activityMapper.getActivitiesByUserId(loginUser.getId());
+        return ResultData.success(activities);
     }
 }

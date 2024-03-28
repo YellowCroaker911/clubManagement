@@ -177,4 +177,19 @@ create trigger after_user_activity_join_status_update
     END IF;
 end //
 delimiter ;
--- todo:管理员通过社长注册的社团后，自动把社长加为第一名社团成员
+
+-- 管理员通过社长注册的社团后，自动把社长加为第一名社团成员
+DELIMITER //
+CREATE TRIGGER after_club_insert
+    AFTER INSERT ON club
+    FOR EACH ROW
+BEGIN
+    -- 插入社长到user_club表中，作为第一名成员
+    INSERT INTO user_club (user_id, club_id)
+    VALUES (NEW.president_id, NEW.id);
+
+    -- 如果需要更新社团的成员数量，可以在这里执行，但根据您提供的表结构，成员数量是通过其他逻辑维护的
+    -- UPDATE club SET member = member + 1 WHERE id = NEW.id;
+END;
+//
+DELIMITER ;

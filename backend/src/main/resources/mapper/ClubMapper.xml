@@ -26,11 +26,11 @@
         member,money,president_id,
         create_time,update_time,is_delete
     </sql>
-    <select id="getClubByUserId" resultType="com.example.backend.model.entity.Club">
+    <select id="getClubsByUserId" resultType="com.example.backend.model.entity.Club">
         select * from club
         where club.id in (select club_id from user_club where user_id = #{id});
     </select>
-    <select id="getClubByPresidentId" resultType="com.example.backend.model.entity.Club">
+    <select id="getClubsByPresidentId" resultType="com.example.backend.model.entity.Club">
         select * from club
         where club.president_id = #{id};
     </select>
