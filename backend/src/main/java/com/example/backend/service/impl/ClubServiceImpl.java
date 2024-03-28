@@ -8,6 +8,7 @@ import com.example.backend.mapper.UserClubMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.Club;
 import com.example.backend.model.entity.User;
+import com.example.backend.model.entity.UserClub;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
@@ -64,9 +65,19 @@ public class ClubServiceImpl implements ClubService {
         if (club == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
-        UpdateWrapper<Club> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("is_admitted", 1);
-        clubMapper.update(club, updateWrapper);
+        UpdateWrapper<Club> updateWrapper1 = new UpdateWrapper<>();
+        updateWrapper1.set("is_admitted",1);
+        clubMapper.update(club, updateWrapper1);
+
+        UserClub userClub = new UserClub();
+        userClub.setUserId(club.getPresidentId());
+        userClub.setClubId(club.getId());
+        userClubMapper.insert(userClub);
+
+        UpdateWrapper<UserClub> updateWrapper2 = new UpdateWrapper<>();
+        updateWrapper2.set("is_passed",1);
+        userClubMapper.update(userClub,updateWrapper2);
+
         return ResultData.success(null);
     }
     @Override
@@ -98,7 +109,7 @@ public class ClubServiceImpl implements ClubService {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
         clubMapper.delete(queryWrapper);
-        return ResultData.success(queryWrapper);
+        return ResultData.success(null);
     }
 
 }

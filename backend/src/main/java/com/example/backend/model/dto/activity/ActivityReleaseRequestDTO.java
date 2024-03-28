@@ -22,9 +22,7 @@ public class ActivityReleaseRequestDTO {
     @Pattern(regexp = "^.{0,50}$",message = "活动主题不能超过50个字符")
     private String title;
     //todo:时间数据校验
-    @NotBlank(message = "活动开始时间不能为空")
     private Date beginTime;
-    @NotBlank(message = "活动结束时间不能为空")
     private Date endTime;
     @NotBlank(message = "活动地点不能为空")
     @Pattern(regexp = "^.{0,100}$",message = "活动地点不能超过100个字符")

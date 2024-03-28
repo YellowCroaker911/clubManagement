@@ -23,6 +23,25 @@ create table user
     is_delete     tinyint  default 0 not null comment '是否删除'
 ) comment '用户';
 
+-- 社团表
+create table club
+(
+    id             bigint auto_increment comment '社团id' primary key,
+    name           varchar(255) not null comment '名称',
+    avatar         varchar(1023) null comment '头像',
+    info           varchar(1023) null comment '社团描述',
+    address        varchar(1023) null comment '活动场地',
+    contact        varchar(255) null comment '联系方式',
+    member         int default 0 not null comment '成员数量',
+    activity_number int default 0 not null comment '活动数量',
+    money        int     default 0 not null comment '公费（单位是分）',
+    president_id   bigint not null comment '社长id',
+    is_admitted 	tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
+    create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
+    is_delete     tinyint  default 0 not null comment '是否删除'
+)comment '社团';
+
 -- 活动表
 create table activity
 (
@@ -44,26 +63,6 @@ create table activity
     is_delete     tinyint  default 0 not null comment '是否删除',
     FOREIGN KEY (club_id) REFERENCES club(id) on delete cascade
 )comment '活动';
-
-
--- 社团表
-create table club
-(
-    id             bigint auto_increment comment '社团id' primary key,
-    name           varchar(255) not null comment '名称',
-    avatar         varchar(1023) null comment '头像',
-    info           varchar(1023) null comment '社团描述',
-    address        varchar(1023) null comment '活动场地',
-    contact        varchar(255) null comment '联系方式',
-    member         int default 0 not null comment '成员数量',
-    activity_number int default 0 not null comment '活动数量',
-    money        int     default 0 not null comment '公费（单位是分）',
-    president_id   bigint not null comment '社长id',
-    is_admitted 	tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
-    create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
-    update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    is_delete     tinyint  default 0 not null comment '是否删除'
-)comment '社团';
 
 create table user_activity
 (
@@ -102,34 +101,18 @@ CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name a
                                from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
                                where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
 
-drop trigger if exists on_club_status_update;
 drop trigger if exists on_join_club;
 drop trigger if exists on_release_activity;
 drop trigger if exists on_sign_up_activity;
 drop trigger if exists on_user_activity_status_update;
 
--- 管理员通过社团
-DELIMITER //
-CREATE TRIGGER on_club_status_update
-    AFTER UPDATE ON club
-    FOR EACH ROW
-BEGIN
-    IF NEW.is_admitted = 1 AND OLD.is_admitted != 1 THEN
-        -- 插入社长到user_club表中，作为第一名成员
-        INSERT INTO user_club (user_id, club_id)
-        VALUES (NEW.president_id, NEW.id);
-        UPDATE club SET member = member + 1 WHERE id = NEW.id;
-    END IF;
-END;
-//
-DELIMITER ;
-
-
--- 用户报名社团
+-- 社长通过用户报名
 delimiter //
-create trigger on_join_club after insert on user_club
+create trigger on_join_club after update on user_club
     for each row begin
-    update club set member = member + 1 where id = new.club_id;
+    IF NEW.is_passed = 1 AND OLD.is_passed != 1 THEN
+        update club set member = member + 1 where id = new.club_id;
+    END IF;
 end //
 delimiter ;
 
@@ -156,21 +139,16 @@ CREATE TRIGGER on_user_activity_status_update
     FOR EACH ROW
 BEGIN
     DECLARE activity_money bigint;
-    DECLARE club_id INT;
     -- 检查pay_status是否从非1更新为1
     IF NEW.pay_status = 1 AND OLD.pay_status != 1 THEN
         -- 获取activity的money字段值
         SELECT money INTO activity_money FROM activity WHERE id = NEW.activity_id;
         -- 如果获取到了activity_money，则进行更新操作
         IF activity_money IS NOT NULL THEN
-            -- 更新activity所属club的money字段
-            SELECT club_id INTO club_id FROM activity WHERE id = NEW.activity_id;
-            IF club_id IS NOT NULL THEN
-                UPDATE club
-                SET money = money + activity_money
-                WHERE id = club_id;
-            END IF;
-
+            -- 更新club的money字段
+            UPDATE club
+            SET money = money + activity_money
+            WHERE id = (select club_id from activity where id = NEW.activity_id);
             -- 更新user的money字段
             UPDATE user
             SET money = money + activity_money
