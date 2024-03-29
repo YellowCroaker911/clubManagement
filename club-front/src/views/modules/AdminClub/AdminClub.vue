@@ -1,11 +1,15 @@
 <template>
   <div class="box">
     <h1>社团管理</h1>
-    <el-button class="new_btn" type="primary" @click="handleNew">新增</el-button>
-    <el-table :data="clubInfo" border style="width: 100%">
+<!--    <el-button class="new_btn" type="primary" @click="handleNew">新增</el-button>-->
+    <el-table :data="clubInfo" border style="width: 100%; margin-top: 30px">
       <el-table-column prop="id" label="社团id" />
       <el-table-column prop="name" label="社团名" />
-      <el-table-column prop="avatar" label="头像" />  <!-- todo 图片 -->
+      <el-table-column prop="avatar" label="头像" >
+        <template #default="scope">
+          <el-avatar :src="scope.row.avatar" size="large" alt="上传头像" />
+        </template>
+      </el-table-column>
       <el-table-column prop="info" label="信息" />
       <el-table-column prop="address" label="地址" />
       <el-table-column prop="contact" label="联系方式" />
@@ -14,16 +18,15 @@
       <el-table-column prop="is_admitted" label="社团状态" >
         <template #default="scope">
           <el-tag
-              :type="scope.row.is_admitted === 0 ? 'warning' : 'success'"
+              :type="scope.row.isAdmitted === 0 ? 'warning' : 'success'"
               disable-transitions
-          >{{ scope.row.is_admitted === 0 ? "审核中" : "正常"}}</el-tag
-          >
+          >{{ scope.row.isAdmitted === 0 ? "审核中" : "正常"}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
         <template #default="scope">
           <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" size="small" v-if="scope.row.is_admitted === 0" @click="handleDetail(scope.row)">通过</el-button>
+          <el-button type="text" size="small" v-if="scope.row.isAdmitted === 0" @click="handleDetail(scope.row)">通过</el-button>
           <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -43,111 +46,127 @@
   </div>
 </template>
 
-<script lang="ts">
-import { reactive, ref, toRefs } from "vue";
+<script lang="ts" setup>
+import {onMounted, reactive, ref, toRefs} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import Dialog from "./dialog.vue";
-import { clubRegister } from "@/api/backend-api/clubController";
+import {clubRegister} from "@/api/backend-api/commonUserController";
+import {getAllActivity, getAllClub, getClubAvatar} from "@/api/backend-api/globalQueryController";
+import {clubAdmit, clubDelete} from "@/api/backend-api/adminUserController";
 
-
-
-export default {
-  components: { Dialog },
-  setup() {
-    const data = reactive({
-      dialogShow: false, // 新增/编辑弹框
-      detailShow: false, // 详情弹窗
-      rowInfo: {}, // 新增/编辑的数据
-      title: "", // 是新建还是修改
-      clubInfo: [
-        {
-          id: 13,
-          name: "111",
-          avatar: "123",
-          info: "1233",
-          address: "432",
-          contact: "32132",
-          member: "4433",
-          money: "jidowq",
-          president_name: "xuxu",
-          is_admitted: 1
-        },
-        {
-          id: 22,
-          name: "131231",
-          avatar: "dqwd23",
-          info: "123dqds3",
-          address: "43qsd2",
-          contact: "32qwe132",
-          member: "4433",
-          money: "jidoeqwewq",
-          president_name: "xuxu",
-          is_admitted: 0
-        }
-      ]
-    });
-    const method = reactive({
-      handleNew() {
-        data.title = "新增";
-        data.rowInfo = {};
-        data.dialogShow = true;
-      },
-      handleDetail(val: any) {
-        console.log(val);
-        // data.detailShow = true;
-        // data.rowInfo = val;
-        // todo 发送审核通过请求
-      },
-      handleEdit(val: any) {
-        console.log(val);
-        data.title = "修改";
-        data.dialogShow = true;
-        data.rowInfo = val;
-      },
-      handleDel(val: any) {
-        console.log(val);
-        ElMessageBox.confirm("你确定删除这个社团吗?", "提示", {
-          confirmButtonText: "确认",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        .then(() => {
-          // todo 发送请求删除社团
-        })
-        .catch(() => {
-          // catch error
-        });
-      },
-      // 添加行
-      addRow(val: any) {
-        console.log("val", val);
-        // ElMessage.error("此页面不支持添加");
-        clubRegister({
-          ...val
-        }).then((res) => {
-          ElMessage.success('提交成功');
-        }).catch(e => {
-          ElMessage.error(`提交失败, ${e.message}`)
-        })
-        // data.studentInfo.push(val);
-      },
-      // 编辑行
-      editRow(val: any) {
-        // todo 发送更新请求
-
-        // let index = data.studentInfo.findIndex(
-        //     (item, index) => item.id === val.id
-        // );
-        // data.studentInfo.splice(index, 1, val);
-      },
-      // 关闭详情弹窗
-      closeDetail() {
-        data.detailShow = false;
-      },
-    });
-    return { ...toRefs(data), ...method };
+const dialogShow = ref(false) // 新增/编辑弹框
+const detailShow = ref(false) // 详情弹窗
+const rowInfo = ref({}) // 新增/编辑的数据
+const title = ref("") // 是新建还是修改
+const clubInfo = ref<API.Club[]>([
+  {
+    id: 13,
+    name: "111",
+    avatar: "123",
+    info: "1233",
+    address: "432",
+    contact: "32132",
+    member: 4433,
+    money: 1,
   },
-};
+  {
+    id: 22,
+    name: "131231",
+    avatar: "dqwd23",
+    info: "123dqds3",
+    address: "43qsd2",
+    contact: "32qwe132",
+    member: 4433,
+    money: 12,
+  }
+])
+
+
+const handleNew = () => {
+  title.value = "新增";
+  rowInfo.value = {};
+  dialogShow.value = true;
+}
+const handleDetail = (val: any) => {
+  console.log(val);
+  // data.detailShow = true;
+  // data.rowInfo = val;
+  // todo 发送审核通过请求
+  clubAdmit({id: val.id}).then(({data}) => {
+    updateClubsInfo();
+  }).catch(e => {
+    console.log(e);
+    ElMessage("通过失败");
+  })
+}
+const handleEdit = (val: any) => {
+  console.log(val);
+  title.value = "修改";
+  dialogShow.value = true;
+  rowInfo.value = val;
+}
+const handleDel = (val: any) => {
+  console.log(val);
+  ElMessageBox.confirm("你确定删除这个社团吗?", "提示", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+  .then(() => {
+    // todo 发送请求删除社团
+    clubDelete({id: val.id}).then(({data}) => {
+      ElMessage.success("删除成功");
+      updateClubsInfo();
+    }).catch(e => {
+      console.log(e);
+      ElMessage.error("删除失败");
+    })
+  })
+  .catch(() => {
+    // catch error
+  });
+}
+// 添加行
+const addRow = (val: any) => {
+  console.log("val", val);
+  // ElMessage.error("此页面不支持添加");
+  clubRegister({
+    ...val
+  }).then((res) => {
+    ElMessage.success('提交成功');
+  }).catch(e => {
+    ElMessage.error(`提交失败, ${e.message}`)
+  })
+  // data.studentInfo.push(val);
+}
+// 编辑行
+const editRow = (val: any) => {
+  // todo 发送更新请求
+
+  // let index = data.studentInfo.findIndex(
+  //     (item, index) => item.id === val.id
+  // );
+  // data.studentInfo.splice(index, 1, val);
+}
+// 关闭详情弹窗
+const closeDetail = () => {
+  detailShow.value = false;
+}
+const updateClubsInfo = () => {
+  getAllClub().then(({data}) => {
+    clubInfo.value = data.data;
+  }).then(() => {
+    clubInfo.value.forEach(item => {
+      const it = item;
+      getClubAvatar({id: it.id}).then(({data}) => {
+        it.avatar = 'data:image/png;base64,' + data.data;
+      })
+    })
+  })
+}
+onMounted(() => {
+  updateClubsInfo();
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,13 +1,17 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+  <el-affix >
   <div class="title">
     <div class="title-left">
       <div class="title-left-image"></div>
       <router-link to="/">
-        <span>主页(展示活动)</span>
+        <span>主页</span>
+      </router-link>
+      <router-link to="/clubs">
+        <span class="">社团信息</span>
       </router-link>
       <!-- todo true换成是否为管理员 -->
-      <router-link to="/usedOrder">
+      <router-link to="/president/club">
         <span class="">社长的社团管理</span>
       </router-link>
       <router-link to="/admin/club">
@@ -17,12 +21,9 @@
       <router-link to="/admin/activity">
         <span class="">管理员能看的活动管理</span>
       </router-link>
-      <router-link to="/evaluate">
-        <span class="">导航五</span>
-      </router-link>
     </div>
     <div class="title-right">
-      <el-dropdown v-if="isLogin">
+      <el-dropdown v-if="isLogin()">
         <el-avatar class="title-right-image" :src="avatarData" @click="() => avatarEvent('profile')" />
 <!--        <custom-avatar class="title-right-image" src="/api/user/getAvatar" @click="() => avatarEvent('profile')" />-->
         <template #dropdown>
@@ -45,7 +46,8 @@
 <!--      </router-link>-->
     </div>
   </div>
-  <h1>{{}}</h1>
+  </el-affix>
+<!--  <h1>{{}}</h1>-->
   <transition name="fade">
       <router-view></router-view>
   </transition>
@@ -59,7 +61,7 @@ import {useRouter} from "vue-router";
 import {getCurrentUser} from "@/utils";
 import {onMounted, ref} from "vue";
 import CustomAvatar from "@/components/CustomAvatar.vue";
-import {getAvatar} from "@/api/backend-api/userController";
+import {getSelfAvatar} from "@/api/backend-api/userAccountController";
 // import HelloWorld from './components/HelloWorld.vue'
 // import {Table} from 'ant-design-vue';
 // export default {
@@ -92,9 +94,11 @@ const avatarEvent = (type: string) => {
 
 const avatarData = ref<string>();
 onMounted(() => {
-  getAvatar().then(({data})=> {
-    avatarData.value = 'data:image/png;base64,' + data.data;
-  })
+  if(sessionStorage.getItem('jwt')) {
+    getSelfAvatar().then(({data}) => {
+      avatarData.value = 'data:image/png;base64,' + data.data;
+    })
+  }
 })
 
 // 解决ERROR ResizeObserver loop completed with undelivered notifications.

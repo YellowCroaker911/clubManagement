@@ -5,6 +5,7 @@
   <!--    <el-card v-for="item in list" :body-style="{ padding: '0px', marginBottom: '1px' }">-->
     <el-descriptions class="activity-item-class" :title="item.name" border type="primary">
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动名称: ">{{ item.name }}</el-descriptions-item>
+      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主办社团: ">{{ item.clubName }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主题: ">{{ item.title }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="报名方式: ">{{ item.sign }}</el-descriptions-item>
 <!--      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>-->
@@ -35,8 +36,10 @@
 <script setup lang="ts">
 import { getUUID } from '@/utils'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import { ref, reactive, getCurrentInstance, } from "vue";
+import {ref, reactive, getCurrentInstance, onMounted,} from "vue";
 import router from "@/router";
+import {getAllActivity} from "@/api/backend-api/globalQueryController";
+import {getSelfClubActivities} from "@/api/backend-api/commonUserController";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()
@@ -44,7 +47,7 @@ const { proxy } = getCurrentInstance()
 
 const loading = ref(false)
 const currentDate = new Date().toDateString()
-const list = ref([
+const list = ref<API.ActivityWithClubNameVO[]>([
   {
     id: 1,
     name: "卖书",
@@ -54,7 +57,7 @@ const list = ref([
     endTime: "2024-01-07 00:00",
     address: "操场",
     sign: "网站报名",
-    joinPeople: "100"
+    joinPeople: 100
   },
   {
     id: 2,
@@ -65,7 +68,7 @@ const list = ref([
     endTime: "2026-12-31",
     address: "国英园-1号楼",
     sign: "网站报名",
-    joinPeople: "100"
+    joinPeople: 100
   },
   {
     id: 3,
@@ -76,7 +79,7 @@ const list = ref([
     endTime: "2024-12-31",
     address: "河北省邯郸市丛台区人民东路312号",
     sign: "网站报名",
-    joinPeople: "100"
+    joinPeople: 100
   },
   {
     id: 4,
@@ -87,7 +90,7 @@ const list = ref([
     endTime: "2026-12-31",
     address: "中国黄海湿地博物馆",
     sign: "网站报名",
-    joinPeople: "100"
+    joinPeople: 100
   }
 ])
 
@@ -99,13 +102,19 @@ const handleDetailActivity = (index: number) => {
 function signUp(index: number) {
   ElMessageBox.confirm(`确定要报名活动 ${list.value[index].name}`)
   .then(() => {
-  // todo 提交活动报名
+
     console.log("报名成功")
   })
   .catch(() => {
     console.log("报名取消")
   })
 }
+
+onMounted(() => {
+  getSelfClubActivities().then(({data}) => {
+    list.value = data.data;
+  })
+})
 
 </script>
 

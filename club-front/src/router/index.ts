@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {getCurrentUser} from "@/utils";
-import component from "*.vue";
-import {getSelfInfo} from "@/api/backend-api/userController";
+import {getSelfInfo} from "@/api/backend-api/userAccountController";
 
 
 const router = createRouter({
@@ -19,20 +18,27 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/usedOrder',
-      name: 'UsedOrder',
-      component: ()=> import("@/views/modules/Club/usedOrder.vue"),
+      path: '/clubs',
+      name: 'clubs',
+      component: ()=> import("@/views/modules/Clubs.vue"),
       meta: { requiresAuth: true }
-      // children: [
-      //     path: '/usedOrder/clubInfo',
-      //     name: 'clubInfo',
-      //     component: ()=> import("@/views/modules/Club/clubInfo.vue"),
-      // ]
+    },
+    {
+      path: '/president/club',
+      name: 'UsedOrder',
+      component: ()=> import("@/views/modules/Club/presidentClub.vue"),
+      meta: { requiresAuth: true }
     },
     {
       path: '/admin/club',
       name: 'AdminClub',
       component: ()=> import("@/views/modules/AdminClub/AdminClub.vue"),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/admin/activity',
+      name: 'AdminActivity',
+      component: ()=> import("@/views/modules/AdminActivity/AdminActivity.vue"),
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
