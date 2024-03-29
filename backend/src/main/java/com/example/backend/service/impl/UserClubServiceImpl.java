@@ -6,11 +6,9 @@ import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserClubMapper;
 import com.example.backend.model.entity.Club;
-import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserClub;
 import com.example.backend.service.UserClubService;
 import com.example.backend.service.UserService;
-import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +32,18 @@ public class UserClubServiceImpl implements UserClubService {
     @Override
     public ResultData<Object> userClubJoin(String userId,String clubId) {
 
-        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id",clubId);
-        Club club = clubMapper.selectOne(queryWrapper);
+        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id",clubId);
+        Club club = clubMapper.selectOne(queryWrapper1);
         if (club == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        }
+
+        QueryWrapper<UserClub> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("user_id",userId).eq("club_id",clubId);
+        List<UserClub> userClubs = userClubMapper.selectList(queryWrapper2);
+        if(!userClubs.isEmpty()){
+            throw new BusinessException(ReturnCodes.JOIN_YET,null);
         }
 
         UserClub userClub = new UserClub();

@@ -12,6 +12,8 @@
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
             <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+            <result property="signBeginTime" column="sign_begin_time" jdbcType="TIMESTAMP"/>
+            <result property="signEndTime" column="sign_end_time" jdbcType="TIMESTAMP"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
             <result property="sign" column="sign" jdbcType="VARCHAR"/>
             <result property="money" column="money" jdbcType="BIGINT"/>

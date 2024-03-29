@@ -70,15 +70,17 @@ public class PresidentUserController {
         return activityService.activityRelease(activityReleaseRequestDTO.getClubId(),activityReleaseRequestDTO.getName(),
                 activityReleaseRequestDTO.getInfo(), activityReleaseRequestDTO.getTitle(),
                 activityReleaseRequestDTO.getBeginTime(),activityReleaseRequestDTO.getEndTime(),
+                activityReleaseRequestDTO.getSignBeginTime(),activityReleaseRequestDTO.getSignEndTime(),
                 activityReleaseRequestDTO.getAddress(),activityReleaseRequestDTO.getSign(),activityReleaseRequestDTO.getMoney());
     }
 
-    // 活动修改和活动总结发布
+    // 活动修改和活动总结发布以及管理活动签到
     @PostMapping("/activityAlterInfo")
     public ResultData<Object> activityAlterInfo(@RequestBody @Validated ActivityAlterInfoRequestDTO activityAlterInfoRequestDTO) {
         return activityService.activityAlterInfo(activityAlterInfoRequestDTO.getId(),activityAlterInfoRequestDTO.getName(),
                 activityAlterInfoRequestDTO.getInfo(), activityAlterInfoRequestDTO.getTitle(),
                 activityAlterInfoRequestDTO.getBeginTime(),activityAlterInfoRequestDTO.getEndTime(),
+                activityAlterInfoRequestDTO.getSignBeginTime(),activityAlterInfoRequestDTO.getSignEndTime(),
                 activityAlterInfoRequestDTO.getAddress(),activityAlterInfoRequestDTO.getSign(),activityAlterInfoRequestDTO.getMoney(),
                 activityAlterInfoRequestDTO.getSummary());
     }

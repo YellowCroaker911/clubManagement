@@ -52,6 +52,8 @@ create table activity
     title          varchar(255) not null comment '活动主题',
     begin_time     datetime not null comment '活动开始时间',
     end_time       datetime not null comment '活结束时间',
+    sign_begin_time datetime not null comment  '最早签到时间' ,
+    sign_end_time  datetime not null comment  '最迟签到时间' ,
     address        varchar(255) not null comment '活动地点',
     sign           varchar(255) not null comment '报名方式',
     money          bigint comment '活动缴费（单位是分）',
@@ -85,7 +87,7 @@ create table user_club
     user_id     bigint not null comment '用户id',
     club_id     bigint not null comment '社团id',
     is_passed   tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
-    contribution_money         bigint comment '社团贡献（单位是分）',
+    contribution_money   bigint default 0 comment '社团贡献（单位是分）',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
@@ -154,6 +156,7 @@ BEGIN
             UPDATE user
             SET money = money + activity_money
             WHERE id = NEW.user_id;
+            -- 更新user_club的contribution_money字段
             UPDATE user_club
             SET contribution_money = contribution_money + activity_money
             WHERE user_id = NEW.user_id and club_id = (select club_id from activity where id = NEW.activity_id);

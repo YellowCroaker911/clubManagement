@@ -85,6 +85,18 @@ public class UserActivityExtendVO {
     private Date endTime;
 
     /**
+     * 签到开始时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date signBeginTime;
+
+    /**
+     * 签到结束时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date signEndTime;
+
+    /**
      * 活动地点
      */
     private String address;

@@ -91,4 +91,9 @@ public class UserClubExtendClubVO {
      * 社长id
      */
     private Long presidentId;
+
+    /**
+     * 是否审核通过(0-审核中, 1-通过)
+     */
+    private Integer isAdmitted;
 }

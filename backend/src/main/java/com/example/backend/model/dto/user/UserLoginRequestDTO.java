@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
@@ -15,5 +14,4 @@ public class UserLoginRequestDTO implements Serializable {
     @NotBlank(message = "密码不能为空")
     @Pattern(regexp = "^.{6,20}$",message = "密码必须在6到20位之间")
     private String password;
-//  todo  private String captcha;
 }

@@ -23,13 +23,18 @@ public class ActivityAlterInfoRequestDTO {
     @NotBlank(message = "活动主题不能为空")
     @Pattern(regexp = "^.{0,50}$",message = "活动主题不能超过50个字符")
     private String title;
-    //todo:时间数据校验
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date beginTime;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date endTime;
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date signBeginTime;
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date signEndTime;
     @NotBlank(message = "活动地点不能为空")
     @Pattern(regexp = "^.{0,100}$",message = "活动地点不能超过100个字符")
     private String address;

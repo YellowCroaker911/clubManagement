@@ -15,6 +15,7 @@
             <result property="activityNumber" column="activity_number" jdbcType="INTEGER"/>
             <result property="money" column="money" jdbcType="INTEGER"/>
             <result property="presidentId" column="president_id" jdbcType="BIGINT"/>
+            <result property="isAdmitted" column="is_admitted" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
