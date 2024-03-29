@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import static java.lang.Long.parseLong;
 
@@ -88,5 +90,12 @@ public class ActivityServiceImpl implements ActivityService {
         activityMapper.delete(queryWrapper);
 
         return ResultData.success(null);
+    }
+
+    @Override
+    public List<Activity> listActivityById(String clubId) {
+        LambdaQueryWrapper<Activity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Activity::getClubId, clubId);
+        return activityMapper.selectList(wrapper);
     }
 }

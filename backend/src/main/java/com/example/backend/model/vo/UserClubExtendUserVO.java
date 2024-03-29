@@ -28,7 +28,7 @@ public class UserClubExtendUserVO {
     /**
      * 对社团缴费金额（单位是分）
      */
-    private Integer contribution_money;
+    private Integer contributionMoney;
 
     /**
      * 创建时间

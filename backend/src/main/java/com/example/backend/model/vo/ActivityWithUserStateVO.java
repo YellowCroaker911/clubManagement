@@ -5,15 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-public class ActivityWithClubNameVO {
+public class ActivityWithUserStateVO {
+
     /**
      * 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -25,6 +24,16 @@ public class ActivityWithClubNameVO {
      * 所属社团name
      */
     private String clubName;
+
+    /**
+     * 0-没缴费 1-缴费
+     */
+    private Integer payStatus;
+
+    /**
+     * 0-没签到 1-签到
+     */
+    private Integer joinStatus;
 
     /**
      * 活动名称

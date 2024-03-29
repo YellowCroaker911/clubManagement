@@ -1,13 +1,15 @@
 package com.example.backend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.*;
 import com.example.backend.model.entity.*;
-import com.example.backend.model.vo.ActivityWithClubNameVO;
+import com.example.backend.model.vo.ActivityWithUserStateVO;
 import com.example.backend.model.vo.UserActivityExtendVO;
-import com.example.backend.model.vo.UserClubExtendClubVO;
+import com.example.backend.model.vo.ClubWithUserStateVO;
 import com.example.backend.model.vo.UserClubExtendUserVO;
+import com.example.backend.service.UserService;
 import com.example.backend.utils.CommonConstant;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
@@ -35,6 +37,8 @@ public class GlobalQueryController {
     UserActivityMapper userActivityMapper;
     @Autowired
     UserClubMapper userClubMapper;
+    @Autowired
+    UserService userService;
 
     // 获取所有用户
     @GetMapping("/getAllUser")
@@ -88,22 +92,22 @@ public class GlobalQueryController {
 
     // 获取所有活动
     @GetMapping("/getAllActivity")
-    public ResultData<List<ActivityWithClubNameVO>> getAllActivity() {
+    public ResultData<List<ActivityWithUserStateVO>> getAllActivity() {
 
-        List<ActivityWithClubNameVO> activityWithClubNameVOs = new ArrayList<>();
+        List<ActivityWithUserStateVO> activityWithUserStateVOS = new ArrayList<>();
         List<Activity> activities = activityMapper.selectList(null);
 
         for (Activity activity : activities) {
-            ActivityWithClubNameVO activityWithClubNameVO = new ActivityWithClubNameVO();
-            BeanUtils.copyProperties(activity, activityWithClubNameVO);
+            ActivityWithUserStateVO activityWithUserStateVO = new ActivityWithUserStateVO();
+            BeanUtils.copyProperties(activity, activityWithUserStateVO);
             QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", activity.getClubId());
             Club club = clubMapper.selectOne(queryWrapper);
-            activityWithClubNameVO.setClubName(club.getName());
-            activityWithClubNameVOs.add(activityWithClubNameVO);
+            activityWithUserStateVO.setClubName(club.getName());
+            activityWithUserStateVOS.add(activityWithUserStateVO);
         }
 
-        return ResultData.success(activityWithClubNameVOs);
+        return ResultData.success(activityWithUserStateVOS);
     }
 
     // 获取社团管理的活动
@@ -119,22 +123,35 @@ public class GlobalQueryController {
         return ResultData.success(activities);
     }
 
-    // 获取活动
+    /**
+     * 根据活动id获取活动信息并携带用户在活动中的信息
+     * @param id 活动id
+     * @return
+     */
     @GetMapping("/getActivityById")
-    public ResultData<ActivityWithClubNameVO> getActivityById(@RequestParam @NotNull String id) {
+    public ResultData<ActivityWithUserStateVO> getActivityById(@RequestParam @NotNull String id) {
         Activity activity = activityMapper.selectById(id);
         if (activity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
 
-        ActivityWithClubNameVO activityWithClubNameVO = new ActivityWithClubNameVO();
-        BeanUtils.copyProperties(activity, activityWithClubNameVO);
+        ActivityWithUserStateVO activityWithUserStateVO = new ActivityWithUserStateVO();
+        BeanUtils.copyProperties(activity, activityWithUserStateVO);
 
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", activity.getClubId());
         Club club = clubMapper.selectOne(queryWrapper);
-        activityWithClubNameVO.setClubName(club.getName());
-        return ResultData.success(activityWithClubNameVO);
+        activityWithUserStateVO.setClubName(club.getName());
+
+        LambdaQueryWrapper<UserActivity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserActivity::getUserId, userService.userGetSelfInfo().getId()).eq(UserActivity::getActivityId, id);
+        UserActivity userActivity = userActivityMapper.selectOne(wrapper);
+        if(userActivity != null) {
+            activityWithUserStateVO.setJoinStatus(userActivity.getJoinStatus());
+            activityWithUserStateVO.setPayStatus(userActivity.getPayStatus());
+        }
+        else activityWithUserStateVO.setJoinStatus(2);
+        return ResultData.success(activityWithUserStateVO);
     }
 
     // 获取用户报名的活动
@@ -165,10 +182,11 @@ public class GlobalQueryController {
     }
 
     // 获取所有*用户和社团*的关系
+    @Deprecated
     @GetMapping ("/getUserClubExtendClub")
-    public ResultData<List<UserClubExtendClubVO>> getUserClubExtendClub(@RequestParam @NotNull String clubId) {
+    public ResultData<List<ClubWithUserStateVO>> getUserClubExtendClub(@RequestParam @NotNull String clubId) {
 
-        List<UserClubExtendClubVO> userClubExtendClubVOS = new ArrayList<>();
+        List<ClubWithUserStateVO> clubWithUserStateVOS = new ArrayList<>();
 
         QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("id", clubId);
@@ -182,13 +200,13 @@ public class GlobalQueryController {
         List<UserClub> userClubs = userClubMapper.selectList(queryWrapper2);
 
         for (UserClub userClub : userClubs) {
-            UserClubExtendClubVO userClubExtendClubVO = new UserClubExtendClubVO();
-            BeanUtils.copyProperties(userClub, userClubExtendClubVO);
-            BeanUtils.copyProperties(club, userClubExtendClubVO);
-            userClubExtendClubVOS.add(userClubExtendClubVO);
+            ClubWithUserStateVO clubWithUserStateVO = new ClubWithUserStateVO();
+            BeanUtils.copyProperties(userClub, clubWithUserStateVO);
+            BeanUtils.copyProperties(club, clubWithUserStateVO);
+            clubWithUserStateVOS.add(clubWithUserStateVO);
         }
 
-        return ResultData.success(userClubExtendClubVOS);
+        return ResultData.success(clubWithUserStateVOS);
     }
 
     /**

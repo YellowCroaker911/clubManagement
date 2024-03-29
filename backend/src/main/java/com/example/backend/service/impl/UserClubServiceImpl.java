@@ -1,5 +1,6 @@
 package com.example.backend.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
@@ -93,6 +94,13 @@ public class UserClubServiceImpl implements UserClubService {
         userClubMapper.delete(queryWrapper1);
 
         return ResultData.success(null);
+    }
+
+    @Override
+    public List<UserClub> getListByUserId(Long userId) {
+        LambdaQueryWrapper<UserClub> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserClub::getUserId, userId);
+        return userClubMapper.selectList(wrapper);
     }
 
 }

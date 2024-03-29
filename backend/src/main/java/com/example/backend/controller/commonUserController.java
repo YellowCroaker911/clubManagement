@@ -1,21 +1,19 @@
 package com.example.backend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserActivityMapper;
 import com.example.backend.model.dto.club.ClubRegisterRequestDTO;
-import com.example.backend.model.entity.Activity;
-import com.example.backend.model.entity.Club;
-import com.example.backend.model.entity.User;
-import com.example.backend.model.entity.UserActivity;
-import com.example.backend.model.vo.ActivityWithClubNameVO;
+import com.example.backend.model.entity.*;
+import com.example.backend.model.vo.ActivityWithUserStateVO;
 import com.example.backend.model.vo.UserActivityExtendVO;
-import com.example.backend.service.ClubService;
-import com.example.backend.service.UserActivityService;
-import com.example.backend.service.UserClubService;
-import com.example.backend.service.UserService;
+import com.example.backend.model.vo.ClubWithUserStateVO;
+import com.example.backend.service.*;
 import com.example.backend.utils.result.ResultData;
+import com.example.backend.utils.result.ReturnCodes;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/common")
@@ -42,6 +41,8 @@ public class commonUserController {
     ActivityMapper activityMapper;
     @Autowired
     UserActivityMapper userActivityMapper;
+    @Autowired
+    ActivityService activityService;
 
     // 社团注册
     @PostMapping("/register")
@@ -111,22 +112,22 @@ public class commonUserController {
 
     // 获取用户所在社团活动
     @GetMapping("/getSelfClubActivities")
-    public ResultData<List<ActivityWithClubNameVO>> getSelfClubActivities(){
+    public ResultData<List<ActivityWithUserStateVO>> getSelfClubActivities(){
         User loginUser = userService.userGetSelfInfo();
         List<Activity> activities = activityMapper.getActivitiesByUserId(loginUser.getId());
-        List<ActivityWithClubNameVO> activityWithClubNameVOs = new ArrayList<>();
+        List<ActivityWithUserStateVO> activityWithUserStateVOS = new ArrayList<>();
 
         for (Activity activity : activities){
-            ActivityWithClubNameVO activityWithClubNameVO = new ActivityWithClubNameVO();
-            BeanUtils.copyProperties(activity,activityWithClubNameVO);
+            ActivityWithUserStateVO activityWithUserStateVO = new ActivityWithUserStateVO();
+            BeanUtils.copyProperties(activity, activityWithUserStateVO);
             QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id",activity.getClubId());
             Club club = clubMapper.selectOne(queryWrapper);
-            activityWithClubNameVO.setClubName(club.getName());
-            activityWithClubNameVOs.add(activityWithClubNameVO);
+            activityWithUserStateVO.setClubName(club.getName());
+            activityWithUserStateVOS.add(activityWithUserStateVO);
         }
 
-        return ResultData.success(activityWithClubNameVOs);
+        return ResultData.success(activityWithUserStateVOS);
     }
 
     // 获取用户报名的活动
@@ -151,5 +152,59 @@ public class commonUserController {
         userActivityExtendVO.setClubName(club.getName());
 
         return ResultData.success(userActivityExtendVO);
+    }
+
+    /**
+     * 获取所有club并携带当前用户在该社团的信息
+     * @return
+     */
+    @GetMapping("/getAllClubWithCurrentUser")
+    public ResultData<List<ClubWithUserStateVO>> getAllClubWithCurrentUser() {
+        User user = userService.userGetSelfInfo();
+        List<UserClub> userClubs = userClubService.getListByUserId(user.getId());
+        List<Club> allClubs = clubMapper.selectList(null);
+
+        List<ClubWithUserStateVO> list = allClubs.stream().map(item -> {
+            ClubWithUserStateVO vo = new ClubWithUserStateVO();
+            BeanUtils.copyProperties(item, vo);
+            vo.setIsPassed(2);
+            for (UserClub c : userClubs) {
+                if (c.getClubId().equals(item.getId())) {
+                    vo.setIsPassed(c.getIsPassed());
+                    vo.setContributionMoney(c.getContributionMoney());
+                }
+            }
+            return vo;
+        }).collect(Collectors.toList());
+
+        return ResultData.success(list);
+    }
+
+    /**
+     * 获取某个社团下的所有活动，并携带当前社员在活动的状态
+     * @param clubId 社团id
+     * @return
+     */
+    @GetMapping("/getSelfClubActivityByClubId")
+    public ResultData<List<UserActivityExtendVO>> getSelfClubActivityByClubId(@RequestParam @NotNull String clubId) {
+        User loginUser = userService.userGetSelfInfo();
+
+        List<Activity> activityList = activityService.listActivityById(clubId);
+
+        List<UserActivityExtendVO> list = activityList.stream().map(item -> {
+            UserActivityExtendVO vo = new UserActivityExtendVO();
+            BeanUtils.copyProperties(item, vo);
+            LambdaQueryWrapper<UserActivity> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(UserActivity::getUserId, loginUser.getId()).eq(UserActivity::getActivityId, item.getId());
+            UserActivity userActivity = userActivityMapper.selectOne(wrapper);
+            if (userActivity == null) vo.setJoinStatus(2);
+            else {
+                vo.setJoinStatus(userActivity.getJoinStatus());
+                vo.setPayStatus(userActivity.getPayStatus());
+            }
+            return vo;
+        }).collect(Collectors.toList());
+
+        return ResultData.success(list);
     }
 }

@@ -58,7 +58,7 @@ public class PresidentUserController {
 
     // 社长踢人
     @PostMapping("kick")
-    public ResultData<Object> userKick(@RequestParam @NotNull   String userId, @RequestParam @NotNull  String clubId){
+    public ResultData<Object> userKick(@RequestParam @NotNull String userId, @RequestParam @NotNull  String clubId){
         return userClubService.userClubDelete(userId,clubId);
     }
 

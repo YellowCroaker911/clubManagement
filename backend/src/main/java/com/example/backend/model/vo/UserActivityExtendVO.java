@@ -9,22 +9,9 @@ import java.util.Date;
 @Data
 public class UserActivityExtendVO {
     /**
-     * 主键
-     */
-    @TableId(type = IdType.AUTO)
-    private Long userActivityId;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
      * 活动id
      */
-    private Long activityId;
-
-
+    private Long id;
     /**
      * 0-没缴费 1-缴费
      */
@@ -109,7 +96,6 @@ public class UserActivityExtendVO {
     /**
      * 活动缴费
      */
-
     private Long money;
 
     /**
