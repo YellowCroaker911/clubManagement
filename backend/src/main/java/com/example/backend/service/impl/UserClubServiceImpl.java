@@ -1,7 +1,6 @@
 package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserClubMapper;
@@ -65,9 +64,8 @@ public class UserClubServiceImpl implements UserClubService {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
-        UpdateWrapper<UserClub> updateWrapper1 = new UpdateWrapper<>();
-        updateWrapper1.set("is_passed", 1);
-        userClubMapper.update(userClub,updateWrapper1);
+        userClub.setIsPassed(1);
+        userClubMapper.updateById(userClub);
 
         return ResultData.success(null);
     }
@@ -86,6 +84,10 @@ public class UserClubServiceImpl implements UserClubService {
         Club club = clubMapper.selectOne(queryWrapper2);
         if(club != null) {
             throw new BusinessException(ReturnCodes.KICK_PRESIDENT,null);
+        }
+
+        if(userClub.getIsPassed() != 1){
+            throw new BusinessException(ReturnCodes.NOT_PASS_YEET,null);
         }
 
         userClubMapper.delete(queryWrapper1);

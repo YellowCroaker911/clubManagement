@@ -2,13 +2,10 @@ package com.example.backend.model.dto.activity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data

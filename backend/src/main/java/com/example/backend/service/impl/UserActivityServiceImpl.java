@@ -1,7 +1,6 @@
 package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.UserActivityMapper;
@@ -74,9 +73,8 @@ public class UserActivityServiceImpl implements UserActivityService {
             throw new BusinessException(ReturnCodes.NOT_SIGN_UP,null);
         }
 
-        UpdateWrapper<UserActivity> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("pay_status",1);
-        userActivityMapper.update(userActivity,updateWrapper);
+        userActivity.setPayStatus(1);
+        userActivityMapper.updateById(userActivity);
 
         return ResultData.success(null);
     }
@@ -101,9 +99,8 @@ public class UserActivityServiceImpl implements UserActivityService {
             throw  new BusinessException(ReturnCodes.NOT_SIGN_TIME,null);
         }
 
-        UpdateWrapper<UserActivity> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("join_status",1);
-        userActivityMapper.update(userActivity,updateWrapper);
+        userActivity.setJoinStatus(1);
+        userActivityMapper.updateById(userActivity);
 
         return ResultData.success(null);
     }
@@ -115,6 +112,10 @@ public class UserActivityServiceImpl implements UserActivityService {
         UserActivity userActivity = userActivityMapper.selectOne(queryWrapper);
         if (userActivity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
+        }
+
+        if(userActivity.getPayStatus() == 1 || userActivity.getJoinStatus() == 1){
+            throw new BusinessException(ReturnCodes.PAY_OR_JOIN_YET,null);
         }
 
         userActivityMapper.delete(queryWrapper);

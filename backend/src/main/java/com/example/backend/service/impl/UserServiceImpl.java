@@ -1,7 +1,6 @@
 package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
@@ -85,13 +84,12 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
         }
 
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("name", name);
-        updateWrapper.set("gender", parseInt(gender));
-        updateWrapper.set("phone", phone);
-        updateWrapper.set("email", email);
+        user.setName(name);
+        user.setGender(parseInt(gender));
+        user.setPhone(phone);
+        user.setEmail(email);
 
-        userMapper.update(user, updateWrapper);
+        userMapper.updateById(user);
 
         return ResultData.success(null);
     }
@@ -114,11 +112,10 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ReturnCodes.DIFF_PASSWORD, null);
         }
 
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         String encodedNewPassword = passwordEncoder.encode(newPassword);
-        updateWrapper.set("password", encodedNewPassword);
+        user.setPassword(encodedNewPassword);
 
-        userMapper.update(user, updateWrapper);
+        userMapper.updateById(user);
 
         return ResultData.success(null);
     }

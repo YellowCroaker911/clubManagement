@@ -46,7 +46,7 @@ public class PresidentUserController {
     // 修改社团信息
     @PostMapping("/alterInfo")
     public ResultData<Object> clubAlterInfo(@RequestBody @Validated ClubAlterInfoRequestDTO clubAlterInfoRequestDTO){
-        return clubService.clubAlterInfo(clubAlterInfoRequestDTO.getId(),clubAlterInfoRequestDTO.getAvatar(),
+        return clubService.clubAlterInfo(clubAlterInfoRequestDTO.getId(),
                 clubAlterInfoRequestDTO.getInfo(),clubAlterInfoRequestDTO.getAddress(),clubAlterInfoRequestDTO.getContact());
     }
 

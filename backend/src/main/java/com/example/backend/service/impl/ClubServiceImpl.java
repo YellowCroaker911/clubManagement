@@ -1,7 +1,6 @@
 package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserClubMapper;
@@ -59,29 +58,28 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public ResultData<Object> clubAdmit(String id) {
-        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        Club club = clubMapper.selectOne(queryWrapper);
+        QueryWrapper<Club> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", id);
+        Club club = clubMapper.selectOne(queryWrapper1);
         if (club == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
-        UpdateWrapper<Club> updateWrapper1 = new UpdateWrapper<>();
-        updateWrapper1.set("is_admitted",1);
-        clubMapper.update(club, updateWrapper1);
+
+        club.setIsAdmitted(1);
+        clubMapper.updateById(club);
 
         UserClub userClub = new UserClub();
         userClub.setUserId(club.getPresidentId());
         userClub.setClubId(club.getId());
         userClubMapper.insert(userClub);
 
-        UpdateWrapper<UserClub> updateWrapper2 = new UpdateWrapper<>();
-        updateWrapper2.set("is_passed",1);
-        userClubMapper.update(userClub,updateWrapper2);
+        userClub.setIsPassed(1);
+        userClubMapper.updateById(userClub);
 
         return ResultData.success(null);
     }
     @Override
-    public ResultData<Object> clubAlterInfo(String id,String avatar, String info, String address, String contact) {
+    public ResultData<Object> clubAlterInfo(String id, String info, String address, String contact) {
 
         QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
@@ -90,12 +88,10 @@ public class ClubServiceImpl implements ClubService {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
-        UpdateWrapper<Club> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("avatar", avatar);
-        updateWrapper.set("info", info);
-        updateWrapper.set("address", address);
-        updateWrapper.set("contact", contact);
-        clubMapper.update(club, updateWrapper);
+        club.setInfo(info);
+        club.setAddress(address);
+        club.setContact(contact);
+        clubMapper.updateById(club);
         return ResultData.success(null);
 
     }

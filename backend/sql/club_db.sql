@@ -46,7 +46,7 @@ create table club
 create table activity
 (
     id             bigint auto_increment comment '主键' primary key,
-    club_id        bigint comment '社团id',
+    club_id        bigint not null comment '社团id',
     name           varchar(255) not null comment '活动名称',
     info           varchar(1023) not null comment '活动信息',
     title          varchar(255) not null comment '活动主题',
@@ -56,7 +56,7 @@ create table activity
     sign_end_time  datetime not null comment  '最迟签到时间' ,
     address        varchar(255) not null comment '活动地点',
     sign           varchar(255) not null comment '报名方式',
-    money          bigint comment '活动缴费（单位是分）',
+    money          bigint not null comment '活动缴费（单位是分）',
     join_people          int default 0 not null comment '参加人数',
     attendance_people      int default 0 not null comment '签到人数',
     summary        varchar(1023) null comment '活动总结',
@@ -108,6 +108,9 @@ drop trigger if exists on_join_club;
 drop trigger if exists on_release_activity;
 drop trigger if exists on_sign_up_activity;
 drop trigger if exists on_user_activity_status_update;
+drop trigger if exists on_exit_club;
+drop trigger if exists on_delete_activity;
+drop trigger if exists on_cancel_activity;
 
 -- 社长通过用户报名
 delimiter //
@@ -167,3 +170,29 @@ BEGIN
     END IF;
 END //
 DELIMITER ;
+
+-- 用户退出社团和社长踢人
+delimiter //
+create trigger on_exit_club after delete on user_club
+    for each row begin
+    IF OLD.is_passed = 1 THEN
+        update club set member = member - 1 where id = OLD.club_id;
+    END IF;
+end //
+delimiter ;
+
+-- 社长删除活动
+delimiter //
+create trigger on_delete_activity after delete on activity
+    for each row begin
+    update club set activity_number = club.activity_number - 1 where club.id = OLD.club_id;
+end //
+delimiter ;
+
+-- 用户取消报名
+delimiter //
+create trigger on_cancel_activity after delete on user_activity
+    for each row begin
+    update activity set join_people = activity.join_people - 1 where activity.id = OLD.activity_id;
+end //
+delimiter ;

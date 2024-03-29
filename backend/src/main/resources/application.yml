@@ -28,3 +28,8 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+
+# 输出sql语句
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
