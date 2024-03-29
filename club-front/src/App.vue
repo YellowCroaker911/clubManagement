@@ -34,15 +34,6 @@
         </template>
       </el-dropdown>
 
-<!--      <router-link to="/unusedOrder">-->
-<!--        <span class="">导航六</span>-->
-<!--      </router-link>-->
-<!--      <router-link to="/usedOrder">-->
-<!--        <span class="">导航七</span>-->
-<!--      </router-link>-->
-<!--      <router-link to="/advices">-->
-<!--        <span class="">导航八</span>-->
-<!--      </router-link>-->
     </div>
   </div>
   <h1>{{}}</h1>
@@ -50,34 +41,21 @@
       <router-view></router-view>
   </transition>
   <el-backtop :right="100" :bottom="100" />
-  <!-- <HelloWorld msg="Welcome to Your Vue.js App"/>
-  <Table></Table> -->
+
 </template>
 
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
 import {getCurrentUser} from "@/utils";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, onUnmounted } from "vue";
 import CustomAvatar from "@/components/CustomAvatar.vue";
 import {getAvatar} from "@/api/backend-api/userAccountController";
-// import HelloWorld from './components/HelloWorld.vue'
-// import {Table} from 'ant-design-vue';
-// export default {
-  // name: 'App',
-  // components: {
-  //   HelloWorld,
-  //   Table
-  // }
-// }
-const router = useRouter();
-// export const isLogin = ref(false);
+
+const router = useRouter()
 
 const isLogin = () =>{
   return sessionStorage.getItem('jwt');
 }
-// const avatarUrl = () => {
-//   return sessionStorage.getItem('jwt');
-// }
 
 
 const avatarEvent = (type: string) => {
@@ -97,8 +75,6 @@ onMounted(() => {
   })
 })
 
-// 解决ERROR ResizeObserver loop completed with undelivered notifications.
-//问题的
 const debounce = (fn, delay) => {
 
   let timer = null;
@@ -121,9 +97,7 @@ const debounce = (fn, delay) => {
 
 }
 
-// 解决ERROR ResizeObserver loop completed with undelivered notifications.
 
-//问题的
 
 const _ResizeObserver = window.ResizeObserver;
 
@@ -138,6 +112,9 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
   }
 
 }
+
+
+
 </script>
 
 <style>
@@ -149,6 +126,9 @@ window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
   color: #2c3e50;
   margin-top: 60px;
 } */
+
+
+
 .title{
   margin-left: 0px;
   height: 48px;
@@ -171,7 +151,9 @@ span{
 }
 .title-left-image{
   height: 48px;
-  width:120px
+  width:120px;
+  display: flex;
+  align-items: center
 }
 /* router-link样式 */
 a{
@@ -207,4 +189,6 @@ h1{
   justify-content: center;
   color: black;
 }
+
+
 </style>
