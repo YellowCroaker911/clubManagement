@@ -10,8 +10,9 @@
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动时间: ">{{ activityInfo.beginTime }} 至 {{ activityInfo.endTime }}</el-descriptions-item>
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="已报名人数: ">{{ activityInfo.joinPeople }}</el-descriptions-item>
         <el-descriptions-item class-name="description-class" label-class-name="label-class" span="1" label="其他: ">
-          <el-button type="primary" :disabled="activityInfo.isJoin" @click="handleSignUpOrOut()"> {{ activityInfo.isJoin?'取消报名':'立即报名' }}</el-button>
-          <el-button v-if="activityInfo.isJoin" type="primary" :disabled="activityInfo.isSign" @click="handleSignIn()"> {{ activityInfo.isSign?'已签到':'未签到' }}</el-button>
+          <el-button type="primary" @click="handleSignUpOrOut()"> {{ activityInfo.joinStatus!==2?'取消报名':'立即报名' }}</el-button>
+          <el-button v-if="activityInfo.joinStatus!==2" type="primary" :disabled="activityInfo.joinStatus===1" @click="handleSignIn()"> {{ activityInfo.joinStatus===1?'已签到':'未签到' }}</el-button>
+          <el-button v-if="activityInfo.joinStatus!==2" type="primary" :disabled="activityInfo.payStatus" @click="handlePayMoney()"> {{ activityInfo.payStatus?'已缴费':'未缴费' }}</el-button>
         </el-descriptions-item>
       </el-descriptions>
   </div>
@@ -21,9 +22,16 @@ import Vue, {onMounted, ref} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 import Options from 'vue-class-component';
 import {getActivityById} from "@/api/backend-api/globalQueryController";
-import {ElMain, ElMessage} from "element-plus";
-import {activityCancel, activitySignUp} from "@/api/backend-api/commonUserController";
-const activityInfo = ref<API.Activity>({
+import {ElMain, ElMessage, ElMessageBox} from "element-plus";
+import {
+  activityCancel,
+  activityPay,
+  activitySignIn,
+  activitySignUp,
+  clubJoin
+} from "@/api/backend-api/commonUserController";
+
+const activityInfo = ref<API.ActivityWithUserStateVO>({
   id: 1,
   name: "卖书",
   info: "这是一个卖书活动的信息",
@@ -33,47 +41,70 @@ const activityInfo = ref<API.Activity>({
   address: "操场",
   sign: "网站报名",
   joinPeople: 100,
-  // isJoin: false,
-  // isSign: false,
+  joinStatus: 0,
+  payStatus: 1,
 });
 const route = useRoute();
 const activityId = parseInt(route.params.id);
 
 const handleSignUpOrOut = () => {
-  if(!activityInfo.isJoin) {
+  if(activityInfo.value.joinStatus === 2) {
     activitySignUp({id: '' + activityId}).then(({data}) => {
       ElMessage.success("报名成功");
+      getInfo();
     }).catch(e => {
       console.log(e);
-      ElMessage.error("报名失败");
+      ElMessage.error(`报名失败, ${e.message}`);
     })
   }
   else{
     activityCancel({id: ''+activityId}).then(({data}) => {
       ElMessage.success("取消成功");
+      getInfo();
     }).catch(e => {
       console.log(e);
-      ElMessage.error("取消失败");
+      ElMessage.error(`取消失败 ${e.message}`);
     })
   }
 }
 
 const handleSignIn = () => {
-  activitySignUp({id:''+activityId}).then(({data}) => {
+  activitySignIn({id:''+activityId}).then(({data}) => {
     ElMessage.success("签到成功");
+    getInfo();
   }).catch(e => {
     console.log(e);
-    ElMessage.error("签到失败");
+    ElMessage.error(`签到失败, ${e.message}`);
   })
 }
 
-onMounted(() => {
+const handlePayMoney = () => {
+  ElMessageBox.confirm(`确定支付吗`).then(() => {
+    activityPay({id: ''+activityId}).then(({data}) => {
+      ElMessage.success("支付成功");
+      getInfo();
+    }).catch(e => {
+      console.log(e);
+      ElMessage.error(`支付失败, ${e.message}`);
+    })
+  })
+  .catch(() => {
+    console.log("取消支付")
+  })
+
+}
+
+const getInfo = () => {
   getActivityById({id: activityId}).then(({data}) => {
     activityInfo.value = data.data;
   }).catch(e => {
     console.log(e);
     ElMessage.error("获取信息失败");
   })
+}
+
+onMounted(() => {
+  getInfo();
 })
 </script>
 

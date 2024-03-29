@@ -18,7 +18,13 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/usedOrder',
+      path: '/clubs',
+      name: 'clubs',
+      component: ()=> import("@/views/modules/Clubs.vue"),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/president/club',
       name: 'UsedOrder',
       component: ()=> import("@/views/modules/Club/presidentClub.vue"),
       meta: { requiresAuth: true }
@@ -27,6 +33,12 @@ const router = createRouter({
       path: '/admin/club',
       name: 'AdminClub',
       component: ()=> import("@/views/modules/AdminClub/AdminClub.vue"),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
+      path: '/admin/activity',
+      name: 'AdminActivity',
+      component: ()=> import("@/views/modules/AdminActivity/AdminActivity.vue"),
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {

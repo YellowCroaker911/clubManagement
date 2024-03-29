@@ -2,14 +2,14 @@
 /* eslint-disable */
 import request from '@/api/httpRequest';
 
-/** 此处后端没有提供注释 GET /common/cancel */
+/** 此处后端没有提供注释 POST /common/cancel */
 export async function activityCancel(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.activityCancelParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/cancel`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -17,13 +17,36 @@ export async function activityCancel(
   });
 }
 
-/** 此处后端没有提供注释 GET /common/exit */
+/** 此处后端没有提供注释 POST /common/exit */
 export async function clubExit(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.clubExitParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/exit`, {
+    method: 'POST',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 GET /common/getAllClubWithCurrentUser */
+export async function getAllClubWithCurrentUser(options?: { [key: string]: any }) {
+  return request<API.ResultDataListClubWithUserStateVO>(`/api/common/getAllClubWithCurrentUser`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 GET /common/getSelfActivityById */
+export async function getSelfActivityById(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getSelfActivityByIdParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultDataUserActivityExtendVO>(`/api/common/getSelfActivityById`, {
     method: 'GET',
     params: {
       ...params,
@@ -34,10 +57,28 @@ export async function clubExit(
 
 /** 此处后端没有提供注释 GET /common/getSelfClubActivities */
 export async function getSelfClubActivities(options?: { [key: string]: any }) {
-  return request<API.ResultDataListActivity>(`/api/common/getSelfClubActivities`, {
+  return request<API.ResultDataListActivityWithUserStateVO>(`/api/common/getSelfClubActivities`, {
     method: 'GET',
     ...(options || {}),
   });
+}
+
+/** 此处后端没有提供注释 GET /common/getSelfClubActivityByClubId */
+export async function getSelfClubActivityByClubId(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getSelfClubActivityByClubIdParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultDataListUserActivityExtendVO>(
+    `/api/common/getSelfClubActivityByClubId`,
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
 }
 
 /** 此处后端没有提供注释 GET /common/getSelfClubs */
@@ -56,14 +97,14 @@ export async function getSelfClubsAsPresident(options?: { [key: string]: any }) 
   });
 }
 
-/** 此处后端没有提供注释 GET /common/join */
+/** 此处后端没有提供注释 POST /common/join */
 export async function clubJoin(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.clubJoinParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/join`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -71,14 +112,14 @@ export async function clubJoin(
   });
 }
 
-/** 此处后端没有提供注释 GET /common/pay */
+/** 此处后端没有提供注释 POST /common/pay */
 export async function activityPay(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.activityPayParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/pay`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -101,14 +142,14 @@ export async function clubRegister(
   });
 }
 
-/** 此处后端没有提供注释 GET /common/signIn */
+/** 此处后端没有提供注释 POST /common/signIn */
 export async function activitySignIn(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.activitySignInParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/signIn`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -116,14 +157,14 @@ export async function activitySignIn(
   });
 }
 
-/** 此处后端没有提供注释 GET /common/signUp */
+/** 此处后端没有提供注释 POST /common/signUp */
 export async function activitySignUp(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.activitySignUpParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/common/signUp`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },

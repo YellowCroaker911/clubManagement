@@ -5,6 +5,7 @@
   <!--    <el-card v-for="item in list" :body-style="{ padding: '0px', marginBottom: '1px' }">-->
     <el-descriptions class="activity-item-class" :title="item.name" border type="primary">
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="活动名称: ">{{ item.name }}</el-descriptions-item>
+      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主办社团: ">{{ item.clubName }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="主题: ">{{ item.title }}</el-descriptions-item>
       <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="报名方式: ">{{ item.sign }}</el-descriptions-item>
 <!--      <el-descriptions-item class-name="description-class" label-class-name="label-class" span="3" label="详细信息: ">{{ item.info }}</el-descriptions-item>-->
@@ -38,6 +39,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {ref, reactive, getCurrentInstance, onMounted,} from "vue";
 import router from "@/router";
 import {getAllActivity} from "@/api/backend-api/globalQueryController";
+import {getSelfClubActivities} from "@/api/backend-api/commonUserController";
 // import {getToken} from "@/api/backend-api/loginController";
 // import {register} from "@/api/backend-api/registerController";
 const { proxy } = getCurrentInstance()
@@ -45,7 +47,7 @@ const { proxy } = getCurrentInstance()
 
 const loading = ref(false)
 const currentDate = new Date().toDateString()
-const list = ref<API.Activity[]>([
+const list = ref<API.ActivityWithClubNameVO[]>([
   {
     id: 1,
     name: "卖书",
@@ -109,7 +111,7 @@ function signUp(index: number) {
 }
 
 onMounted(() => {
-  getAllActivity().then(({data}) => {
+  getSelfClubActivities().then(({data}) => {
     list.value = data.data;
   })
 })

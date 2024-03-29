@@ -16,3 +16,13 @@ export const getCurrentUser = (): API.User | undefined => {
   if(user === null)return undefined;
   return JSON.parse(user);
 }
+
+export const fen2Yuan = (amount:string | number | undefined):string => {
+  if(amount === undefined)return '0.00';
+  return (Number(amount) / 100).toFixed(2)
+}
+
+export const yuanToFen = (amount:string | number | undefined):string => {
+  if(amount === undefined)return '0.00';
+  return Math.round(Number(amount) * 100).toString()
+}

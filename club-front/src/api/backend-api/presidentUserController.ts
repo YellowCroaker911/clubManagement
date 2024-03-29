@@ -17,14 +17,14 @@ export async function activityAlterInfo(
   });
 }
 
-/** 此处后端没有提供注释 GET /president/activityDelete */
+/** 此处后端没有提供注释 POST /president/activityDelete */
 export async function activityDelete(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.activityDeleteParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/president/activityDelete`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -62,44 +62,14 @@ export async function clubAlterInfo(
   });
 }
 
-/** 此处后端没有提供注释 GET /president/getActivitiesByClubId */
-export async function getActivities(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getActivitiesParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultDataListActivity>(`/api/president/getActivitiesByClubId`, {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
-/** 此处后端没有提供注释 GET /president/getUsersByClubId */
-export async function getUsers(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getUsersParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.ResultDataListUser>(`/api/president/getUsersByClubId`, {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
-/** 此处后端没有提供注释 GET /president/kick */
+/** 此处后端没有提供注释 POST /president/kick */
 export async function userKick(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.userKickParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/president/kick`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
@@ -107,17 +77,37 @@ export async function userKick(
   });
 }
 
-/** 此处后端没有提供注释 GET /president/pass */
+/** 此处后端没有提供注释 POST /president/pass */
 export async function clubPass(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.clubPassParams,
   options?: { [key: string]: any },
 ) {
   return request<API.ResultDataObject>(`/api/president/pass`, {
-    method: 'GET',
+    method: 'POST',
     params: {
       ...params,
     },
+    ...(options || {}),
+  });
+}
+
+/** 此处后端没有提供注释 POST /president/upload */
+export async function clubFileUpload(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.clubFileUploadParams,
+  body: {},
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultDataObject>(`/api/president/upload`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: {
+      ...params,
+    },
+    data: body,
     ...(options || {}),
   });
 }

@@ -32,9 +32,9 @@ export async function alterSelfInfo(
   });
 }
 
-/** 此处后端没有提供注释 GET /account/getAvatar */
-export async function getAvatar(options?: { [key: string]: any }) {
-  return request<API.ResultDataString>(`/api/account/getAvatar`, {
+/** 此处后端没有提供注释 GET /account/getSelfAvatar */
+export async function getSelfAvatar(options?: { [key: string]: any }) {
+  return request<API.ResultDataString>(`/api/account/getSelfAvatar`, {
     method: 'GET',
     ...(options || {}),
   });
@@ -76,7 +76,7 @@ export async function userRegister(
 }
 
 /** 此处后端没有提供注释 POST /account/upload */
-export async function singleFileUpload(body: {}, options?: { [key: string]: any }) {
+export async function userFileUpload(body: {}, options?: { [key: string]: any }) {
   return request<API.ResultDataObject>(`/api/account/upload`, {
     method: 'POST',
     headers: {

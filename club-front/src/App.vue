@@ -5,10 +5,13 @@
     <div class="title-left">
       <div class="title-left-image"></div>
       <router-link to="/">
-        <span>主页(展示活动)</span>
+        <span>主页</span>
+      </router-link>
+      <router-link to="/clubs">
+        <span class="">社团信息</span>
       </router-link>
       <!-- todo true换成是否为管理员 -->
-      <router-link to="/usedOrder">
+      <router-link to="/president/club">
         <span class="">社长的社团管理</span>
       </router-link>
       <router-link to="/admin/club">
@@ -17,9 +20,6 @@
       </router-link>
       <router-link to="/admin/activity">
         <span class="">管理员能看的活动管理</span>
-      </router-link>
-      <router-link to="/evaluate">
-        <span class="">导航五</span>
       </router-link>
     </div>
     <div class="title-right">
@@ -61,7 +61,7 @@ import {useRouter} from "vue-router";
 import {getCurrentUser} from "@/utils";
 import {onMounted, ref} from "vue";
 import CustomAvatar from "@/components/CustomAvatar.vue";
-import {getAvatar} from "@/api/backend-api/userAccountController";
+import {getSelfAvatar} from "@/api/backend-api/userAccountController";
 // import HelloWorld from './components/HelloWorld.vue'
 // import {Table} from 'ant-design-vue';
 // export default {
@@ -94,9 +94,11 @@ const avatarEvent = (type: string) => {
 
 const avatarData = ref<string>();
 onMounted(() => {
-  getAvatar().then(({data})=> {
-    avatarData.value = 'data:image/png;base64,' + data.data;
-  })
+  if(sessionStorage.getItem('jwt')) {
+    getSelfAvatar().then(({data}) => {
+      avatarData.value = 'data:image/png;base64,' + data.data;
+    })
+  }
 })
 
 // 解决ERROR ResizeObserver loop completed with undelivered notifications.

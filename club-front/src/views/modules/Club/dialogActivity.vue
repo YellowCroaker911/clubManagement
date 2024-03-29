@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="true" :title="title" @close="handleClose">
+  <el-dialog :model-value="true" :title="title" @close="handleClose" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form
         ref="formRef"
         :model="formData"
@@ -22,20 +22,38 @@
       <el-form-item label="联系方式：" prop="sign">
         <el-input v-model="formData.sign"></el-input>
       </el-form-item>
-      <el-form-item label="开始时间：" prop="beginTime">
+      <el-form-item label="活动开始时间：" prop="beginTime">
         <el-date-picker
             v-model="formData.beginTime"
             type="datetime"
-            placeholder="选择开始时间"
+            placeholder="选择活动开始时间"
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
       </el-form-item>
-      <el-form-item label="结束时间：" prop="endTime">
+      <el-form-item label="活动结束时间：" prop="endTime">
         <el-date-picker
             v-model="formData.endTime"
             type="datetime"
-            placeholder="选择开始结束"
+            placeholder="选择活动结束时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+        />
+      </el-form-item>
+      <el-form-item label="签到开始时间：" prop="signBeginTime">
+        <el-date-picker
+            v-model="formData.signBeginTime"
+            type="datetime"
+            placeholder="选择签到开始时间"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+        />
+      </el-form-item>
+      <el-form-item label="签到结束时间：" prop="signEndTime">
+        <el-date-picker
+            v-model="formData.signEndTime"
+            type="datetime"
+            placeholder="选择签到结束时间"
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
@@ -85,7 +103,7 @@ const rules = reactive<FormRules<API.ActivityAlterInfoRequestDTO>>({
   ],
   address:[
     {required:true, message: '输入活动地址', trigger: 'blur'},
-    {pattern: /^.{0,10}$/, message: '活动地点不能超过100个字符', trigger: 'blur'}
+    {pattern: /^.{0,100}$/, message: '活动地点不能超过100个字符', trigger: 'blur'}
   ],
   sign:[
     {required:true, message: '输入邮箱联系方式', trigger: 'blur'},
@@ -95,6 +113,12 @@ const rules = reactive<FormRules<API.ActivityAlterInfoRequestDTO>>({
     {required:true, message: '输入开始时间', trigger: 'blur'}
   ],
   endTime:[
+    {required:true, message: '输入结束时间', trigger: 'blur'}
+  ],
+  signBeginTime:[
+    {required:true, message: '输入开始时间', trigger: 'blur'}
+  ],
+  signEndTime:[
     {required:true, message: '输入结束时间', trigger: 'blur'}
   ],
   money:[
