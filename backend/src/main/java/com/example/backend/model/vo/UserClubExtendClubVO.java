@@ -41,6 +41,12 @@ public class UserClubExtendClubVO {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;
+
+    /**
+     * 是否审核通过(0-审核中, 1-通过)
+     */
+    private Integer isPassed;
+
     /**
      * 社团id
      */
