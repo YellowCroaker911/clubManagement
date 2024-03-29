@@ -20,7 +20,7 @@ public enum ReturnCodes {
     TOO_LONG_CLUB_NAME(302,"社团名不能大于20"),
     EXIST_CLUB_NAME(303,"社团名已存在"),
     NOT_EXIST_PRESIDENT(304,"社长账号不存在"),
-    NOT_PRESIDENT(305,"非社长账号"),
+    KICK_PRESIDENT(305,"社长不能踢自己"),
     INDEX_NOT_EXIST(901,"索引不存在"),
     SYSTEM_ERROR(999, "系统错误");
     private final int code;     // 状态码

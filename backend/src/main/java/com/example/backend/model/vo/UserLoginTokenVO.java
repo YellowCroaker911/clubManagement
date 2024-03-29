@@ -1,4 +1,4 @@
-package com.example.backend.model.vo.user;
+package com.example.backend.model.vo;
 
 import lombok.Data;
 

@@ -1,10 +1,8 @@
 package com.example.backend.service;
 
 import com.example.backend.model.entity.User;
-import com.example.backend.model.vo.user.UserLoginTokenVO;
+import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.utils.result.ResultData;
-
-import java.util.List;
 
 public interface UserService {
 

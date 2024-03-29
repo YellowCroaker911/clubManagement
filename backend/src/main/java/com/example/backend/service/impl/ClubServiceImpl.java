@@ -112,4 +112,19 @@ public class ClubServiceImpl implements ClubService {
         return ResultData.success(null);
     }
 
+    @Override
+    public ResultData<Object> clubUpdateAvatar(String id, String avatarUrl) {
+        QueryWrapper<Club> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+        Club club = clubMapper.selectOne(queryWrapper);
+        if (club == null) {
+            throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST, null);
+        }
+
+        club.setAvatar(avatarUrl);
+        clubMapper.updateById(club);
+
+        return ResultData.success(null);
+    }
+
 }

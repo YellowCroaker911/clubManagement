@@ -69,14 +69,21 @@ public class UserClubServiceImpl implements UserClubService {
 
     @Override
     public ResultData<Object> userClubDelete(String userId, String clubId) {
-        QueryWrapper<UserClub> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", userId).eq("club_id",clubId);
-        UserClub userClub = userClubMapper.selectOne(queryWrapper);
+        QueryWrapper<UserClub> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("user_id", userId).eq("club_id",clubId);
+        UserClub userClub = userClubMapper.selectOne(queryWrapper1);
         if (userClub == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);
         }
 
-        userClubMapper.delete(queryWrapper);
+        QueryWrapper<Club> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("president_id", userId).eq("id",clubId);
+        Club club = clubMapper.selectOne(queryWrapper2);
+        if(club != null) {
+            throw new BusinessException(ReturnCodes.KICK_PRESIDENT,null);
+        }
+
+        userClubMapper.delete(queryWrapper1);
 
         return ResultData.success(null);
     }

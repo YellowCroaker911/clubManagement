@@ -6,7 +6,7 @@ import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.entity.User;
-import com.example.backend.model.vo.user.UserLoginTokenVO;
+import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.service.UserService;
 import com.example.backend.service.impl.utils.UserDetailsImpl;
 import com.example.backend.utils.JwtUtil;

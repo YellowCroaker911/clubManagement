@@ -5,7 +5,7 @@ import com.example.backend.model.dto.user.UserAlterPasswordRequestDTO;
 import com.example.backend.model.dto.user.UserLoginRequestDTO;
 import com.example.backend.model.dto.user.UserRegisterRequestDTO;
 import com.example.backend.model.entity.User;
-import com.example.backend.model.vo.user.UserLoginTokenVO;
+import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.service.ClubService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.CommonConstant;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 @RestController
 @RequestMapping("/account")
@@ -78,7 +77,7 @@ public class UserAccountController {
      * @return
      */
     @PostMapping("/upload")
-    public ResultData<Object> singleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResultData<Object> userFileUpload(@RequestParam("file") MultipartFile file) {
         //@RequestParam("file") MultipartFile file为接收图片参数
         //Long userId,String status 用户Id和状态
         User loginUser = userService.userGetSelfInfo();
@@ -103,8 +102,8 @@ public class UserAccountController {
      * 获取登录用户头像，返回base64
      * @return
      */
-    @GetMapping("/getAvatar")
-    public ResultData<String> getAvatar() {
+    @GetMapping("/getSelfAvatar")
+    public ResultData<String> getSelfAvatar() {
         User loginUser = userService.userGetSelfInfo();
         // 获取图片名称
         String avatar = loginUser.getAvatar();

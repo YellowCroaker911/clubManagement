@@ -32,6 +32,11 @@ public class UserClub implements Serializable {
     private Long clubId;
 
     /**
+     * 对社团缴费金额（单位是分）
+     */
+    private Integer contribution_money;
+
+    /**
      * 创建时间
      */
     private Date createTime;

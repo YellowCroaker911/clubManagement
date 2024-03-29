@@ -29,7 +29,7 @@ public class UserActivityServiceImpl implements UserActivityService {
     public ResultData<Object> userActivitySignUp(String userId, String activityId) {
 
         QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", userId);
+        queryWrapper.eq("id", activityId);
         Activity activity = activityMapper.selectOne(queryWrapper);
         if (activity == null) {
             throw new BusinessException(ReturnCodes.INDEX_NOT_EXIST,null);

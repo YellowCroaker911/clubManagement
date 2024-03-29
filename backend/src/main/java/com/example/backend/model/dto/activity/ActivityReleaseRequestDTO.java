@@ -1,10 +1,14 @@
 package com.example.backend.model.dto.activity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -22,7 +26,11 @@ public class ActivityReleaseRequestDTO {
     @Pattern(regexp = "^.{0,50}$",message = "活动主题不能超过50个字符")
     private String title;
     //todo:时间数据校验
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date beginTime;
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date endTime;
     @NotBlank(message = "活动地点不能为空")
     @Pattern(regexp = "^.{0,100}$",message = "活动地点不能超过100个字符")

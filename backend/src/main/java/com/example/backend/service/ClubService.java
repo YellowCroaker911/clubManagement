@@ -12,4 +12,6 @@ public interface ClubService {
     ResultData<Object> clubAlterInfo(String id,String avatar,String info,String address,String contact);
 
     ResultData<Object> clubDelete(String id);
+
+    ResultData<Object> clubUpdateAvatar(String id,String avatarUrl);
 }

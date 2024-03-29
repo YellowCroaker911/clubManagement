@@ -85,6 +85,7 @@ create table user_club
     user_id     bigint not null comment '用户id',
     club_id     bigint not null comment '社团id',
     is_passed   tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
+    contribution_money         bigint comment '社团贡献（单位是分）',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
@@ -153,6 +154,9 @@ BEGIN
             UPDATE user
             SET money = money + activity_money
             WHERE id = NEW.user_id;
+            UPDATE user_club
+            SET contribution_money = contribution_money + activity_money
+            WHERE user_id = NEW.user_id and club_id = (select club_id from activity where id = NEW.activity_id);
         END IF;
     END IF;
     IF NEW.join_status = 1 AND OLD.join_status != 1 THEN

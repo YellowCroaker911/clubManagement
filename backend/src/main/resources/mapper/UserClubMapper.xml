@@ -8,6 +8,7 @@
             <id property="userClubId" column="user_club_id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="clubId" column="club_id" jdbcType="BIGINT"/>
+            <result property="contribution_money" column="contribution_money" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
