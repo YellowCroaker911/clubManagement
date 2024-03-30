@@ -29,6 +29,7 @@ public enum ReturnCodes {
     NOT_SIGN_UP(404,"未报名"),
     PAY_OR_JOIN_YET(405,"已签到或缴费"),
     INDEX_NOT_EXIST(901,"索引不存在"),
+    IMG_NOTFOUND(902,"找不到图片"),
     SYSTEM_ERROR(999, "系统错误");
     private final int code;     // 状态码
     private final String message;   // 状态码信息

@@ -1,5 +1,7 @@
 package com.example.backend.utils;
 
+import com.example.backend.exception.BusinessException;
+import com.example.backend.utils.result.ReturnCodes;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -183,7 +185,7 @@ public class CommonUtil {
             //获取JDK8里的编码器Base64.Encoder转为base64字符
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BusinessException(ReturnCodes.IMG_NOTFOUND);
         } finally {
             try {
                 if (baos != null) {
@@ -193,7 +195,6 @@ public class CommonUtil {
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
     /**

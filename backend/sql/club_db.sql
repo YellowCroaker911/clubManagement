@@ -97,12 +97,12 @@ create table user_club
     index club_index (club_id)
 )comment '社员和社团关系表';
 
-drop view if exists view_club_users;
 
 -- 查询社员、社团关系表，带上名字
-CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name as club_name
-                               from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
-                               where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
+-- drop view if exists view_club_users;
+-- CREATE VIEW view_club_users AS select user_id, club_id, u.name as name, c.name as club_name
+--                                from user_club uc left join user u on uc.user_id = u.id left join club c on uc.club_id = c.id
+--                                where uc.is_delete=0 and u.is_delete=0 and c.is_delete=0;
 
 drop trigger if exists on_join_club;
 drop trigger if exists on_release_activity;
