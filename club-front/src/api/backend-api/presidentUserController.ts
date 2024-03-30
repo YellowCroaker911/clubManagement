@@ -77,6 +77,24 @@ export async function userKick(
   });
 }
 
+/** 此处后端没有提供注释 GET /president/listUserByActivityId */
+export async function listUserByActivityId(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listUserByActivityIdParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.ResultDataListUserWithUserActivityStateVO>(
+    `/api/president/listUserByActivityId`,
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
 /** 此处后端没有提供注释 POST /president/pass */
 export async function clubPass(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

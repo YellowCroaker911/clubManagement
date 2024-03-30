@@ -200,6 +200,10 @@ declare namespace API {
     clubId: string;
   };
 
+  type listUserByActivityIdParams = {
+    activityId: number;
+  };
+
   type ResultDataActivityWithUserStateVO = {
     status?: number;
     message?: string;
@@ -260,6 +264,13 @@ declare namespace API {
     status?: number;
     message?: string;
     data?: UserClubExtendUserVO[];
+    timestamp?: number;
+  };
+
+  type ResultDataListUserWithUserActivityStateVO = {
+    status?: number;
+    message?: string;
+    data?: UserWithUserActivityStateVO[];
     timestamp?: number;
   };
 
@@ -386,5 +397,17 @@ declare namespace API {
     password: string;
     confirmedPassword: string;
     role: string;
+  };
+
+  type UserWithUserActivityStateVO = {
+    id?: number;
+    payStatus?: number;
+    joinStatus?: number;
+    username?: string;
+    name?: string;
+    avatar?: string;
+    gender?: number;
+    phone?: string;
+    email?: string;
   };
 }

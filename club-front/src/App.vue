@@ -12,14 +12,14 @@
       </router-link>
       <!-- todo true换成是否为管理员 -->
       <router-link to="/president/club">
-        <span class="">社长的社团管理</span>
+        <span class="">我是社长</span>
       </router-link>
-      <router-link to="/admin/club">
+      <router-link v-if="isAdmin()" to="/admin/club">
 <!--        <router-link to="/admin/club">-->
-        <span class="">管理员能看的社团管理</span>
+        <span class="">管理员社团管理</span>
       </router-link>
-      <router-link to="/admin/activity">
-        <span class="">管理员能看的活动管理</span>
+      <router-link v-if="isAdmin()" to="/admin/activity">
+        <span class="">管理员活动管理</span>
       </router-link>
     </div>
     <div class="title-right">
@@ -77,9 +77,9 @@ const router = useRouter();
 const isLogin = () =>{
   return sessionStorage.getItem('jwt');
 }
-// const avatarUrl = () => {
-//   return sessionStorage.getItem('jwt');
-// }
+const isAdmin = () => {
+  return isLogin() && getCurrentUser()?.role===1;
+}
 
 
 const avatarEvent = (type: string) => {
