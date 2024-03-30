@@ -157,18 +157,6 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         }).finally(() => {
           isLoading.value = false;
         });
-        // proxy.$http.post("/api/user/account/token/", {
-        //   username: formData.username,
-        //   password: formData.password
-        // }).then(({ data }) => {
-        //   console.log(data);
-        //   // sessionStorage.setItem('jwt', `Bearer ${data.data.token}`);
-        //   proxy.$http.defaults.headers.common['Authorization'] = `Bearer ${data.data.token}`;
-        //
-        // }).catch(e => {
-        //   ElMessage.error('Oops, this is a error message.')
-        //   console.log("error", e);
-        // });
       }
       else{
         userRegister({

@@ -10,9 +10,6 @@
       <el-form-item label="社团名称：" prop="name">
         <el-input v-model="formData.name"></el-input>
       </el-form-item>
-<!--      <el-form-item label="年龄：" prop="age">-->
-<!--        <el-input v-model="formData.age"></el-input>-->
-<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" @click="submitForm(formRef)">确定</el-button>
         <el-button @click="resetForm(formRef)">重置</el-button>

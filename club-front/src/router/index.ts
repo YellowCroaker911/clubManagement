@@ -7,9 +7,15 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
     {
+      path: '/404',
+      name: '404',
+      component: ()=> import("@/views/common/404.vue")
+    },
+    {
       path: '/login',
       name: 'login',
-      component: ()=> import("@/views/common/login.vue")
+      component: ()=> import("@/views/common/login.vue"),
+      meta: {requireNotLogin: true}
     },
     {
       path: '/',
@@ -53,6 +59,7 @@ const router = createRouter({
       meta: { title: "活动详情页", requiresAuth: true },
       component: () => import("@/views/modules/activityDetail.vue")
     },
+    { path: '/:catchAll(.*)', redirect: '/404'},
   ]
 })
 
@@ -60,7 +67,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = sessionStorage.getItem('jwt');
   const isAuthenticated = !!authStore;
-  if(to.meta.requiresAuth || to.meta.requiresAdmin) {
+  if(to.meta.requireNotLogin && isAuthenticated){
+    next({name: 'home'});
+  }
+  else if(to.meta.requiresAuth || to.meta.requiresAdmin) {
     if(!isAuthenticated)next({name: "login"});
     else {
       getSelfInfo().then(({data}) => {

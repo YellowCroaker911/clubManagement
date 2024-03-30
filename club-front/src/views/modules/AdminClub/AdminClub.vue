@@ -38,7 +38,6 @@
         :rowInfo="rowInfo"
         :title="title"
         :arrayNum="clubInfo.length"
-        @add="addRow"
         @update="editRow"
     />
     <!-- 详情弹窗 -->
@@ -53,33 +52,13 @@ import Dialog from "./dialog.vue";
 import {clubRegister} from "@/api/backend-api/commonUserController";
 import {getAllActivity, getAllClub, getClubAvatar} from "@/api/backend-api/globalQueryController";
 import {clubAdmit, clubDelete} from "@/api/backend-api/adminUserController";
+import {fen2Yuan} from "@/utils";
 
 const dialogShow = ref(false) // 新增/编辑弹框
 const detailShow = ref(false) // 详情弹窗
 const rowInfo = ref({}) // 新增/编辑的数据
 const title = ref("") // 是新建还是修改
-const clubInfo = ref<API.Club[]>([
-  {
-    id: 13,
-    name: "111",
-    avatar: "123",
-    info: "1233",
-    address: "432",
-    contact: "32132",
-    member: 4433,
-    money: 1,
-  },
-  {
-    id: 22,
-    name: "131231",
-    avatar: "dqwd23",
-    info: "123dqds3",
-    address: "43qsd2",
-    contact: "32qwe132",
-    member: 4433,
-    money: 12,
-  }
-])
+const clubInfo = ref<API.Club[]>([])
 
 
 const handleNew = () => {
@@ -91,7 +70,6 @@ const handleDetail = (val: any) => {
   console.log(val);
   // data.detailShow = true;
   // data.rowInfo = val;
-  // todo 发送审核通过请求
   clubAdmit({id: val.id}).then(({data}) => {
     updateClubsInfo();
   }).catch(e => {
@@ -100,10 +78,12 @@ const handleDetail = (val: any) => {
   })
 }
 const handleEdit = (val: any) => {
-  console.log(val);
-  title.value = "修改";
-  dialogShow.value = true;
-  rowInfo.value = val;
+  ElMessage.error("不支持管理员编辑社团信息")
+  return;
+  // console.log(val);
+  // title.value = "修改";
+  // dialogShow.value = true;
+  // rowInfo.value = val;
 }
 const handleDel = (val: any) => {
   console.log(val);
@@ -113,7 +93,6 @@ const handleDel = (val: any) => {
     type: "warning",
   })
   .then(() => {
-    // todo 发送请求删除社团
     clubDelete({id: val.id}).then(({data}) => {
       ElMessage.success("删除成功");
       updateClubsInfo();
@@ -129,19 +108,18 @@ const handleDel = (val: any) => {
 // 添加行
 const addRow = (val: any) => {
   console.log("val", val);
-  // ElMessage.error("此页面不支持添加");
-  clubRegister({
-    ...val
-  }).then((res) => {
-    ElMessage.success('提交成功');
-  }).catch(e => {
-    ElMessage.error(`提交失败, ${e.message}`)
-  })
+  ElMessage.error("此页面不支持添加");
+  // clubRegister({
+  //   ...val
+  // }).then((res) => {
+  //   ElMessage.success('提交成功');
+  // }).catch(e => {
+  //   ElMessage.error(`提交失败, ${e.message}`)
+  // })
   // data.studentInfo.push(val);
 }
 // 编辑行
 const editRow = (val: any) => {
-  // todo 发送更新请求
 
   // let index = data.studentInfo.findIndex(
   //     (item, index) => item.id === val.id
@@ -154,6 +132,9 @@ const closeDetail = () => {
 }
 const updateClubsInfo = () => {
   getAllClub().then(({data}) => {
+    for(let i in data.data||[]) {
+      data.data[i].money = fen2Yuan(data.data[i].money);
+    }
     clubInfo.value = data.data;
   }).then(() => {
     clubInfo.value.forEach(item => {

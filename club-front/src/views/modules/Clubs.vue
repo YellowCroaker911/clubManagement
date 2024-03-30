@@ -26,18 +26,6 @@
         </el-descriptions-item>
 
       </el-descriptions>
-      <!--      <img-->
-      <!--          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"-->
-      <!--          class="image"-->
-      <!--      />-->
-      <!--      <div style="padding: 14px">-->
-      <!--        <span>Delicious hamburger</span>-->
-      <!--        <div class="bottom card-header">-->
-      <!--          <div class="time">{{ currentDate }}</div>-->
-      <!--          <el-button text class="button">operation button</el-button>-->
-      <!--        </div>-->
-      <!--      </div>-->
-      <!--    </el-card>-->
     </template>
   </div>
 </template>
