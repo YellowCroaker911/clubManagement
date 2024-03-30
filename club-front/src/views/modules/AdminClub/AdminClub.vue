@@ -52,6 +52,7 @@ import Dialog from "./dialog.vue";
 import {clubRegister} from "@/api/backend-api/commonUserController";
 import {getAllActivity, getAllClub, getClubAvatar} from "@/api/backend-api/globalQueryController";
 import {clubAdmit, clubDelete} from "@/api/backend-api/adminUserController";
+import {fen2Yuan} from "@/utils";
 
 const dialogShow = ref(false) // 新增/编辑弹框
 const detailShow = ref(false) // 详情弹窗
@@ -131,6 +132,9 @@ const closeDetail = () => {
 }
 const updateClubsInfo = () => {
   getAllClub().then(({data}) => {
+    for(let i in data.data||[]) {
+      data.data[i].money = fen2Yuan(data.data[i].money);
+    }
     clubInfo.value = data.data;
   }).then(() => {
     clubInfo.value.forEach(item => {
