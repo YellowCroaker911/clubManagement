@@ -10,7 +10,6 @@
       <router-link to="/clubs">
         <span class="">社团信息</span>
       </router-link>
-      <!-- todo true换成是否为管理员 -->
       <router-link to="/president/club">
         <span class="">我是社长</span>
       </router-link>

@@ -167,12 +167,6 @@
               </el-tag>
             </template>
           </el-table-column>
-          <!--          <el-table-column fixed="right" label="操作" width="220">-->
-          <!--            <template #default="scope">-->
-          <!--              <el-button :type="scope.row.isJoin?'danger':'primary'" size="small" @click="handleSignInOut(scope.row)">{{ scope.row.isJoin?"取消报名":"报名" }}</el-button>-->
-          <!--            <el-button type="text" size="small" v-if="scope.row.is_admitted === 0" @click="handleDetail(scope.row)">通过</el-button>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
         </el-table>
       </el-card>
     </div>
@@ -186,7 +180,7 @@ import {Edit, Upload} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox, FormInstance, FormRules} from "element-plus";
 import {useRouter} from "vue-router";
 import {alterPassword, alterSelfInfo, getSelfAvatar, getSelfInfo} from "@/api/backend-api/userAccountController";
-import {getUUID} from "@/utils";
+import {fen2Yuan, getUUID} from "@/utils";
 import CustomImg from "@/App.vue";
 import {
   activityCancel,
@@ -210,12 +204,14 @@ const showPanel = (type, data) => {
   opType.value = type;
   if (type == 3) {
     clubInfo.value = data;
-    //todo get社团头像
     updateActivities();
   }
 }
 const updateActivities = () => {
   getSelfClubActivityByClubId({clubId: clubInfo.value.id}).then(({data}) => {
+    for(let i in data.data||[]) {
+      data.data[i].money = fen2Yuan(data.data[i].money);
+    }
     activityInfo.value = data.data;
     console.log(data);
   })
@@ -342,7 +338,7 @@ const exitClub = () => {
       ElMessage.success("退出成功");
     }).catch(e => {
       console.log(e);
-      ElMessage.error("退出失败");
+      ElMessage.error(`退出失败 ${e.message}`);
     })
   })
 }
@@ -393,12 +389,16 @@ const clubAvatarData = ref();
 onMounted(() => {
   getSelfInfo().then(({data}) => {
     sessionStorage.setItem('user', JSON.stringify(data.data));
+    data.data.money = fen2Yuan(data.data.money);
     userInfo.value = data.data || {};
   })
   getSelfAvatar().then(({data}) => {
     avatarData.value = 'data:image/png;base64,' + data.data;
   })
   getSelfClubs().then(({data}) => {
+    for(let i in data.data||[]) {
+      data.data[i].money = fen2Yuan(data.data[i].money);
+    }
     clubs.value = data.data;
   }).catch(e => {
     ElMessage.error("获取社团信息失败");

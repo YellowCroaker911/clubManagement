@@ -29,6 +29,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import {clubRegister} from "@/api/backend-api/commonUserController";
 import {activityDelete} from "@/api/backend-api/presidentUserController";
 import {getAllActivity} from "@/api/backend-api/globalQueryController";
+import {fen2Yuan} from "@/utils";
 
 const data = reactive({
   dialogShow: false, // 新增/编辑弹框
@@ -46,7 +47,6 @@ const handleDetail = (val: any) => {
   console.log(val);
   // data.detailShow = true;
   // data.rowInfo = val;
-  // todo 发送审核通过请求
 }
 const handleDel = (val: any) => {
   console.log(val);
@@ -55,7 +55,6 @@ const handleDel = (val: any) => {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    // todo 发送请求删除社团
     activityDelete({
       id: val.id,
     }).then(({data}) => {
@@ -82,7 +81,6 @@ const addRow = (val: any) => {
 }
 // 编辑行
 const editRow = (val: any) => {
-  // todo 发送更新请求
 
   // let index = data.studentInfo.findIndex(
   //     (item, index) => item.id === val.id
@@ -95,6 +93,9 @@ const closeDetail =() => {
 }
 const updateTable = () => {
   getAllActivity().then((res) => {
+    for(let i in res.data.data||[]){
+      res.data.data[i].money = fen2Yuan(res.data.data[i].money);
+    }
     data.activityInfo = res.data.data;
   }).catch(e => {
     ElMessage.error("查询活动失败");

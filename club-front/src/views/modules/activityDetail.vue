@@ -31,19 +31,7 @@ import {
   clubJoin
 } from "@/api/backend-api/commonUserController";
 
-const activityInfo = ref<API.ActivityWithUserStateVO>({
-  id: 1,
-  name: "卖书",
-  info: "这是一个卖书活动的信息",
-  title: "义卖",
-  beginTime: "2024-01-01 19:00",
-  endTime: "2024-01-07 00:00",
-  address: "操场",
-  sign: "网站报名",
-  joinPeople: 100,
-  joinStatus: 0,
-  payStatus: 1,
-});
+const activityInfo = ref<API.ActivityWithUserStateVO>({});
 const route = useRoute();
 const activityId = parseInt(route.params.id);
 
