@@ -1,10 +1,11 @@
 package com.example.backend.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.backend.model.entity.User;
 import com.example.backend.model.vo.UserLoginTokenVO;
 import com.example.backend.utils.result.ResultData;
 
-public interface UserService {
+public interface UserService extends IService<User> {
 
     ResultData<Object> userRegister(String username, String password, String confirmedPassword, String role);
     ResultData<Object> userAlterSelfInfo(String id,String name, String gender, String phone, String email);

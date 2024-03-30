@@ -2,27 +2,32 @@ package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ActivityMapper;
 import com.example.backend.mapper.UserActivityMapper;
 import com.example.backend.mapper.UserClubMapper;
 import com.example.backend.model.entity.Activity;
+import com.example.backend.model.entity.User;
 import com.example.backend.model.entity.UserActivity;
 import com.example.backend.model.entity.UserClub;
+import com.example.backend.model.vo.UserWithUserActivityStateVO;
 import com.example.backend.service.UserActivityService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.Long.parseLong;
 
 @Service
-public class UserActivityServiceImpl implements UserActivityService {
+public class UserActivityServiceImpl extends ServiceImpl<UserActivityMapper, UserActivity> implements UserActivityService {
     @Autowired
     ActivityMapper activityMapper;
     @Autowired
@@ -122,5 +127,21 @@ public class UserActivityServiceImpl implements UserActivityService {
         userActivityMapper.delete(queryWrapper);
 
         return ResultData.success(null);
+    }
+
+    @Override
+    public List<UserWithUserActivityStateVO> listUserByActivityId(Long activityId) {
+        LambdaQueryWrapper<UserActivity> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserActivity::getActivityId, activityId);
+        List<UserActivity> userActivities = baseMapper.selectList(wrapper);
+        List<UserWithUserActivityStateVO> list = userActivities.stream().map(item -> {
+            User user = userService.getById(item.getUserId());
+            UserWithUserActivityStateVO vo = new UserWithUserActivityStateVO();
+            BeanUtils.copyProperties(user, vo);
+            vo.setJoinStatus(item.getJoinStatus());
+            vo.setPayStatus(item.getPayStatus());
+            return vo;
+        }).collect(Collectors.toList());
+        return list;
     }
 }

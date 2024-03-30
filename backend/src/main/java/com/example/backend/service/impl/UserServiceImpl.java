@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.mapper.ClubMapper;
 import com.example.backend.mapper.UserMapper;
@@ -25,7 +26,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;

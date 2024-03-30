@@ -6,10 +6,9 @@ import com.example.backend.mapper.UserMapper;
 import com.example.backend.model.dto.activity.ActivityAlterInfoRequestDTO;
 import com.example.backend.model.dto.activity.ActivityReleaseRequestDTO;
 import com.example.backend.model.dto.club.ClubAlterInfoRequestDTO;
-import com.example.backend.service.ActivityService;
-import com.example.backend.service.ClubService;
-import com.example.backend.service.UserClubService;
-import com.example.backend.service.UserService;
+import com.example.backend.model.entity.UserActivity;
+import com.example.backend.model.vo.UserWithUserActivityStateVO;
+import com.example.backend.service.*;
 import com.example.backend.utils.CommonConstant;
 import com.example.backend.utils.CommonUtil;
 import com.example.backend.utils.result.ResultData;
@@ -25,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/president")
@@ -43,6 +43,10 @@ public class PresidentUserController {
     ClubMapper clubMapper;
     @Autowired
     ActivityMapper activityMapper;
+    @Autowired
+    UserActivityService userActivityService;
+
+
     // 修改社团信息
     @PostMapping("/alterInfo")
     public ResultData<Object> clubAlterInfo(@RequestBody @Validated ClubAlterInfoRequestDTO clubAlterInfoRequestDTO){
@@ -89,6 +93,17 @@ public class PresidentUserController {
     @PostMapping("/activityDelete")
     public ResultData<Object> activityDelete(@RequestParam @NotNull  String id){
         return activityService.activityDelete(id);
+    }
+
+
+    /**
+     * 根据活动id查参与该活动的所有学生
+     * @param activityId
+     * @return
+     */
+    @GetMapping("/listUserByActivityId")
+    public ResultData<List<UserWithUserActivityStateVO>> listUserByActivityId(@NotNull Long activityId) {
+        return ResultData.success(userActivityService.listUserByActivityId(activityId));
     }
 
 
