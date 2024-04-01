@@ -12,7 +12,9 @@ class BackendApplicationTests {
     AdminService adminService;
     @Test
     void contextLoads() {
-        System.out.println(adminService.getAllBackUpFiles());
+//        adminService.backup();
+        adminService.recovery("F:\\Files\\大三下\\数据库\\ClubManagement\\backend\\backup\\Sun_Mar_31_23_53_09_CST_2024.sql");
+//        System.out.println(adminService.recovery("./backup/Sun_Mar_31_23_53_09_CST_2024.sql"));
     }
 
 }

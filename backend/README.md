@@ -42,3 +42,10 @@ custom.mysql.password=本地数据库密码
 - [x] login失败时 `Authentication authenticate = authenticationManager.authenticate(authenticationToken);` 会自动处理，无法返回统一错误格式
 
 - [x] 带token的header错误时会自动处理，无法返回统一错误格式，[使用这的第二个解决方法](https://blog.csdn.net/m0_37731470/article/details/116754395)
+
+- 数据备份功能，不知道怎么执行sql脚本导入数据，接口在AdminService.recovery()，调用了SqlScriptService，里面写了三个版本都不行，第三个最合理（读sql文件转化为JDBC的statement执行，但执行到一半执行失败，可能是编码问题，也有可能JDBC不支持），测试入口在BackendApplicationTests，等价的cmd指令是:
+```agsl
+mysql -h 127.0.0.1 -P 3306 -u{用户名} -p{密码}
+use club
+source {sql文件路径}
+```

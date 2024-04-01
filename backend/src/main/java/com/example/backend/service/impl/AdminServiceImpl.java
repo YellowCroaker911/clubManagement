@@ -3,9 +3,12 @@ package com.example.backend.service.impl;
 import com.example.backend.exception.BusinessException;
 import com.example.backend.model.vo.FileDetailsVO;
 import com.example.backend.service.AdminService;
+import com.example.backend.service.impl.utils.FileDetails;
 import com.example.backend.service.impl.utils.FileDetailsService;
+import com.example.backend.service.impl.utils.SqlScriptService;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -16,14 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.example.backend.utils.CommonConstant.BACKUP_FOLDER;
 
@@ -33,10 +31,16 @@ public class AdminServiceImpl implements AdminService {
     String databaseUser;
     @Value("${custom.mysql.password}")
     String databasePassword;
+    @Value("${custom.mysql.host}")
+    String databaseHost;
+    @Value("${custom.mysql.port}")
+    String databasePort;
     @Value("${custom.mysql.table}")
     String databaseTable;
     @Autowired
     FileDetailsService fileDetailsService;
+    @Autowired
+    SqlScriptService sqlScriptService;
 
     public ResultData<Object> backup() {
 
@@ -47,8 +51,8 @@ public class AdminServiceImpl implements AdminService {
                 "mysqldump",
                 "-u" + databaseUser,
                 "-p" + databasePassword,
-                "--host=127.0.0.1",
-                "--port=3306",
+                "--host=" + databaseHost,
+                "--port=" + databasePort,
                 "--databases",
                 databaseTable,
                 "-r", // 使用 -r 参数指定输出文件，而不是重定向
@@ -91,50 +95,21 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ResultData<List<FileDetailsVO>> getAllBackUpFiles() {
-        List<FileDetailsVO> fileDetailsVOs =  fileDetailsService.getAllFiles(BACKUP_FOLDER);
-        return ResultData.success(fileDetailsVOs);
+        List<FileDetails> fileDetailsList =  fileDetailsService.getAllFiles(BACKUP_FOLDER);
+        List<FileDetailsVO> fileDetailsVOList = new ArrayList<>();
+        for(FileDetails fileDetails: fileDetailsList ){
+            FileDetailsVO fileDetailsVO = new FileDetailsVO();
+            BeanUtils.copyProperties(fileDetails,fileDetailsVO);
+            fileDetailsVOList.add(fileDetailsVO);
+        }
+        return ResultData.success(fileDetailsVOList);
     }
 
 
     @Override
-    public ResultData<ResponseEntity<Resource>> download() {
+    public ResultData<ResponseEntity<Resource>> download(String path) {
 
-        // 定义备份文件夹路径
-        Path backupDirectory = Paths.get(BACKUP_FOLDER);
-
-        Path filePath = null;
-
-        try {
-            // 获取文件夹下的所有文件
-            List<Path> files = Files.list(backupDirectory)
-                    .filter(Files::isRegularFile) // 过滤掉非文件项
-                    .collect(Collectors.toList());
-
-            // 如果文件夹为空，则直接返回
-            if (files.isEmpty()) {
-                System.out.println("No files found in the backup directory.");
-                throw new BusinessException(ReturnCodes.SYSTEM_ERROR, "备份文件夹为空");
-            }
-
-            // 根据最后修改时间排序文件
-            Collections.sort(files, Comparator.comparingLong(f -> {
-                try {
-                    return Files.getLastModifiedTime(f).toMillis();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
-
-            // 获取最后修改时间最新的文件
-            Path latestFile = files.get(files.size() - 1);
-            System.out.println("The latest file is: " + latestFile);
-
-            // 如果需要，你可以将此路径赋值给filePath变量
-            filePath = latestFile;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Path filePath = Paths.get(path);
 
         Resource resource = new FileSystemResource(filePath);
 
@@ -155,5 +130,11 @@ public class AdminServiceImpl implements AdminService {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource));
+    }
+
+    @Override
+    public ResultData<Object> recovery(String path) {
+        sqlScriptService.runSqlScript(path);
+        return ResultData.success(null);
     }
 }

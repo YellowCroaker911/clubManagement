@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class FileDetailsService {
 
-    public List<FileDetailsVO> getAllFiles(String filePath) {
+    public List<FileDetails> getAllFiles(String filePath) {
         Path path = Paths.get(filePath);
         try {
             return Files.list(path)
@@ -30,8 +30,8 @@ public class FileDetailsService {
         }
     }
 
-    private FileDetailsVO toFileDetailsVO(Path path) {
-        FileDetailsVO fileDetails = new FileDetailsVO();
+    private FileDetails toFileDetailsVO(Path path) {
+        FileDetails fileDetails = new FileDetails();
         fileDetails.setFileName(path.getFileName().toString());
         fileDetails.setFilePath(path.toString());
         try {
