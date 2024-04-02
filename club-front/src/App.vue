@@ -20,6 +20,9 @@
       <router-link v-if="isAdmin()" to="/admin/activity">
         <span class="">管理员活动管理</span>
       </router-link>
+      <router-link v-if="isAdmin()" to="/admin/database">
+        <span class="">数据库备份与恢复</span>
+      </router-link>
     </div>
     <div class="title-right">
       <el-dropdown v-if="isLogin()">

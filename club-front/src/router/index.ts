@@ -48,6 +48,12 @@ const router = createRouter({
       meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
+      path: '/admin/database',
+      name: 'AdminDatabase',
+      component: ()=> import("@/views/modules/AdminDatabase/AdminDatabase.vue"),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+    {
       path: "/profile/:id",
       name: "profile",
       meta: { title: "个人主页", requiresAuth: true },

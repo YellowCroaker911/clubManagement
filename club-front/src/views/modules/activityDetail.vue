@@ -22,7 +22,7 @@ import Vue, {onMounted, ref} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 import Options from 'vue-class-component';
 import {getActivityById} from "@/api/backend-api/globalQueryController";
-import {ElMain, ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {
   activityCancel,
   activityPay,

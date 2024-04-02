@@ -163,6 +163,16 @@ declare namespace API {
     updateTime?: string;
   };
 
+  type downloadParams = {
+    path: string;
+  };
+
+  type FileDetailsVO = {
+    fileName?: string;
+    filePath?: string;
+    timeStamp?: string;
+  };
+
   type getActivitiesParams = {
     id: string;
   };
@@ -204,6 +214,10 @@ declare namespace API {
     activityId: number;
   };
 
+  type recoveryParams = {
+    path: string;
+  };
+
   type ResultDataActivityWithUserStateVO = {
     status?: number;
     message?: string;
@@ -243,6 +257,13 @@ declare namespace API {
     status?: number;
     message?: string;
     data?: ClubWithUserStateVO[];
+    timestamp?: number;
+  };
+
+  type ResultDataListFileDetailsVO = {
+    status?: number;
+    message?: string;
+    data?: FileDetailsVO[];
     timestamp?: number;
   };
 
