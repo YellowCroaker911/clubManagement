@@ -1,7 +1,10 @@
 package com.example.backend.service.impl.utils;
 
 import com.example.backend.exception.BusinessException;
+import com.example.backend.utils.CommonConstant;
+import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -15,6 +18,10 @@ import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
+import java.util.stream.Collectors;
+
+import static com.example.backend.utils.CommonConstant.BACKUP_FOLDER;
 
 //@Service
 //public class SqlScriptService {
@@ -107,44 +114,115 @@ import java.sql.Statement;
 
 
 @Service
+@Slf4j
 public class SqlScriptService {
 
-    @Autowired
-    private DataSource dataSource;
+//    @Autowired
+//    private DataSource dataSource;
 
+    @Value("${custom.mysql.username}")
+    String databaseUser;
+    @Value("${custom.mysql.password}")
+    String databasePassword;
+    @Value("${custom.mysql.host}")
+    String databaseHost;
+    @Value("${custom.mysql.port}")
+    String databasePort;
+    @Value("${custom.mysql.table}")
+    String databaseTable;
+
+    /**
+     *  todo check一下这个注解真有效吗
+     */
     @Transactional // 如果需要的话，添加事务注解
     public void runSqlScript(String path) {
-        Resource scriptResource = new FileSystemResource(path);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(scriptResource.getInputStream()))) {
-            String line;
-            StringBuilder sql = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                // 跳过注释和空行
-                if (!line.trim().startsWith("--") && !line.trim().isEmpty()) {
-                    sql.append(line).append("\n");
-
-                    // 如果行以分号结束，则执行SQL
-                    if (line.endsWith(";")) {
-                        executeSql(sql.toString());
-                        sql.setLength(0); // 重置StringBuilder
-                    }
-                }
+//        String database = "club"; // 需要备份的数据库名
+//        System.out.println("现在时间是" + new Date());
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            String stmt = "mysql -h "+databaseHost
+                    +" -u"+databaseUser
+                    +" -p"+databasePassword
+                    +" "+databaseTable+"< " + path;
+            log.info("还原数据库  " + stmt);
+            String[] command = {"cmd", "/c", stmt};
+            Process process = runtime.exec(command);
+            //若有错误信息则输出
+            InputStream errorStream = process.getErrorStream();
+//            System.out.println(errorStream);
+            //等待操作
+            int processComplete = process.waitFor();
+            if (processComplete == 0) {
+                log.info("还原成功.");
+            } else {
+                String result = new BufferedReader(new InputStreamReader(errorStream, "GBK"))
+                        .lines().collect(Collectors.joining(System.lineSeparator()));
+                log.error(result);
+                // 截取返回
+                throw new BusinessException(ReturnCodes.SYSTEM_ERROR, result.substring(0, 50));
             }
-            // 处理SQL脚本的最后一部分（如果没有以分号结束）
-            if (sql.length() > 0) {
-                executeSql(sql.toString());
-            }
-        } catch (IOException e) {
-            throw new BusinessException(ReturnCodes.SYSTEM_ERROR,"读SQL脚本错");
+        } catch (BusinessException e){
+            throw e;
+        } catch (Exception e) {
+            throw new BusinessException(ReturnCodes.SYSTEM_ERROR,"还原数据库失败");
         }
     }
 
-    private void executeSql(String sql) {
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new BusinessException(ReturnCodes.SYSTEM_ERROR,"执行SQL脚本错");
+//    private void executeSql(String sql) {
+//        try (Connection connection = dataSource.getConnection();
+//             Statement statement = connection.createStatement()) {
+//            statement.execute(sql);
+//        } catch (SQLException e) {
+//            throw new BusinessException(ReturnCodes.SYSTEM_ERROR,"执行SQL脚本错");
+//        }
+//    }
+
+    public void backup() {
+
+        Date date = new Date();
+
+        // 定义CMD指令和参数作为数组元素
+        String[] command = {
+                "mysqldump",
+                "-u" + databaseUser,
+                "-p" + databasePassword,
+                "--host=" + databaseHost,
+                "--port=" + databasePort,
+                "--databases",
+                databaseTable,
+                "-r", // 使用 -r 参数指定输出文件，而不是重定向
+                BACKUP_FOLDER + "/" + date.toString().replace(" ","_").replace(":","_")+ ".sql"
+        };
+
+        // 使用String.join合并数组元素，元素之间用空格分隔
+        String fullCommand = String.join(" ", command);
+        System.out.println(fullCommand); // 打印完整的命令字符串
+
+        // 创建ProcessBuilder对象
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        processBuilder.redirectErrorStream(true); // 合并标准输出和错误输出
+
+        try {
+            // 启动进程
+            Process process = processBuilder.start();
+
+            // 读取进程的输出
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line); // 打印到控制台或根据需要处理
+            }
+
+            // 等待进程结束并获取退出值
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.err.println("mysqldump process exited with code: " + exitCode);
+            } else {
+                System.out.println("mysqldump process completed successfully.");
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new BusinessException(ReturnCodes.SYSTEM_ERROR, "数据库备份错误");
         }
     }
 }

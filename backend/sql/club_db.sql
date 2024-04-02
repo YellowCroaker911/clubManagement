@@ -1,9 +1,9 @@
 drop table if exists club_activity;
 drop table if exists user_activity;
 drop table if exists user_club;
-drop table if exists user;
 drop table if exists activity;
 drop table if exists club;
+drop table if exists user;
 
 -- 用户信息表
 create table user
@@ -39,7 +39,8 @@ create table club
     is_admitted 	tinyint  default 0 not null comment '是否审核通过(0-审核中, 1-通过)',
     create_time   datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
-    is_delete     tinyint  default 0 not null comment '是否删除'
+    is_delete     tinyint  default 0 not null comment '是否删除',
+    FOREIGN KEY (president_id) REFERENCES user(id) on delete cascade
 )comment '社团';
 
 -- 活动表
@@ -92,9 +93,7 @@ create table user_club
     update_time   datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     is_delete     tinyint  default 0 not null comment '是否删除',
     FOREIGN KEY (user_id) REFERENCES user(id) on delete cascade ,
-    FOREIGN KEY (club_id) REFERENCES club(id) on delete cascade,
-    index user_index (user_id),
-    index club_index (club_id)
+    FOREIGN KEY (club_id) REFERENCES club(id) on delete cascade
 )comment '社员和社团关系表';
 
 

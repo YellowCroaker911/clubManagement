@@ -17,6 +17,9 @@
 # application.properties文件内容
 custom.mysql.username=本地数据库账号
 custom.mysql.password=本地数据库密码
+custom.mysql.host=服务ip
+custom.mysql.port=端口
+custom.mysql.table=表名
 ```
 
 - `ReturnCode`改为枚举类型，使用`ReturnCodes.SUCCESS.getCode()/getMessage()`方式获取信息

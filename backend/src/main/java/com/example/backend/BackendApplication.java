@@ -4,10 +4,12 @@ import com.example.backend.utils.CommonConstant;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.File;
 
 @SpringBootApplication
+@EnableTransactionManagement        // 开启事务功能
 @MapperScan(basePackages = "com.example.backend.mapper")
 public class BackendApplication {
 
