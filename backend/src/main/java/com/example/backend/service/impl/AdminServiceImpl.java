@@ -6,8 +6,10 @@ import com.example.backend.service.AdminService;
 import com.example.backend.service.impl.utils.FileDetails;
 import com.example.backend.service.impl.utils.FileDetailsService;
 import com.example.backend.service.impl.utils.SqlScriptService;
+import com.example.backend.utils.CommonConstant;
 import com.example.backend.utils.result.ResultData;
 import com.example.backend.utils.result.ReturnCodes;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +20,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -52,29 +57,25 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public ResultData<ResponseEntity<Resource>> download(String path) {
+    public void download(HttpServletResponse response, String path) throws IOException {
 
-        Path filePath = Paths.get(path);
+        File file = new File(BACKUP_FOLDER + "/" + path);
 
-        Resource resource = new FileSystemResource(filePath);
+        response.reset();
+        response.setContentType("application/x-download;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment;filename="+ new String(file.getName().getBytes("utf-8"), "utf-8"));
 
-        // 如果文件不存在，则抛出异常
-        if (!resource.exists() || !resource.isReadable()) {
-            throw new BusinessException(ReturnCodes.SYSTEM_ERROR, "读文件错误");
-        }
+        //创建输入流
+        InputStream is = Files.newInputStream(file.toPath());
+        OutputStream os = response.getOutputStream();
 
-        // 设置文件名为要下载的文件名（不含路径）
-        String fileName = filePath.getFileName().toString();
-
-        // 创建HttpHeaders对象并设置Content-Disposition
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
-
-        // 返回ResponseEntity对象，包含文件内容、状态码和HttpHeaders
-        return ResultData.success(ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource));
+        //利用IOUtils将输入流的内容 复制到输出流
+        //org.apache.tomcat.util.http.fileupload.IOUtils
+        //项目搭建是自动集成了这个类 直接使用即可
+        IOUtils.copy(is, os);
+        os.flush();
+        is.close();
+        os.close();
     }
 
     @Override

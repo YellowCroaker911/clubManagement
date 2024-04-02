@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -51,8 +53,8 @@ public class AdminUserController {
 
     // 数据备份文件下载
     @GetMapping("/download")
-    public ResultData<ResponseEntity<Resource>> download(@RequestParam @NotNull String path) {
-        return adminService.download(path);
+    public void download(@RequestParam @NotNull String path, HttpServletResponse response) throws IOException {
+        adminService.download(response, path);
     }
 
     // 数据恢复
