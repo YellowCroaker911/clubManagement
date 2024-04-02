@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {Exception} from "sass";
 
 const httpRequest = axios.create({
   timeout: 1000 * 30,
@@ -10,6 +9,28 @@ const httpRequest = axios.create({
 })
 
 export default httpRequest;
+
+
+/*
+ * @params {string} url 请求地址
+ * @params {object} resOpts 请求配置参数
+ */
+export const downloadByUrl = (url: string, resOpts = {type:'get'}) => {
+  const { type = 'get' } = resOpts
+  const queryArgs = {
+    url,
+    method: type,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      withCredentials: true,
+    },
+  }
+  // tips: 这里直接返回的是response整体!
+  return httpRequest.request(queryArgs)
+}
+
+
 
 /**
  * 请求拦截器
@@ -30,7 +51,9 @@ httpRequest.interceptors.request.use(config=>{
  */
 httpRequest.interceptors.response.use(response => {
   console.log("相应拦截器", response);
-  if(response.data.status !== 100){
+  // console.log(response.headers["content-type"]);
+  // console.log(response.headers);
+  if((!response.headers["content-type"].toString().includes("x-download")) && response.data.status !== 100){
     throw new Error(response.data.message);
   }
   return response

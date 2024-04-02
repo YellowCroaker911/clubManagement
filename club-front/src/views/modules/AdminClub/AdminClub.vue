@@ -141,6 +141,8 @@ const updateClubsInfo = () => {
       const it = item;
       getClubAvatar({id: it.id}).then(({data}) => {
         it.avatar = 'data:image/png;base64,' + data.data;
+      }).catch(e => {
+        ElMessage.error(`加载图片失败 ${e.message}`);
       })
     })
   })

@@ -14,6 +14,7 @@ import '@/assets/base.scss'
 const app = createApp(App)
 
 app.config.globalProperties.$http = httpRequest;
-app.use(ElementPlus).use(store).use(router)
+app.use(ElementPlus);
+app.use(store).use(router)
 app.mount("#app")
 
