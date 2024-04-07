@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="220">
         <template #default="scope">
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+<!--          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>-->
           <el-button type="text" size="small" v-if="scope.row.isAdmitted === 0" @click="handleDetail(scope.row)">通过</el-button>
           <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
         </template>
@@ -145,6 +145,8 @@ const updateClubsInfo = () => {
         ElMessage.error(`加载图片失败 ${e.message}`);
       })
     })
+  }).catch(e => {
+    ElMessage.error(`获取社团信息失败, ${e.message}`);
   })
 }
 onMounted(() => {

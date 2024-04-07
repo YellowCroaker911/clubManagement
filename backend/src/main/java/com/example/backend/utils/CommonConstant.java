@@ -7,4 +7,5 @@ public class CommonConstant {
     public static final String IMG_FOLDER = "./img/";
 
     public static final String BACKUP_FOLDER = "./backup";
+    public static final String DEFAULT_IMG = "defaultAvatar.png";
 }

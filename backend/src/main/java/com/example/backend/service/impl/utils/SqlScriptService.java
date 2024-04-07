@@ -128,7 +128,7 @@ public class SqlScriptService {
     String databaseHost;
     @Value("${custom.mysql.port}")
     String databasePort;
-    @Value("${custom.mysql.table}")
+    @Value("${custom.mysql.datasource}")
     String databaseTable;
 
     /**

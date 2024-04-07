@@ -214,34 +214,13 @@ const updateActivities = () => {
     }
     activityInfo.value = data.data;
     console.log(data);
+  }).catch(e => {
+    ElMessage.error(`获取社团活动失败，${e.message}`);
   })
 }
 
 const userInfo = ref<API.User>({});
-const clubs = ref<API.Club[]>([
-  {
-    id: 1,
-    name: "fex",
-    avatar: undefined,
-    info: undefined,
-    presidentId: undefined,
-    address: undefined,
-    contact: undefined,
-    member: undefined,
-    money: undefined
-  },
-  {
-    id: 2,
-    name: "maple",
-    avatar: undefined,
-    info: undefined,
-    presidentId: undefined,
-    address: undefined,
-    contact: undefined,
-    member: undefined,
-    money: undefined
-  }
-])
+const clubs = ref<API.Club[]>([])
 
 const router = useRouter();
 const isLoading = ref(false)
@@ -293,7 +272,7 @@ const onAlterPsw = async (formEl: FormInstance | undefined) => {
     console.log(valid, fields);
     if (valid) {
       isLoading.value = true;
-      //todo 检验密码
+
       alterPassword({
         ...alterPswData
       }).then(({data}) => {
@@ -391,9 +370,13 @@ onMounted(() => {
     sessionStorage.setItem('user', JSON.stringify(data.data));
     data.data.money = fen2Yuan(data.data.money);
     userInfo.value = data.data || {};
+  }).catch(e => {
+    ElMessage.error(`获取个人信息失败，${e.message}`);
   })
   getSelfAvatar().then(({data}) => {
     avatarData.value = 'data:image/png;base64,' + data.data;
+  }).catch(e => {
+    ElMessage.error(`获取头像失败, ${e.message}`);
   })
   getSelfClubs().then(({data}) => {
     for(let i in data.data||[]) {

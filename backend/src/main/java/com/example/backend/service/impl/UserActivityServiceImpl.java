@@ -56,7 +56,7 @@ public class UserActivityServiceImpl extends ServiceImpl<UserActivityMapper, Use
         QueryWrapper<UserClub> queryWrapper3 = new QueryWrapper<>();
         queryWrapper3.eq("user_id",userId).eq("club_id",activity.getClubId());
         UserClub userClub = userClubMapper.selectOne(queryWrapper3);
-        if(userClub == null){
+        if(userClub == null || userClub.getIsPassed().equals(0)){
             throw new BusinessException(ReturnCodes.NOT_MEMBER,null);
         }
 

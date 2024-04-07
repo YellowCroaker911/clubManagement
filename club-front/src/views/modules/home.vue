@@ -41,7 +41,6 @@ const handleDetailActivity = (index: number) => {
 function signUp(index: number) {
   ElMessageBox.confirm(`确定要报名活动 ${list.value[index].name}`)
   .then(() => {
-
     console.log("报名成功")
   })
   .catch(() => {
@@ -52,6 +51,8 @@ function signUp(index: number) {
 onMounted(() => {
   getSelfClubActivities().then(({data}) => {
     list.value = data.data;
+  }).catch(e => {
+    ElMessage.error(`获取活动列表失败，${e.message}`);
   })
 })
 

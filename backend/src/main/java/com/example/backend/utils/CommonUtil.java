@@ -185,7 +185,8 @@ public class CommonUtil {
             //获取JDK8里的编码器Base64.Encoder转为base64字符
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
-            throw new BusinessException(ReturnCodes.IMG_NOTFOUND);
+            return convertImageToBase64Str(CommonConstant.IMG_FOLDER + CommonConstant.DEFAULT_IMG);
+//            throw new BusinessException(ReturnCodes.IMG_NOTFOUND);
         } finally {
             try {
                 if (baos != null) {

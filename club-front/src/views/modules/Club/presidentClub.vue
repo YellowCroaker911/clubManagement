@@ -191,9 +191,9 @@
       </div>
       <div class="person_body_right" v-if="opType == 2">
       <el-card style="width: 600px; margin-top: 20px; margin-left: 200px;" shadow="hover">
-        <el-descriptions title="社团注册" style="margin-left: 250px">
-        </el-descriptions>
-        <el-form label-width="80px" size="large" ref="applyForm" :model="applyClubInfo">
+        <el-descriptions title="社团注册" style="margin-left: 250px" />
+
+        <el-form label-width="80px" size="large" ref="applyForm" :model="applyClubInfo" @submit.prevent>
           <el-form-item prop="name" label="社团名称" style="margin-left: 10px; margin-top: 10px;" :rules="[{required: true, message: '输入社团名称', trigger: 'blur'}]">
             <el-input v-model="applyClubInfo.name" autocomplete="off" style="width: 400px;"></el-input>
           </el-form-item>
@@ -453,7 +453,7 @@ const handlePassMember = (row) => {
     ElMessage.success("通过成功");
     updateClubToTalInfo(''+clubInfo.value.id);
   }).catch(e => {
-    ElMessage.error("审核通过失败");
+    ElMessage.error(`审核通过失败 ${e.message}`);
   })
 }
 
@@ -469,7 +469,7 @@ const applyClub = (formEl: FormInstance | undefined) => {
         ElMessage.success("注册成功");
         getClubs();
       }).catch(e => {
-        ElMessage.error("注册失败");
+        ElMessage.error(`注册失败, ${e.message}`);
       })
     } else {
       console.log('error submit!', fields)
@@ -490,6 +490,8 @@ const getClubs = () => {
       data.data[i].money = fen2Yuan(data.data[i].money);
     }
     clubs.value = data.data;
+  }).catch(e => {
+    ElMessage.error(`获取社团信息失败 ${e.message}`);
   })
 }
 

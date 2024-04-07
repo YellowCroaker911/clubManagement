@@ -66,8 +66,7 @@ function signinClub(clubId: number, index) {
       ElMessage.error("报名失败");
       console.log(e);
     })
-  })
-  .catch(() => {
+  }).catch(() => {
     console.log("报名取消")
   })
 }

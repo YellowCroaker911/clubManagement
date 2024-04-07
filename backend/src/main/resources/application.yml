@@ -5,7 +5,7 @@ spring:
   datasource:
     username: ${custom.mysql.username}
     password: ${custom.mysql.password}
-    url: jdbc:mysql://${custom.mysql.host}:${custom.mysql.port}/${custom.mysql.table}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false
+    url: jdbc:mysql://${custom.mysql.host}:${custom.mysql.port}/${custom.mysql.datasource}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false
     driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

@@ -31,7 +31,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="() => avatarEvent('profile')">个人中心</el-dropdown-item>
-            <el-dropdown-item @click="() => avatarEvent('2')">留着</el-dropdown-item>
+<!--            <el-dropdown-item @click="() => avatarEvent('2')">留着</el-dropdown-item>-->
             <el-dropdown-item @click="() => avatarEvent('logout')">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -64,6 +64,7 @@ import {getCurrentUser} from "@/utils";
 import {onMounted, ref} from "vue";
 import CustomAvatar from "@/components/CustomAvatar.vue";
 import {getSelfAvatar} from "@/api/backend-api/userAccountController";
+import {ElMessage} from "element-plus";
 // import HelloWorld from './components/HelloWorld.vue'
 // import {Table} from 'ant-design-vue';
 // export default {
@@ -99,6 +100,8 @@ onMounted(() => {
   if(sessionStorage.getItem('jwt')) {
     getSelfAvatar().then(({data}) => {
       avatarData.value = 'data:image/png;base64,' + data.data;
+    }).catch(e => {
+      ElMessage.error("获取头像失败");
     })
   }
 })
